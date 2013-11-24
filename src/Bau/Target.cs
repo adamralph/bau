@@ -1,4 +1,4 @@
-﻿// <copyright file="BauTask.cs" company="Bau contributors">
+﻿// <copyright file="Target.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -10,11 +10,12 @@ namespace Bau
     using System.Linq;
     using Common.Logging;
 
-    public class BauTask
+    // TODO (adamralph): move static stuff into static Application class
+    public class Target
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
-        private static readonly Dictionary<string, BauTask> tasks = new Dictionary<string, BauTask>();
-        private static string nextTaskDescription;
+        private static readonly Dictionary<string, Target> targets = new Dictionary<string, Target>();
+        private static string nextTargetDescription;
 
         private readonly List<string> prerequisites = new List<string>();
         private readonly List<object> actions = new List<object>();
@@ -45,42 +46,45 @@ namespace Bau
             get { return this.description; }
         }
 
-        public static void DescribeNextTask(string description)
+        public static void DescribeNextTarget(string description)
         {
             if (description == null)
             {
                 return;
             }
 
-            nextTaskDescription = description.Trim();
+            nextTargetDescription = description.Trim();
         }
 
-        public static void DefineTask<TTask>(string name, string[] prerequisites, Action<TTask> action)
-            where TTask : BauTask, new()
+        public static void DefineTarget<TTarget>(string name, string[] prerequisites, Action<TTarget> action)
+            where TTarget : Target, new()
         {
-            var task = Intern<TTask>(name);
+            var target = Intern<TTarget>(name);
             if (prerequisites != null)
             {
-                task.prerequisites.AddRange(prerequisites.Where(p => p != null));
+                foreach (var prerequisite in prerequisites.Where(p => !target.prerequisites.Contains(p)))
+                {
+                    target.prerequisites.Add(prerequisite);
+                }
             }
 
             if (action != null)
             {
-                task.actions.Add(action);
+                target.actions.Add(action);
             }
         }
 
-        public static void InvokeTasks(params string[] names)
+        public static void InvokeTargets(params string[] names)
         {
             if (names.Length == 0)
             {
-                GetTask("default").Invoke();
+                GetTarget("default").Invoke();
             }
             else
             {
-                foreach (var task in names.Select(name => GetTask(name)))
+                foreach (var target in names.Select(name => GetTarget(name)))
                 {
-                    task.Invoke();
+                    target.Invoke();
                 }
             }
         }
@@ -95,15 +99,15 @@ namespace Bau
             }
 
             this.alreadyInvoked = true;
-            foreach (var task in this.prerequisites.Select(name => GetTask(name)))
+            foreach (var target in this.prerequisites.Select(name => GetTarget(name)))
             {
-                task.Invoke();
+                target.Invoke();
             }
 
             this.Execute();
         }
 
-        public void Execute()
+        protected virtual void Execute()
         {
             log.TraceFormat(CultureInfo.InvariantCulture, "Execute '{0}'.", this.Name);
             foreach (var action in this.actions)
@@ -114,44 +118,43 @@ namespace Bau
 
         protected virtual void Call(object action)
         {
-            ((Action<BauTask>)action)(this);
+            ((Action<Target>)action)(this);
         }
 
-        private static TTask Intern<TTask>(string name)
-            where TTask : BauTask, new()
+        private static TTarget Intern<TTarget>(string name) where TTarget : Target, new()
         {
-            BauTask task;
-            if (!tasks.TryGetValue(name, out task))
+            Target target;
+            if (!targets.TryGetValue(name, out target))
             {
-                tasks.Add(name, task = new TTask() { Name = name });
+                targets.Add(name, target = new TTarget() { Name = name });
             }
 
-            var typedTask = task as TTask;
-            if (typedTask == null)
+            var typedTarget = target as TTarget;
+            if (typedTarget == null)
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "The task has already been created with type '{0}'.",
-                    task.GetType().Name);
+                    "The target has already been created with type '{0}'.",
+                    target.GetType().Name);
 
                 throw new InvalidOperationException(message);
             }
 
-            typedTask.description = nextTaskDescription ?? task.description;
-            nextTaskDescription = null;
-            return typedTask;
+            typedTarget.description = nextTargetDescription ?? target.description;
+            nextTargetDescription = null;
+            return typedTarget;
         }
 
-        private static BauTask GetTask(string name)
+        private static Target GetTarget(string name)
         {
-            BauTask task;
-            if (!tasks.TryGetValue(name, out task))
+            Target target;
+            if (!targets.TryGetValue(name, out target))
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "Don't know how to build task '{0}'", name);
+                var message = string.Format(CultureInfo.InvariantCulture, "Don't know how to build target '{0}'", name);
                 throw new InvalidOperationException(message);
             }
 
-            return task;
+            return target;
         }
     }
 }

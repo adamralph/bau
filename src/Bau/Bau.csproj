@@ -36,7 +36,7 @@
     <CodeAnalysisRuleSet>..\Bau.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BauTask.cs" />
+    <Compile Include="Target.cs" />
     <Compile Include="Exec.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Program.cs" />

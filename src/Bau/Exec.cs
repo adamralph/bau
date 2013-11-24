@@ -9,7 +9,7 @@ namespace Bau
     using System.Globalization;
     using Common.Logging;
 
-    public class Exec : BauTask
+    public class Exec : Target
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
@@ -17,9 +17,9 @@ namespace Bau
 
         public string[] Parameters { get; set; }
 
-        protected override void Call(object action)
+        protected override void Execute()
         {
-            ((Action<Exec>)action)(this);
+            base.Execute();
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(this.Command, string.Join(" ", this.Parameters));
             process.StartInfo.UseShellExecute = false;
@@ -34,6 +34,11 @@ namespace Bau
 
                 throw new InvalidOperationException(message);
             }
+        }
+
+        protected override void Call(object action)
+        {
+            ((Action<Exec>)action)(this);
         }
     }
 }

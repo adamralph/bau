@@ -18,42 +18,42 @@ namespace Bau.Scripting
 
         public void Desc(string description)
         {
-            BauTask.DescribeNextTask(description);
+            Bau.Target.DescribeNextTarget(description);
         }
 
-        public void Task(string name, Action action)
+        public void Target(string name, Action action)
         {
-            BauTask.DefineTask(name, null, (BauTask task) => action());
+            Bau.Target.DefineTarget(name, null, (Target target) => action());
         }
 
-        public void Task(string name, Action<BauTask> action)
+        public void Target(string name, Action<Target> action)
         {
-            BauTask.DefineTask(name, null, action);
+            Bau.Target.DefineTarget(name, null, action);
         }
 
-        public void Task(string name, string[] prerequisites)
+        public void Target(string name, string[] prerequisites)
         {
-            BauTask.DefineTask(name, prerequisites, default(Action<BauTask>));
+            Bau.Target.DefineTarget(name, prerequisites, default(Action<Target>));
         }
 
-        public void Task(string name, string[] prerequisites, Action action)
+        public void Target(string name, string[] prerequisites, Action action)
         {
-            BauTask.DefineTask(name, prerequisites, (BauTask task) => action());
+            Bau.Target.DefineTarget(name, prerequisites, (Target target) => action());
         }
 
-        public void Task(string name, string[] prerequisites, Action<BauTask> action)
+        public void Target(string name, string[] prerequisites, Action<Target> action)
         {
-            BauTask.DefineTask(name, prerequisites, action);
+            Bau.Target.DefineTarget(name, prerequisites, action);
         }
 
         public void Exec(string name, Action<Exec> action)
         {
-            BauTask.DefineTask(name, null, action);
+            Bau.Target.DefineTarget(name, null, action);
         }
 
         public void Exec(string name, string[] prerequisites, Action<Exec> action)
         {
-            BauTask.DefineTask(name, prerequisites, action);
+            Bau.Target.DefineTarget(name, prerequisites, action);
         }
     }
 }

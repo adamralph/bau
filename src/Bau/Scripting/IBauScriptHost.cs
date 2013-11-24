@@ -12,15 +12,15 @@ namespace Bau.Scripting
     {
         void Desc(string description);
 
-        void Task(string name, Action action);
+        void Target(string name, Action action);
 
-        void Task(string name, Action<BauTask> action);
+        void Target(string name, Action<Target> action);
 
-        void Task(string name, string[] prerequisites);
+        void Target(string name, string[] prerequisites);
         
-        void Task(string name, string[] prerequisites, Action action);
+        void Target(string name, string[] prerequisites, Action action);
 
-        void Task(string name, string[] prerequisites, Action<BauTask> action);
+        void Target(string name, string[] prerequisites, Action<Target> action);
 
         void Exec(string name, Action<Exec> action);
 

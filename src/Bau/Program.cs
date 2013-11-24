@@ -45,7 +45,7 @@ namespace Bau
                 executor.Execute(filename);
             }
 
-            BauTask.InvokeTasks(args);
+            Target.InvokeTargets(args);
             return 0;
         }
     }
