@@ -16,20 +16,33 @@ namespace Bau
         private static readonly Dictionary<string, BauTask> tasks = new Dictionary<string, BauTask>();
         private static string nextTaskDescription;
 
-        private readonly string name;
         private readonly List<string> prerequisites = new List<string>();
-        private readonly List<Action> actions = new List<Action>();
+        private readonly List<object> actions = new List<object>();
+        private string name;
         private string description;
         private bool alreadyInvoked;
 
-        public BauTask(string name)
+        public string Name
         {
-            if (string.IsNullOrWhiteSpace(name))
+            get
             {
-                throw new ArgumentException("The name is invalid.");
+                return this.name;
             }
 
-            this.name = name;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("The name is invalid.", "value");
+                }
+
+                this.name = value;
+            }
+        }
+
+        public string Description
+        {
+            get { return this.description; }
         }
 
         public static void DescribeNextTask(string description)
@@ -42,29 +55,15 @@ namespace Bau
             nextTaskDescription = description.Trim();
         }
 
-        public static void DefineTask(string name, Action action)
+        public static void DefineTask<TTask>(string name, string[] prerequisites, Action<TTask> action)
+            where TTask : BauTask, new()
         {
-            var task = Intern(name);
-            if (action != null)
+            var task = Intern<TTask>(name);
+            if (prerequisites != null)
             {
-                task.actions.Add(action);
+                task.prerequisites.AddRange(prerequisites.Where(p => p != null));
             }
-        }
 
-        public static void DefineTask(string name, string[] prerequisites)
-        {
-            Guard.AgainstNullArgument("prerequisites", prerequisites);
-
-            var task = Intern(name);
-            task.prerequisites.AddRange(prerequisites.Where(p => p != null));
-        }
-
-        public static void DefineTask(string name, string[] prerequisites, Action action)
-        {
-            Guard.AgainstNullArgument("prerequisites", prerequisites);
-
-            var task = Intern(name);
-            task.prerequisites.AddRange(prerequisites.Where(p => p != null));
             if (action != null)
             {
                 task.actions.Add(action);
@@ -88,10 +87,10 @@ namespace Bau
 
         public void Invoke()
         {
-            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", this.name);
+            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", this.Name);
             if (this.alreadyInvoked)
             {
-                log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.name);
+                log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
                 return;
             }
 
@@ -101,23 +100,46 @@ namespace Bau
                 task.Invoke();
             }
 
+            this.Execute();
+        }
+
+        public void Execute()
+        {
+            log.TraceFormat(CultureInfo.InvariantCulture, "Execute '{0}'.", this.Name);
             foreach (var action in this.actions)
             {
-                action.Invoke();
+                this.Call(action);
             }
         }
 
-        private static BauTask Intern(string name)
+        protected virtual void Call(object action)
+        {
+            ((Action<BauTask>)action)(this);
+        }
+
+        private static TTask Intern<TTask>(string name)
+            where TTask : BauTask, new()
         {
             BauTask task;
             if (!tasks.TryGetValue(name, out task))
             {
-                tasks.Add(name, task = new BauTask(name));
+                tasks.Add(name, task = new TTask() { Name = name });
             }
 
-            task.description = nextTaskDescription ?? task.description;
+            var typedTask = task as TTask;
+            if (typedTask == null)
+            {
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The task has already been created with type '{0}'.",
+                    task.GetType().Name);
+
+                throw new InvalidOperationException(message);
+            }
+
+            typedTask.description = nextTaskDescription ?? task.description;
             nextTaskDescription = null;
-            return task;
+            return typedTask;
         }
 
         private static BauTask GetTask(string name)
@@ -125,7 +147,8 @@ namespace Bau
             BauTask task;
             if (!tasks.TryGetValue(name, out task))
             {
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Don't know how to build task '{0}'", name));
+                var message = string.Format(CultureInfo.InvariantCulture, "Don't know how to build task '{0}'", name);
+                throw new InvalidOperationException(message);
             }
 
             return task;

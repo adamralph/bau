@@ -1,12 +1,18 @@
 Desc("Execute default tasks");
-Task("default", new[] { "bar" });
+Task("default", new[] { "foo3" });
 
-Desc("Foo");
-Task("foo", () => {
-    Console.WriteLine("Executing foo");
+Desc("Foo1");
+Task("foo1", () => {
+    Console.WriteLine("Executing foo1");
 });
 
-Desc("Bar");
-Task("bar", new[] { "foo" }, () => {
-    Console.WriteLine("Executing bar");
+Desc("Foo2");
+Task("foo2", new[] { "foo1" }, task => {
+    Console.WriteLine("Executing {0}", task.Name);
+});
+
+Desc("Foo3");
+Exec("foo3", new[] { "foo2" }, cmd => {
+    cmd.Command = "ping";
+    cmd.Parameters = new [] { "localhost" };
 });
