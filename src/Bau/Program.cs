@@ -21,10 +21,17 @@ namespace Bau
 
             var log = LogManager.GetCurrentClassLogger();
 
+            // TODO (adamralph): 
+            ////'rakefile',
+            ////'Rakefile',
+            ////'rakefile.rb',
+            ////'Rakefile.rb'
             var filename = "baufile.csx";
-            var directory = Directory.GetCurrentDirectory();
             while (!File.Exists(filename))
             {
+                var directory = Directory.GetCurrentDirectory();
+                log.TraceFormat(CultureInfo.InvariantCulture, "No baufile found in directory '{0}'.", directory);
+                
                 var parent = Directory.GetParent(directory);
                 if (parent == null)
                 {
@@ -34,13 +41,14 @@ namespace Bau
                 Directory.SetCurrentDirectory(parent.FullName);
             }
 
-            var fileSystem = new FileSystem { CurrentDirectory = Directory.GetCurrentDirectory() };
+            log.TraceFormat(CultureInfo.InvariantCulture, "The current directory is '{0}'.", Directory.GetCurrentDirectory());
+            log.DebugFormat(CultureInfo.InvariantCulture, "Executing '{0}'...", Path.GetFullPath(filename));
 
-            log.DebugFormat(CultureInfo.InvariantCulture, "The current directory is {0}", fileSystem.CurrentDirectory);
-            log.DebugFormat(CultureInfo.InvariantCulture, "Executing '{0}'", fileSystem.GetFullPath(filename));
+            // TODO (adamralph): move out for easily swappable scripting solutions
+            var fileSystem = new FileSystem { CurrentDirectory = Directory.GetCurrentDirectory() };
             using (var executor = new BauScriptExecutor(fileSystem))
             {
-                executor.AddReferenceAndImportNamespaces(new[] { typeof(Program) });
+                executor.AddReferenceAndImportNamespaces(new[] { typeof(Target) });
                 executor.Initialize(new string[0], new IScriptPack[0]);
                 executor.Execute(filename);
             }
