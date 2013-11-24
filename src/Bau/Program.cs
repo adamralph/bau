@@ -14,7 +14,7 @@ namespace Bau
 
     internal static class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             var log = LogManager.GetCurrentClassLogger();
 
@@ -41,6 +41,9 @@ namespace Bau
                 executor.Initialize(new string[0], new IScriptPack[0]);
                 executor.Execute(filename);
             }
+
+            BauTask.ExecuteTasks();
+            return 0;
         }
     }
 }
