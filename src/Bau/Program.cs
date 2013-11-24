@@ -9,6 +9,7 @@ namespace Bau
     using System.IO;
     using Bau.Scripting;
     using Common.Logging;
+    using Common.Logging.Simple;
     using ScriptCs;
     using ScriptCs.Contracts;
 
@@ -16,6 +17,8 @@ namespace Bau
     {
         public static int Main(string[] args)
         {
+            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Trace, true, true, true, "u");
+
             var log = LogManager.GetCurrentClassLogger();
 
             var filename = "baufile.csx";
@@ -42,7 +45,7 @@ namespace Bau
                 executor.Execute(filename);
             }
 
-            BauTask.ExecuteTasks();
+            BauTask.InvokeTasks(args);
             return 0;
         }
     }
