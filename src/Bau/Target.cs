@@ -10,7 +10,7 @@ namespace Bau
     using System.Linq;
     using Common.Logging;
 
-    // TODO (adamralph): move static stuff into static Application class
+    // TODO (adamralph): move static stuff into an Application class, which can be instantiated and passed to the script host
     public class Target
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();

@@ -1,0 +1,12 @@
+Desc = "Execute default targets";
+Target = "default"; Depends = new[] { "foo3" };
+
+Desc = "Foo1";
+Target = "foo1"; Action = () => {
+    Console.WriteLine("Executing foo1");
+};
+
+Desc = "Foo2";
+Target = "foo2"; Depends = new[] { "foo1" }; Action = target => {
+    Console.WriteLine("Executing {0}", target.Name);
+};
