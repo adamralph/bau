@@ -17,7 +17,7 @@ namespace Bau
 
         public string[] Parameters { get; set; }
 
-        protected override void Execute()
+        public override void Execute()
         {
             base.Execute();
             var process = new Process();

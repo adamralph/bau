@@ -53,7 +53,7 @@ namespace Bau
                 executor.Execute(filename);
             }
 
-            Target.InvokeTargets(args);
+            Application.InvokeTargets(args);
             return 0;
         }
     }

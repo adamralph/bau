@@ -37,6 +37,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="Exec.cs" />
     <Compile Include="Guard.cs" />

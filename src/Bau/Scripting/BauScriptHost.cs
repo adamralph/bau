@@ -18,42 +18,42 @@ namespace Bau.Scripting
 
         public void Desc(string description)
         {
-            Bau.Target.DescribeNextTarget(description);
+            Application.DescribeNextTarget(description);
         }
 
         public void Target(string name, Action action)
         {
-            Bau.Target.DefineTarget(name, null, (Target target) => action());
+            Application.DefineTarget(name, null, (Target target) => action());
         }
 
         public void Target(string name, Action<Target> action)
         {
-            Bau.Target.DefineTarget(name, null, action);
+            Application.DefineTarget(name, null, action);
         }
 
         public void Target(string name, string[] prerequisites)
         {
-            Bau.Target.DefineTarget(name, prerequisites, default(Action<Target>));
+            Application.DefineTarget(name, prerequisites, default(Action<Target>));
         }
 
         public void Target(string name, string[] prerequisites, Action action)
         {
-            Bau.Target.DefineTarget(name, prerequisites, (Target target) => action());
+            Application.DefineTarget(name, prerequisites, (Target target) => action());
         }
 
         public void Target(string name, string[] prerequisites, Action<Target> action)
         {
-            Bau.Target.DefineTarget(name, prerequisites, action);
+            Application.DefineTarget(name, prerequisites, action);
         }
 
         public void Exec(string name, Action<Exec> action)
         {
-            Bau.Target.DefineTarget(name, null, action);
+            Application.DefineTarget(name, null, action);
         }
 
         public void Exec(string name, string[] prerequisites, Action<Exec> action)
         {
-            Bau.Target.DefineTarget(name, prerequisites, action);
+            Application.DefineTarget(name, prerequisites, action);
         }
     }
 }
