@@ -16,7 +16,7 @@ Exec("foo3", new[] { "foo2" }, cmd => {
     cmd.Command = "ping";
 });
 
-Exec("foo3", new[] { "foo1" }, cmd => {
+Target("foo3", new[] { "foo1" }, (Exec cmd) => {
     cmd.Parameters = new [] { "localhost" };
 });
 
