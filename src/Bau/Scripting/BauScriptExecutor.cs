@@ -18,11 +18,11 @@ namespace Bau.Scripting
         private static readonly ILog scriptCsLog = LogManager.GetLogger("ScriptCs");
         private bool isInitialized;
 
-        public BauScriptExecutor(IFileSystem fileSystem)
+        public BauScriptExecutor(Application application, IFileSystem fileSystem)
             : base(
                 fileSystem,
                 new FilePreProcessor(fileSystem, scriptCsLog, new ILineProcessor[] { new LoadLineProcessor(fileSystem) }),
-                new BauScriptEngine(new BauScriptHostFactory(), scriptCsLog),
+                new BauScriptEngine(new BauScriptHostFactory(application), scriptCsLog),
                 scriptCsLog)
         {
         }

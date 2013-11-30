@@ -11,49 +11,54 @@ namespace Bau.Scripting
     [CLSCompliant(false)]
     public class BauScriptHost : ScriptHost, IBauScriptHost
     {
-        public BauScriptHost(IScriptPackManager scriptPackManager, string[] scriptArgs)
+        private readonly Application application;
+
+        public BauScriptHost(Application application, IScriptPackManager scriptPackManager, string[] scriptArgs)
             : base(scriptPackManager, scriptArgs)
         {
+            Guard.AgainstNullArgument("application", application);
+
+            this.application = application;
         }
 
         public void Desc(string description)
         {
-            Application.DescribeNextTarget(description);
+            this.application.DescribeNextTarget(description);
         }
 
         public void Target(string name, Action action)
         {
-            Application.DefineTarget(name, null, (Target target) => action());
+            this.application.DefineTarget(name, null, (Target target) => action());
         }
 
         public void Target(string name, Action<Target> action)
         {
-            Application.DefineTarget(name, null, action);
+            this.application.DefineTarget(name, null, action);
         }
 
         public void Target(string name, string[] prerequisites)
         {
-            Application.DefineTarget(name, prerequisites, default(Action<Target>));
+            this.application.DefineTarget(name, prerequisites, default(Action<Target>));
         }
 
         public void Target(string name, string[] prerequisites, Action action)
         {
-            Application.DefineTarget(name, prerequisites, (Target target) => action());
+            this.application.DefineTarget(name, prerequisites, (Target target) => action());
         }
 
         public void Target(string name, string[] prerequisites, Action<Target> action)
         {
-            Application.DefineTarget(name, prerequisites, action);
+            this.application.DefineTarget(name, prerequisites, action);
         }
 
         public void Exec(string name, Action<Exec> action)
         {
-            Application.DefineTarget(name, null, action);
+            this.application.DefineTarget(name, null, action);
         }
 
         public void Exec(string name, string[] prerequisites, Action<Exec> action)
         {
-            Application.DefineTarget(name, prerequisites, action);
+            this.application.DefineTarget(name, prerequisites, action);
         }
     }
 }

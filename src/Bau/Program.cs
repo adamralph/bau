@@ -12,6 +12,7 @@ namespace Bau
     using Common.Logging.Simple;
     using ScriptCs;
     using ScriptCs.Contracts;
+    using ServiceStack.Text;
 
     internal static class Program
     {
@@ -20,6 +21,8 @@ namespace Bau
             LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Trace, true, true, true, "u");
 
             var log = LogManager.GetCurrentClassLogger();
+
+            log.TraceFormat(CultureInfo.InvariantCulture, "Args: {0}", args.ToJsv());
 
             // TODO (adamralph): 
             ////'rakefile',
@@ -44,16 +47,18 @@ namespace Bau
             log.TraceFormat(CultureInfo.InvariantCulture, "The current directory is '{0}'.", Directory.GetCurrentDirectory());
             log.DebugFormat(CultureInfo.InvariantCulture, "Executing '{0}'...", Path.GetFullPath(filename));
 
+            var application = new Application();
+
             // TODO (adamralph): move out for easily swappable scripting solutions
             var fileSystem = new FileSystem { CurrentDirectory = Directory.GetCurrentDirectory() };
-            using (var executor = new BauScriptExecutor(fileSystem))
+            using (var executor = new BauScriptExecutor(application, fileSystem))
             {
                 executor.AddReferenceAndImportNamespaces(new[] { typeof(Target) });
                 executor.Initialize(new string[0], new IScriptPack[0]);
                 executor.Execute(filename);
             }
 
-            Application.InvokeTargets(args);
+            application.InvokeTargets(args);
             return 0;
         }
     }

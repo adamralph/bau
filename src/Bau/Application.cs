@@ -13,23 +13,24 @@ namespace Bau
     public class Application
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
-        private static readonly Dictionary<string, Target> targets = new Dictionary<string, Target>();
-        private static string nextTargetDescription;
 
-        public static void DescribeNextTarget(string description)
+        private readonly Dictionary<string, Target> targets = new Dictionary<string, Target>();
+        private string nextTargetDescription;
+
+        public void DescribeNextTarget(string description)
         {
             if (description == null)
             {
                 return;
             }
 
-            nextTargetDescription = description.Trim();
+            this.nextTargetDescription = description.Trim();
         }
 
-        public static void DefineTarget<TTarget>(string name, string[] prerequisites, Action<TTarget> action)
+        public void DefineTarget<TTarget>(string name, string[] prerequisites, Action<TTarget> action)
             where TTarget : Target, new()
         {
-            var target = Intern<TTarget>(name);
+            var target = this.Intern<TTarget>(name);
             if (prerequisites != null)
             {
                 foreach (var prerequisite in prerequisites.Where(p => !target.Prerequisites.Contains(p)))
@@ -44,22 +45,22 @@ namespace Bau
             }
         }
 
-        public static void InvokeTargets(params string[] names)
+        public void InvokeTargets(params string[] names)
         {
             if (names.Length == 0)
             {
-                Invoke(GetTarget("default"));
+                this.Invoke(this.GetTarget("default"));
             }
             else
             {
-                foreach (var target in names.Select(name => GetTarget(name)))
+                foreach (var target in names.Select(name => this.GetTarget(name)))
                 {
-                    Invoke(target);
+                    this.Invoke(target);
                 }
             }
         }
 
-        private static void Invoke(Target target)
+        private void Invoke(Target target)
         {
             log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", target.Name);
             if (target.AlreadyInvoked)
@@ -69,20 +70,20 @@ namespace Bau
             }
 
             target.AlreadyInvoked = true;
-            foreach (var prerequisite in target.Prerequisites.Select(name => GetTarget(name)))
+            foreach (var prerequisite in target.Prerequisites.Select(name => this.GetTarget(name)))
             {
-                Invoke(prerequisite);
+                this.Invoke(prerequisite);
             }
 
             target.Execute();
         }
 
-        private static TTarget Intern<TTarget>(string name) where TTarget : Target, new()
+        private TTarget Intern<TTarget>(string name) where TTarget : Target, new()
         {
             Target target;
-            if (!targets.TryGetValue(name, out target))
+            if (!this.targets.TryGetValue(name, out target))
             {
-                targets.Add(name, target = new TTarget() { Name = name });
+                this.targets.Add(name, target = new TTarget() { Name = name });
             }
 
             var typedTarget = target as TTarget;
@@ -96,15 +97,15 @@ namespace Bau
                 throw new InvalidOperationException(message);
             }
 
-            typedTarget.Description = nextTargetDescription ?? target.Description;
-            nextTargetDescription = null;
+            typedTarget.Description = this.nextTargetDescription ?? target.Description;
+            this.nextTargetDescription = null;
             return typedTarget;
         }
 
-        private static Target GetTarget(string name)
+        private Target GetTarget(string name)
         {
             Target target;
-            if (!targets.TryGetValue(name, out target))
+            if (!this.targets.TryGetValue(name, out target))
             {
                 var message = string.Format(CultureInfo.InvariantCulture, "Don't know how to build target '{0}'", name);
                 throw new InvalidOperationException(message);

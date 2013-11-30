@@ -9,10 +9,17 @@ namespace Bau.Scripting
 
     public class BauScriptHostFactory : IBauScriptHostFactory
     {
+        private readonly Application application;
+
+        public BauScriptHostFactory(Application application)
+        {
+            this.application = application;
+        }
+
         [CLSCompliant(false)]
         public IBauScriptHost CreateScriptHost(IScriptPackManager scriptPackManager, string[] scriptArgs)
         {
-            return new BauScriptHost(scriptPackManager, scriptArgs);
+            return new BauScriptHost(this.application, scriptPackManager, scriptArgs);
         }
     }
 }
