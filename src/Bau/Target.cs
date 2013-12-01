@@ -55,7 +55,7 @@ namespace Bau
 
         public virtual void Execute()
         {
-            log.TraceFormat(CultureInfo.InvariantCulture, "Execute '{0}'.", this.Name);
+            log.DebugFormat(CultureInfo.InvariantCulture, "Execute '{0}'.", this.Name);
             foreach (var action in this.actions)
             {
                 action();

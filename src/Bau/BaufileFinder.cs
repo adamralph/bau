@@ -17,7 +17,7 @@ namespace Bau
         public static string Find()
         {
             var filenames = new[] { "baufile", "Baufile", "baufile.csx", "Baufile.csx" };
-            log.TraceFormat(CultureInfo.InvariantCulture, "Searching for {0}.", filenames.ToJsv());
+            log.DebugFormat(CultureInfo.InvariantCulture, "Searching for {0}.", filenames.ToJsv());
 
             var directory = Directory.GetCurrentDirectory();
             while (true)

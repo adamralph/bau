@@ -22,7 +22,11 @@ namespace Bau
                 return 1;
             }
 
-            if (arguments.Trace)
+            if (arguments.Debug)
+            {
+                LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Debug, true, true, true, "u");
+            }
+            else if (arguments.Trace)
             {
                 LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Trace, true, true, true, "u");
             }
@@ -30,7 +34,7 @@ namespace Bau
             {
                 LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Info, false, false, false, "u");
             }
-            
+
             var log = LogManager.GetCurrentClassLogger();
 
             AppDomain.CurrentDomain.FirstChanceException +=
@@ -40,7 +44,7 @@ namespace Bau
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
                 log.Fatal("Unhandled exception.", (Exception)e.ExceptionObject);
 
-            log.TraceFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
+            log.DebugFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
 
             var application = ApplicationFactory.Create(BaufileFinder.Find());
             foreach (var target in (arguments.TargetNames.Count == 0 ? new[] { "default" } : arguments.TargetNames)

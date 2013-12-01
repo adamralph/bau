@@ -20,6 +20,9 @@ namespace Bau
         [Option('T', "targets", HelpText = "Display the tasks with descriptions, then exit.")]
         public bool Targets { get; set; }
 
+        [Option('d', "debug", HelpText = "Turn on debugging.")]
+        public bool Debug { get; set; }
+
         [Option('t', "trace", HelpText = "Turn on tracing.")]
         public bool Trace { get; set; }
 
