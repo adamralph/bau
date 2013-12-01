@@ -15,16 +15,14 @@ namespace Bau
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         private readonly Dictionary<string, Target> targets = new Dictionary<string, Target>();
+
         private string nextTargetDescription;
+        private bool nextTargetDescribed;
 
         public void DescribeNextTarget(string description)
         {
-            if (description == null)
-            {
-                return;
-            }
-
-            this.nextTargetDescription = description.Trim();
+            this.nextTargetDescription = description;
+            this.nextTargetDescribed = true;
         }
 
         public void DefineTarget<TTarget>(string name, string[] prerequisites, Action<TTarget> action)
@@ -84,7 +82,14 @@ namespace Bau
             if (!this.targets.TryGetValue(name, out target))
             {
                 this.targets.Add(name, target = new TTarget() { Name = name });
+                if (this.nextTargetDescribed)
+                {
+                    target.Description = this.nextTargetDescription;
+                }
             }
+
+            this.nextTargetDescription = null;
+            this.nextTargetDescribed = false;
 
             var typedTarget = target as TTarget;
             if (typedTarget == null)
@@ -97,8 +102,6 @@ namespace Bau
                 throw new InvalidOperationException(message);
             }
 
-            typedTarget.Description = this.nextTargetDescription ?? target.Description;
-            this.nextTargetDescription = null;
             return typedTarget;
         }
 
