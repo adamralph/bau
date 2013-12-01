@@ -9,6 +9,7 @@ namespace Bau
     using System.IO;
     using System.Linq;
     using Bau.Scripting;
+    using CommandLine;
     using Common.Logging;
     using Common.Logging.Simple;
     using ScriptCs;
@@ -19,11 +20,19 @@ namespace Bau
     {
         public static int Main(string[] args)
         {
+            Guard.AgainstNullArgument("args", args);
+
             LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Trace, true, true, true, "u");
-
             var log = LogManager.GetCurrentClassLogger();
+            log.TraceFormat(CultureInfo.InvariantCulture, "Arguments: {0}", args.ToJsv());
 
-            log.TraceFormat(CultureInfo.InvariantCulture, "Args: {0}", args.ToJsv());
+            var arguments = new Arguments();
+            if (!Parser.Default.ParseArguments(args, arguments))
+            {
+                return 1;
+            }
+
+            log.TraceFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
 
             // TODO (adamralph): 
             ////'rakefile',
@@ -59,12 +68,12 @@ namespace Bau
                 executor.Execute(filename);
             }
 
-            if (args.Length == 0)
+            if (arguments.TargetNames.Count == 0)
             {
-                args = new[] { "default" };
+                arguments.TargetNames.Add("default");
             }
 
-            foreach (var target in args.Select(arg => application.GetTarget(arg)))
+            foreach (var target in arguments.TargetNames.Select(name => application.GetTarget(name)))
             {
                 target.Invoke(application);
             }
