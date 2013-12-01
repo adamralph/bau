@@ -48,7 +48,7 @@ namespace Bau
             Target target;
             if (!this.targets.TryGetValue(name, out target))
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "Target '{0}' not found.", name);
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' target not found.", name);
                 throw new InvalidOperationException(message);
             }
 
@@ -75,7 +75,8 @@ namespace Bau
             {
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
-                    "The target has already been created with type '{0}'.",
+                    "'{0}' target already exists with type '{1}'.",
+                    name,
                     target.GetType().Name);
 
                 throw new InvalidOperationException(message);

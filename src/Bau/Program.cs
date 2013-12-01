@@ -34,12 +34,12 @@ namespace Bau
             while (!File.Exists(filename))
             {
                 var directory = Directory.GetCurrentDirectory();
-                log.TraceFormat(CultureInfo.InvariantCulture, "No baufile found in directory '{0}'.", directory);
+                log.TraceFormat(CultureInfo.InvariantCulture, "No Baufile found in directory '{0}'.", directory);
 
                 var parent = Directory.GetParent(directory);
                 if (parent == null)
                 {
-                    throw new InvalidOperationException("baufile.csx not found.");
+                    throw new InvalidOperationException("No Baufile found (looking for baufile.csx).");
                 }
 
                 Directory.SetCurrentDirectory(parent.FullName);
