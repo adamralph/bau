@@ -37,7 +37,8 @@ namespace Bau
         {
             Guard.AgainstNullArgument("application", application);
 
-            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", this.Name);
+            var trace = this.alreadyInvoked ? null : " (first time)";
+            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'{1}.", this.Name, trace);
             if (this.alreadyInvoked)
             {
                 log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
