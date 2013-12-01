@@ -43,22 +43,7 @@ namespace Bau
             }
         }
 
-        public void InvokeTargets(params string[] names)
-        {
-            if (names.Length == 0)
-            {
-                this.Invoke(this.GetTarget("default"));
-            }
-            else
-            {
-                foreach (var target in names.Select(name => this.GetTarget(name)))
-                {
-                    this.Invoke(target);
-                }
-            }
-        }
-
-        private void Invoke(Target target)
+        public void Invoke(Target target)
         {
             log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", target.Name);
             if (target.AlreadyInvoked)
@@ -74,6 +59,18 @@ namespace Bau
             }
 
             target.Execute();
+        }
+
+        public Target GetTarget(string name)
+        {
+            Target target;
+            if (!this.targets.TryGetValue(name, out target))
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "Target '{0}' not found.", name);
+                throw new InvalidOperationException(message);
+            }
+
+            return target;
         }
 
         private TTarget Intern<TTarget>(string name) where TTarget : Target, new()
@@ -103,18 +100,6 @@ namespace Bau
             }
 
             return typedTarget;
-        }
-
-        private Target GetTarget(string name)
-        {
-            Target target;
-            if (!this.targets.TryGetValue(name, out target))
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, "Don't know how to build target '{0}'", name);
-                throw new InvalidOperationException(message);
-            }
-
-            return target;
         }
     }
 }

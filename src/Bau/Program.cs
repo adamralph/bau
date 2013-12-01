@@ -7,6 +7,7 @@ namespace Bau
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using Bau.Scripting;
     using Common.Logging;
     using Common.Logging.Simple;
@@ -34,7 +35,7 @@ namespace Bau
             {
                 var directory = Directory.GetCurrentDirectory();
                 log.TraceFormat(CultureInfo.InvariantCulture, "No baufile found in directory '{0}'.", directory);
-                
+
                 var parent = Directory.GetParent(directory);
                 if (parent == null)
                 {
@@ -58,7 +59,16 @@ namespace Bau
                 executor.Execute(filename);
             }
 
-            application.InvokeTargets(args);
+            if (args.Length == 0)
+            {
+                args = new[] { "default" };
+            }
+
+            foreach (var target in args.Select(arg => application.GetTarget(arg)))
+            {
+                application.Invoke(target);
+            }
+
             return 0;
         }
     }
