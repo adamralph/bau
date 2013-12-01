@@ -43,24 +43,6 @@ namespace Bau
             }
         }
 
-        public void Invoke(Target target)
-        {
-            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", target.Name);
-            if (target.AlreadyInvoked)
-            {
-                log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", target.Name);
-                return;
-            }
-
-            target.AlreadyInvoked = true;
-            foreach (var prerequisite in target.Prerequisites.Select(name => this.GetTarget(name)))
-            {
-                this.Invoke(prerequisite);
-            }
-
-            target.Execute();
-        }
-
         public Target GetTarget(string name)
         {
             Target target;

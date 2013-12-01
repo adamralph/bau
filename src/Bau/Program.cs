@@ -66,7 +66,7 @@ namespace Bau
 
             foreach (var target in args.Select(arg => application.GetTarget(arg)))
             {
-                application.Invoke(target);
+                target.Invoke(application);
             }
 
             return 0;

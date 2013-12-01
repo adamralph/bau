@@ -7,6 +7,7 @@ namespace Bau
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using Common.Logging;
 
     public class Target
@@ -15,7 +16,9 @@ namespace Bau
 
         private readonly List<string> prerequisites = new List<string>();
         private readonly List<Action> actions = new List<Action>();
+        
         private string name;
+        private bool alreadyInvoked;
 
         public string Name
         {
@@ -47,7 +50,25 @@ namespace Bau
             get { return this.actions; }
         }
 
-        public bool AlreadyInvoked { get; set; }
+        public virtual void Invoke(Application application)
+        {
+            Guard.AgainstNullArgument("application", application);
+
+            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'.", this.Name);
+            if (this.alreadyInvoked)
+            {
+                log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
+                return;
+            }
+
+            this.alreadyInvoked = true;
+            foreach (var prerequisite in this.Prerequisites.Select(name => application.GetTarget(name)))
+            {
+                prerequisite.Invoke(application);
+            }
+
+            this.Execute();
+        }
 
         public virtual void Execute()
         {
