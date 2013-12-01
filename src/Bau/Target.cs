@@ -14,7 +14,7 @@ namespace Bau
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         private readonly List<string> prerequisites = new List<string>();
-        private readonly List<object> actions = new List<object>();
+        private readonly List<Action> actions = new List<Action>();
         private string name;
 
         public string Name
@@ -42,7 +42,7 @@ namespace Bau
             get { return this.prerequisites; }
         }
 
-        public IList<object> Actions
+        public IList<Action> Actions
         {
             get { return this.actions; }
         }
@@ -54,13 +54,8 @@ namespace Bau
             log.TraceFormat(CultureInfo.InvariantCulture, "Execute '{0}'.", this.Name);
             foreach (var action in this.actions)
             {
-                this.Call(action);
+                action();
             }
-        }
-
-        protected virtual void Call(object action)
-        {
-            ((Action<Target>)action)(this);
         }
     }
 }

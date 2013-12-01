@@ -35,10 +35,5 @@ namespace Bau
                 throw new InvalidOperationException(message);
             }
         }
-
-        protected override void Call(object action)
-        {
-            ((Action<Exec>)action)(this);
-        }
     }
 }

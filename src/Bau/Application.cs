@@ -39,7 +39,7 @@ namespace Bau
 
             if (action != null)
             {
-                target.Actions.Add(action);
+                target.Actions.Add(() => action(target));
             }
         }
 
