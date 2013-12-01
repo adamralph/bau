@@ -16,9 +16,21 @@ namespace Bau
     {
         public static int Main(string[] args)
         {
-            Guard.AgainstNullArgument("args", args);
+            var arguments = new Arguments();
+            if (!Parser.Default.ParseArguments(args, arguments))
+            {
+                return 1;
+            }
 
-            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Trace, true, true, true, "u");
+            if (arguments.Trace)
+            {
+                LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Trace, true, true, true, "u");
+            }
+            else
+            {
+                LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Info, false, false, false, "u");
+            }
+            
             var log = LogManager.GetCurrentClassLogger();
 
             AppDomain.CurrentDomain.FirstChanceException +=
@@ -27,14 +39,6 @@ namespace Bau
 
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
                 log.Fatal("Unhandled exception.", (Exception)e.ExceptionObject);
-
-            log.TraceFormat(CultureInfo.InvariantCulture, "Arguments: {0}", args.ToJsv());
-
-            var arguments = new Arguments();
-            if (!Parser.Default.ParseArguments(args, arguments))
-            {
-                return 1;
-            }
 
             log.TraceFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
 
