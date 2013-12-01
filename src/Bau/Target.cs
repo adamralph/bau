@@ -16,27 +16,10 @@ namespace Bau
 
         private readonly List<string> prerequisites = new List<string>();
         private readonly List<Action> actions = new List<Action>();
-        
-        private string name;
+
         private bool alreadyInvoked;
 
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentException("The name is invalid.", "value");
-                }
-
-                this.name = value;
-            }
-        }
+        public string Name { get; set; }
 
         public string Description { get; set; }
 
