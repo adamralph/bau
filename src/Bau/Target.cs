@@ -23,7 +23,10 @@ namespace Bau
 
         public string Name
         {
-            get { return this.name; }
+            get
+            {
+                return this.name;
+            }
 
             set
             {
@@ -31,13 +34,17 @@ namespace Bau
                 {
                     throw new ArgumentException("Invalid name.", "value");
                 }
+
                 this.name = value;
             }
         }
 
         public string Description
         {
-            get { return this.description; }
+            get
+            {
+                return this.description;
+            }
 
             set
             {
@@ -45,6 +52,7 @@ namespace Bau
                 {
                     throw new ArgumentException("Invalid description.", "value");
                 }
+
                 this.description = value;
             }
         }

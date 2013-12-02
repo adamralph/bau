@@ -1,4 +1,8 @@
-﻿namespace Bau
+﻿// <copyright file="Extensions.cs" company="Bau contributors">
+//  Copyright (c) Bau contributors. (baubuildch@gmail.com)
+// </copyright>
+
+namespace Bau
 {
     public static class Extensions
     {

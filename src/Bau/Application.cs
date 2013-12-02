@@ -66,7 +66,7 @@ namespace Bau
             }
             else
             {
-                foreach (var target in topLevelTargets.Select(name => this.GetTarget(name)))
+                foreach (var target in this.topLevelTargets.Select(name => this.GetTarget(name)))
                 {
                     target.Invoke(this);
                 }
