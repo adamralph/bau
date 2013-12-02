@@ -41,6 +41,7 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="BaufileFinder.cs" />
     <Compile Include="ApplicationFactory.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="Exec.cs" />
     <Compile Include="Guard.cs" />

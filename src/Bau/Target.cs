@@ -17,11 +17,37 @@ namespace Bau
         private readonly List<string> prerequisites = new List<string>();
         private readonly List<Action> actions = new List<Action>();
 
+        private string name;
+        private string description;
         private bool alreadyInvoked;
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this.name; }
 
-        public string Description { get; set; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Invalid name.", "value");
+                }
+                this.name = value;
+            }
+        }
+
+        public string Description
+        {
+            get { return this.description; }
+
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Invalid description.", "value");
+                }
+                this.description = value;
+            }
+        }
 
         public IList<string> Prerequisites
         {

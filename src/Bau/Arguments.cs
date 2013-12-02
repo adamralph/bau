@@ -15,16 +15,16 @@ namespace Bau
         public IParserState LastParserState { get; set; }
 
         [ValueList(typeof(List<string>))]
-        public IList<string> TargetNames { get; set; }
-
-        [Option('T', "targets", HelpText = "Display the tasks with descriptions, then exit.")]
-        public bool Targets { get; set; }
+        public IList<string> Targets { get; set; }
 
         [Option('d', "debug", HelpText = "Turn on debugging.")]
         public bool Debug { get; set; }
 
         [Option('t', "trace", HelpText = "Turn on tracing.")]
         public bool Trace { get; set; }
+
+        [Option('T', "targets", HelpText = "Display the targets with descriptions, then exit.")]
+        public bool DisplayTargets { get; set; }
 
         [HelpOption('h', "help")]
         public string GetUsage()

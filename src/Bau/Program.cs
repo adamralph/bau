@@ -16,7 +16,13 @@ namespace Bau
         public static int Main(string[] args)
         {
             var arguments = new Arguments();
-            if (!Parser.Default.ParseArguments(args, arguments))
+            var parser = new Parser(settings =>
+            {
+                settings.CaseSensitive = true;
+                settings.HelpWriter = Console.Out;
+            });
+            
+            if (!parser.ParseArguments(args, arguments))
             {
                 return 1;
             }

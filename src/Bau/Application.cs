@@ -15,6 +15,7 @@ namespace Bau
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         private readonly Arguments arguments;
+        private readonly List<string> topLevelTargets = new List<string>();
         private readonly Dictionary<string, Target> targets = new Dictionary<string, Target>();
 
         private string nextTargetDescription;
@@ -23,8 +24,14 @@ namespace Bau
         public Application(Arguments arguments)
         {
             Guard.AgainstNullArgument("arguments", arguments);
+            Guard.AgainstNullArgumentProperty("arguments", "Targets", arguments.Targets);
 
             this.arguments = arguments;
+            this.topLevelTargets.AddRange(arguments.Targets);
+            if (this.topLevelTargets.Count == 0)
+            {
+                this.topLevelTargets.Add("default");
+            }
         }
 
         public void DescribeNextTarget(string description)
@@ -53,10 +60,16 @@ namespace Bau
 
         public void Execute()
         {
-            var targetNames = this.arguments.TargetNames.Count == 0 ? new[] { "default" } : this.arguments.TargetNames;
-            foreach (var target in targetNames.Select(name => this.GetTarget(name)))
+            if (this.arguments.DisplayTargets)
             {
-                target.Invoke(this);
+                this.DisplayTargets();
+            }
+            else
+            {
+                foreach (var target in topLevelTargets.Select(name => this.GetTarget(name)))
+                {
+                    target.Invoke(this);
+                }
             }
         }
 
@@ -100,6 +113,25 @@ namespace Bau
             }
 
             return typedTarget;
+        }
+
+        private void DisplayTargets()
+        {
+            var displayableTargets = this.targets.Values
+                .Where(target => !string.IsNullOrWhiteSpace(target.Description)).ToArray();
+
+            var maxNameLength = displayableTargets.Max(target => target.Name.Length);
+            var maxLength = Math.Max(80, maxNameLength + 8);
+            foreach (var target in displayableTargets)
+            {
+                var message = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0}  // {1}",
+                    target.Name.PadRight(maxNameLength, ' '),
+                    target.Description);
+
+                Console.WriteLine(message.Truncate(maxLength));
+            }
         }
     }
 }

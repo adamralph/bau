@@ -23,3 +23,6 @@ Target("foo3", new[] { "foo1" }, (Exec cmd) => {
 Target("foo3", target => {
     Console.WriteLine("Executing {0}", target.Name);;
 });
+
+Desc("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
+Target("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
