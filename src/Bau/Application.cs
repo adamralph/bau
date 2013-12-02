@@ -43,6 +43,14 @@ namespace Bau
             }
         }
 
+        public void Execute(IEnumerable<string> targetNames)
+        {
+            foreach (var target in targetNames.Select(name => this.GetTarget(name)))
+            {
+                target.Invoke(this);
+            }
+        }
+
         public Target GetTarget(string name)
         {
             Target target;

@@ -6,7 +6,6 @@ namespace Bau
 {
     using System;
     using System.Globalization;
-    using System.Linq;
     using CommandLine;
     using Common.Logging;
     using Common.Logging.Simple;
@@ -47,12 +46,8 @@ namespace Bau
             log.DebugFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
 
             var application = ApplicationFactory.Create(BaufileFinder.Find());
-            foreach (var target in (arguments.TargetNames.Count == 0 ? new[] { "default" } : arguments.TargetNames)
-                .Select(name => application.GetTarget(name)))
-            {
-                target.Invoke(application);
-            }
-
+            var targetNames = arguments.TargetNames.Count == 0 ? new[] { "default" } : arguments.TargetNames;
+            application.Execute(targetNames);
             return 0;
         }
     }
