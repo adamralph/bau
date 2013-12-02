@@ -45,9 +45,8 @@ namespace Bau
 
             log.DebugFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
 
-            var application = ApplicationFactory.Create(BaufileFinder.Find());
-            var targetNames = arguments.TargetNames.Count == 0 ? new[] { "default" } : arguments.TargetNames;
-            application.Execute(targetNames);
+            var application = ApplicationFactory.Create(BaufileFinder.Find(), arguments);
+            application.Execute();
             return 0;
         }
     }

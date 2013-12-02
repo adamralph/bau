@@ -14,9 +14,9 @@ namespace Bau
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
-        public static Application Create(string filename)
+        public static Application Create(string filename, Arguments arguments)
         {
-            var application = new Application();
+            var application = new Application(arguments);
             var fileSystem = new FileSystem { CurrentDirectory = Path.GetDirectoryName(filename) };
             using (var executor = new BauScriptExecutor(application, fileSystem))
             {

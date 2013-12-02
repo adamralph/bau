@@ -14,10 +14,18 @@ namespace Bau
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
+        private readonly Arguments arguments;
         private readonly Dictionary<string, Target> targets = new Dictionary<string, Target>();
 
         private string nextTargetDescription;
         private bool nextTargetDescribed;
+
+        public Application(Arguments arguments)
+        {
+            Guard.AgainstNullArgument("arguments", arguments);
+
+            this.arguments = arguments;
+        }
 
         public void DescribeNextTarget(string description)
         {
@@ -43,8 +51,9 @@ namespace Bau
             }
         }
 
-        public void Execute(IEnumerable<string> targetNames)
+        public void Execute()
         {
+            var targetNames = this.arguments.TargetNames.Count == 0 ? new[] { "default" } : this.arguments.TargetNames;
             foreach (var target in targetNames.Select(name => this.GetTarget(name)))
             {
                 target.Invoke(this);
