@@ -64,6 +64,10 @@ namespace Bau
             {
                 this.DisplayTargets();
             }
+            else if (this.arguments.DisplayPrerequisites)
+            {
+                this.DisplayPrerequisites();
+            }
             else
             {
                 foreach (var target in this.topLevelTargets.Select(name => this.GetTarget(name)))
@@ -131,6 +135,18 @@ namespace Bau
                     target.Description);
 
                 Console.WriteLine(message.Truncate(maxLength));
+            }
+        }
+
+        private void DisplayPrerequisites()
+        {
+            foreach (var target in this.targets.Values)
+            {
+                Console.WriteLine("Bau {0}", target.Name);
+                foreach (var prerequisite in target.Prerequisites)
+                {
+                    Console.WriteLine("  " + prerequisite);
+                }
             }
         }
     }
