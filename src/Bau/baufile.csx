@@ -26,3 +26,5 @@ Target("foo3", target => {
 
 Desc("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
 Target("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
+
+Target("undescribed");

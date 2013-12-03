@@ -68,6 +68,10 @@ namespace Bau
             {
                 this.DisplayPrerequisites();
             }
+            else if (this.arguments.DescribeTargets)
+            {
+                this.DescribeTargets();
+            }
             else
             {
                 foreach (var target in this.topLevelTargets.Select(name => this.GetTarget(name)))
@@ -145,8 +149,18 @@ namespace Bau
                 Console.WriteLine("Bau {0}", target.Name);
                 foreach (var prerequisite in target.Prerequisites)
                 {
-                    Console.WriteLine("  " + prerequisite);
+                    Console.WriteLine("  {0}", prerequisite);
                 }
+            }
+        }
+
+        private void DescribeTargets()
+        {
+            foreach (var target in this.targets.Values.Where(target => !string.IsNullOrWhiteSpace(target.Description)))
+            {
+                Console.WriteLine("Bau {0}", target.Name);
+                Console.WriteLine("  {0}", target.Description);
+                Console.WriteLine();
             }
         }
     }

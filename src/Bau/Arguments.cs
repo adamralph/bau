@@ -20,7 +20,10 @@ namespace Bau
         [Option('d', "debug", HelpText = "Turn on debugging.")]
         public bool Debug { get; set; }
 
-        [Option('P', "prereqs", HelpText = "Display the tasks and dependencies, then exit.")]
+        [Option('D', "describe", HelpText = " Describe the targets, then exit.")]
+        public bool DescribeTargets { get; set; }
+
+        [Option('P', "prereqs", HelpText = "Display the targets and dependencies, then exit.")]
         public bool DisplayPrerequisites { get; set; }
 
         [Option('t', "trace", HelpText = "Turn on tracing.")]
