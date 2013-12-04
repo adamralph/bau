@@ -21,7 +21,7 @@ namespace Bau
         {
             base.Execute();
             var process = new Process();
-            process.StartInfo = new ProcessStartInfo(this.Command, string.Join(" ", this.Parameters));
+            process.StartInfo = new ProcessStartInfo(this.CreateCommand(), string.Join(" ", this.CreateParameters()));
             process.StartInfo.UseShellExecute = false;
             process.Start();
             process.WaitForExit();
@@ -34,6 +34,16 @@ namespace Bau
 
                 throw new InvalidOperationException(message);
             }
+        }
+
+        protected virtual string CreateCommand()
+        {
+            return this.Command;
+        }
+
+        protected virtual string[] CreateParameters()
+        {
+            return this.Parameters;
         }
     }
 }
