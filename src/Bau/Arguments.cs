@@ -17,20 +17,26 @@ namespace Bau
         [ValueList(typeof(List<string>))]
         public IList<string> Targets { get; set; }
 
-        [Option('d', "debug", HelpText = "Turn on debugging.")]
-        public bool Debug { get; set; }
-
-        [Option('D', "describe", HelpText = " Describe the targets, then exit.")]
+        [Option('D', "describe", HelpText = "Describe the targets, then exit.")]
         public bool DescribeTargets { get; set; }
 
         [Option('P', "prereqs", HelpText = "Display the targets and dependencies, then exit.")]
         public bool DisplayPrerequisites { get; set; }
 
-        [Option('t', "trace", HelpText = "Turn on tracing.")]
+        [Option('q', "quiet", HelpText = "Do not log info messages to standard output.")]
+        public bool Quiet { get; set; }
+
+        [Option('s', "silent", HelpText = "Do not log any messages to standard output.")]
+        public bool Silent { get; set; }
+
+        [Option('t', "trace", HelpText = "Log trace messages to standard output.")]
         public bool Trace { get; set; }
 
         [Option('T', "targets", HelpText = "Display the targets with descriptions, then exit.")]
         public bool DisplayTargets { get; set; }
+
+        [Option('v', "verbose", HelpText = "Log verbose messages to standard output.")]
+        public bool Verbose { get; set; }
 
         [HelpOption('h', "help")]
         public string GetUsage()

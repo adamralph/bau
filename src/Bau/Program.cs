@@ -27,7 +27,15 @@ namespace Bau
                 return 1;
             }
 
-            if (arguments.Debug)
+            if (arguments.Silent)
+            {
+                LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Off, false, false, false, "u");
+            }
+            else if (arguments.Quiet)
+            {
+                LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Warn, false, false, false, "u");
+            }
+            else if (arguments.Verbose)
             {
                 LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(Common.Logging.LogLevel.Debug, true, true, true, "u");
             }
@@ -49,7 +57,7 @@ namespace Bau
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
             {
                 var message = "Bau FAILED!";
-                if (arguments.Debug || arguments.Trace)
+                if (arguments.Verbose || arguments.Trace)
                 {
                     log.Fatal(message, (Exception)e.ExceptionObject);
                 }
