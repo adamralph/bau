@@ -115,5 +115,35 @@ namespace Bau.Scripting
         {
             this.Target<Exec>(name, prerequisites, action);
         }
+
+        public void MSBuild(string name)
+        {
+            this.Target<MSBuild>(name);
+        }
+
+        public void MSBuild(string name, Action action)
+        {
+            this.Target<MSBuild>(name, action);
+        }
+
+        public void MSBuild(string name, Action<MSBuild> action)
+        {
+            this.Target<MSBuild>(name, action);
+        }
+
+        public void MSBuild(string name, string[] prerequisites)
+        {
+            this.Target<MSBuild>(name, prerequisites);
+        }
+
+        public void MSBuild(string name, string[] prerequisites, Action action)
+        {
+            this.Target<MSBuild>(name, prerequisites, action);
+        }
+
+        public void MSBuild(string name, string[] prerequisites, Action<MSBuild> action)
+        {
+            this.Target<MSBuild>(name, prerequisites, action);
+        }
     }
 }

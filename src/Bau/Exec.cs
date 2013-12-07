@@ -20,30 +20,13 @@ namespace Bau
         public override void Execute()
         {
             base.Execute();
-            var process = new Process();
-            process.StartInfo = new ProcessStartInfo(this.CreateCommand(), string.Join(" ", this.CreateParameters()));
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
+            if (this.Command == null)
             {
-                var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Process exited with code {0}.",
-                    process.ExitCode.ToString(CultureInfo.InvariantCulture));
-
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' target has no command.", this.Name);
                 throw new InvalidOperationException(message);
             }
-        }
 
-        protected virtual string CreateCommand()
-        {
-            return this.Command;
-        }
-
-        protected virtual string[] CreateParameters()
-        {
-            return this.Parameters;
+            new Process().Execute(this.Command, this.Parameters);
         }
     }
 }

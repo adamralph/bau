@@ -8,6 +8,7 @@ namespace Bau
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using Common.Logging;
 
     public class Application
@@ -74,10 +75,18 @@ namespace Bau
             }
             else
             {
+                var version = (AssemblyInformationalVersionAttribute)typeof(Program).Assembly
+                    .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
+
+                log.InfoFormat(CultureInfo.InvariantCulture, "Bau version {0}.", version.InformationalVersion);
+                log.Info("Copyright (c) Bau contributors. (baubuildch@gmail.com)");
+
                 foreach (var target in this.topLevelTargets.Select(name => this.GetTarget(name)))
                 {
                     target.Invoke(this);
                 }
+
+                log.Info("Bau succeeded.");
             }
         }
 

@@ -47,5 +47,17 @@ namespace Bau.Scripting
         void Exec(string name, string[] prerequisites, Action action);
 
         void Exec(string name, string[] prerequisites, Action<Exec> action);
+
+        void MSBuild(string name);
+
+        void MSBuild(string name, Action action);
+
+        void MSBuild(string name, Action<MSBuild> action);
+
+        void MSBuild(string name, string[] prerequisites);
+
+        void MSBuild(string name, string[] prerequisites, Action action);
+
+        void MSBuild(string name, string[] prerequisites, Action<MSBuild> action);
     }
 }

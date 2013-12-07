@@ -61,13 +61,11 @@ namespace Bau.Scripting
         {
             if (result.CompileExceptionInfo != null)
             {
-                log.ErrorFormat(CultureInfo.InvariantCulture, "Failed to compile {0}", result.CompileExceptionInfo, script);
                 result.CompileExceptionInfo.Throw();
             }
 
             if (result.ExecuteExceptionInfo != null)
             {
-                log.ErrorFormat(CultureInfo.InvariantCulture, "Failed to execute {0}", result.ExecuteExceptionInfo, script);
                 result.ExecuteExceptionInfo.Throw();
             }
         }

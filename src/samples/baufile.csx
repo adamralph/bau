@@ -3,7 +3,7 @@
 var solution = "src/ConfigR.sln";
 
 Desc("Execute default tasks");
-Task("default", new[] { "build" });
+Target("default", new[] { "build" });
 
 Desc("Restore NuGet packages");
 Exec("restore", cmd => {

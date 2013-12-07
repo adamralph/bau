@@ -21,7 +21,7 @@ namespace Bau
                 settings.CaseSensitive = true;
                 settings.HelpWriter = Console.Out;
             });
-            
+
             if (!parser.ParseArguments(args, arguments))
             {
                 return 1;
@@ -47,12 +47,25 @@ namespace Bau
                 log.Trace("First chance exception.", e.Exception);
 
             AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
-                log.Fatal("Unhandled exception.", (Exception)e.ExceptionObject);
+            {
+                var message = "Bau FAILED!";
+                if (arguments.Debug || arguments.Trace)
+                {
+                    log.Fatal(message, (Exception)e.ExceptionObject);
+                }
+                else
+                {
+                    log.FatalFormat(CultureInfo.InvariantCulture, "{0} {1}", message, ((Exception)e.ExceptionObject).Message);
+                }
+
+                Environment.Exit(1);
+            };
 
             log.DebugFormat(CultureInfo.InvariantCulture, "Parsed arguments: {0}", arguments.ToJsv());
 
             var application = ApplicationFactory.Create(BaufileFinder.Find(), arguments);
             application.Execute();
+
             return 0;
         }
     }

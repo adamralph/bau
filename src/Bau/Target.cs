@@ -32,7 +32,8 @@ namespace Bau
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException("Invalid name.", "value");
+                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid target name '{0}'.", value);
+                    throw new ArgumentException(message, "value");
                 }
 
                 this.name = value;
@@ -72,7 +73,7 @@ namespace Bau
             Guard.AgainstNullArgument("application", application);
 
             var trace = this.alreadyInvoked ? null : " (first time)";
-            log.TraceFormat(CultureInfo.InvariantCulture, "Invoke '{0}'{1}.", this.Name, trace);
+            log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
             if (this.alreadyInvoked)
             {
                 log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
@@ -85,12 +86,25 @@ namespace Bau
                 prerequisite.Invoke(application);
             }
 
-            this.Execute();
+            try
+            {
+                this.Execute();
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' Bau target failed. {1}", this.name, ex.Message);
+                throw new InvalidOperationException(message, ex);
+            }
         }
 
         public virtual void Execute()
         {
-            log.DebugFormat(CultureInfo.InvariantCulture, "Execute '{0}'.", this.Name);
+            if (this.actions.Count == 0)
+            {
+                return;
+            }
+
+            log.InfoFormat(CultureInfo.InvariantCulture, "Executing '{0}' Bau target.", this.Name);
             foreach (var action in this.actions)
             {
                 action();
