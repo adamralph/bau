@@ -1,4 +1,4 @@
-﻿// <copyright file="Target.cs" company="Bau contributors">
+﻿// <copyright file="Task.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -8,17 +8,13 @@ namespace Bau
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using Common.Logging;
 
-    public class Target
+    public class Task
     {
-        private static readonly ILog log = LogManager.GetCurrentClassLogger();
-
         private readonly List<string> prerequisites = new List<string>();
         private readonly List<Action> actions = new List<Action>();
 
         private string name;
-        private string description;
         private bool alreadyInvoked;
 
         public string Name
@@ -32,29 +28,11 @@ namespace Bau
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid target name '{0}'.", value);
+                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", value);
                     throw new ArgumentException(message, "value");
                 }
 
                 this.name = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return this.description;
-            }
-
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentException("Invalid description.", "value");
-                }
-
-                this.description = value;
             }
         }
 
@@ -68,20 +46,20 @@ namespace Bau
             get { return this.actions; }
         }
 
-        public virtual void Invoke(Application application)
+        public virtual void Invoke(BauPack application)
         {
             Guard.AgainstNullArgument("application", application);
 
-            var trace = this.alreadyInvoked ? null : " (first time)";
-            log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
+            ////var trace = this.alreadyInvoked ? null : " (first time)";
+            ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
             if (this.alreadyInvoked)
             {
-                log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
+                ////log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
                 return;
             }
 
             this.alreadyInvoked = true;
-            foreach (var prerequisite in this.Prerequisites.Select(name => application.GetTarget(name)))
+            foreach (var prerequisite in this.Prerequisites.Select(name => application.GetTask(name)))
             {
                 prerequisite.Invoke(application);
             }
@@ -92,19 +70,14 @@ namespace Bau
             }
             catch (Exception ex)
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' Bau target failed. {1}", this.name, ex.Message);
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", this.name, ex.Message);
                 throw new InvalidOperationException(message, ex);
             }
         }
 
         public virtual void Execute()
         {
-            if (this.actions.Count == 0)
-            {
-                return;
-            }
-
-            log.InfoFormat(CultureInfo.InvariantCulture, "Executing '{0}' Bau target.", this.Name);
+            Console.WriteLine("Executing '{0}' Bau task.", this.Name);
             foreach (var action in this.actions)
             {
                 action();
