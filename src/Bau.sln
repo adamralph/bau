@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{4928A491-6E0E-4948-A9DD-F24A4A0AAC08}"
 	ProjectSection(SolutionItems) = preProject
-		Bau.Dictionary = Bau.Dictionary
+		Bau.Dictionary.xml = Bau.Dictionary.xml
 		Bau.ruleset = Bau.ruleset
 		Settings.StyleCop = Settings.StyleCop
 	EndProjectSection
@@ -14,7 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B32D81
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau", "Bau\Bau.csproj", "{CE4AEEE6-880E-4C2F-B52F-E1D319692ED7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau", "Bau\Bau.csproj", "{3302EC96-F250-49D0-B094-E960355D3799}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{28FDEE5B-453E-4977-A640-C8670DDC7258}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Test.Acceptance", "test\Bau.Test.Acceptance\Bau.Test.Acceptance.csproj", "{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,12 +26,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CE4AEEE6-880E-4C2F-B52F-E1D319692ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE4AEEE6-880E-4C2F-B52F-E1D319692ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE4AEEE6-880E-4C2F-B52F-E1D319692ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE4AEEE6-880E-4C2F-B52F-E1D319692ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3302EC96-F250-49D0-B094-E960355D3799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3302EC96-F250-49D0-B094-E960355D3799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3302EC96-F250-49D0-B094-E960355D3799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3302EC96-F250-49D0-B094-E960355D3799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC} = {28FDEE5B-453E-4977-A640-C8670DDC7258}
 	EndGlobalSection
 EndGlobal
