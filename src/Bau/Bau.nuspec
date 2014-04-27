@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Bau</id>
+    <version>0.0.0</version>
+    <title>Bau</title>
+    <authors>Adam Ralph, Bau contributors</authors>
+    <description>Write your build scripts in C#.
+
+Require&lt;BauPack&gt;().Task("default", () => Console.WriteLine("Hello World!"));</description>
+    <projectUrl>https://github.com/bau-build/bau</projectUrl>
+    <licenseUrl>https://github.com/bau-build/bau/blob/dev/license.txt</licenseUrl>
+    <copyright>Copyright (c) Bau contributors. (baubuildch@gmail.com)</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>C# build script task target runner rake grunt gulp fake nake jake psake sake</tags>
+  </metadata>
+</package>
