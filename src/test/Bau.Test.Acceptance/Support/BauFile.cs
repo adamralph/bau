@@ -1,4 +1,4 @@
-﻿// <copyright file="TempFolder.cs" company="Bau contributors">
+﻿// <copyright file="BauFile.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -9,12 +9,12 @@ namespace Bau.Test.Acceptance.Support
     using System.IO;
     using System.Text;
 
-    public sealed class BauFile : IDisposable
+    public sealed class Baufile : IDisposable
     {
         private readonly string folderFullName;
         private readonly string path;
 
-        private BauFile(string code, string scenario)
+        private Baufile(string code, string scenario)
         {
             this.folderFullName = Path.Combine(Path.GetTempPath(), scenario);
             Directory.CreateDirectory(this.folderFullName);
@@ -38,35 +38,37 @@ namespace Bau.Test.Acceptance.Support
             }
         }
 
-        public static BauFile Create(string code, string scenario)
+        public static Baufile Create(string code, string scenario)
         {
-            return new BauFile(code, scenario);
+            return new Baufile(code, scenario);
         }
 
         public string Execute()
         {
-            var process = new Process();
-            var output = new StringBuilder();
-
-            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(this.path);
-            process.StartInfo.FileName = "scriptcs";
-            process.StartInfo.Arguments = this.path;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.OutputDataReceived += (sender, args) => output.AppendLine(args.Data);
-            process.ErrorDataReceived += (sender, args) => output.AppendLine(args.Data);
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
-
-            if (process.ExitCode != 0)
+            using (var process = new Process())
             {
-                throw new Exception(output.ToString());
-            }
+                var output = new StringBuilder();
 
-            return output.ToString();
+                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(this.path);
+                process.StartInfo.FileName = "scriptcs";
+                process.StartInfo.Arguments = this.path;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.OutputDataReceived += (sender, args) => output.AppendLine(args.Data);
+                process.ErrorDataReceived += (sender, args) => output.AppendLine(args.Data);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    throw new InvalidOperationException(output.ToString());
+                }
+
+                return output.ToString();
+            }
         }
 
         public void Dispose()

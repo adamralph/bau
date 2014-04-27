@@ -5,6 +5,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFi
 	ProjectSection(SolutionItems) = preProject
 		Bau.Dictionary.xml = Bau.Dictionary.xml
 		Bau.ruleset = Bau.ruleset
+		Bau.Test.ruleset = Bau.Test.ruleset
+		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		Settings.StyleCop = Settings.StyleCop
 	EndProjectSection
 EndProject

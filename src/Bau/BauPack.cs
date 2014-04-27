@@ -29,25 +29,15 @@ namespace Bau
             }
         }
 
-        public IEnumerable<Task> Tasks
-        {
-            get { return this.tasks.Select(t => t.Value); }
-        }
-
-        public IEnumerable<string> TopLevelTaskNames
-        {
-            get { return this.topLevelTaskNames.Select(n => n); }
-        }
-
         public void Task(string name, Action action)
         {
             this.Task(name, (Task task) => action());
         }
 
-        public void Task<ITask>(string name, Action<ITask> action)
-            where ITask : Task, new()
+        public void Task<TTask>(string name, Action<TTask> action)
+            where TTask : Task, new()
         {
-            var task = this.Intern<ITask>(name);
+            var task = this.Intern<TTask>(name);
             ////if (prerequisites != null)
             ////{
             ////    foreach (var prerequisite in prerequisites.Where(p => !task.Prerequisites.Contains(p)))
@@ -70,7 +60,7 @@ namespace Bau
             Console.WriteLine("Bau version {0}.", version.InformationalVersion);
             Console.WriteLine("Copyright (c) Bau contributors. (baubuildch@gmail.com)");
 
-            foreach (var task in this.TopLevelTaskNames.Select(name => this.GetTask(name)))
+            foreach (var task in this.topLevelTaskNames.Select(name => this.GetTask(name)))
             {
                 task.Invoke(this);
             }

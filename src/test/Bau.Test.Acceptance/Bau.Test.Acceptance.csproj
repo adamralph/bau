@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\Bau.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\Bau.Test.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\Bau.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\Bau.Test.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
@@ -66,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultTask.cs" />
-    <Compile Include="Support\BauFile.cs" />
+    <Compile Include="Support\Baufile.cs" />
     <Compile Include="Support\MethodBaseExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

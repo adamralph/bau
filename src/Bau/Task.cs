@@ -15,7 +15,6 @@ namespace Bau
         private readonly List<Action> actions = new List<Action>();
 
         private string name;
-        private string description;
         private bool alreadyInvoked;
 
         public string Name
@@ -37,24 +36,6 @@ namespace Bau
             }
         }
 
-        public string Description
-        {
-            get
-            {
-                return this.description;
-            }
-
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentException("Invalid description.", "value");
-                }
-
-                this.description = value;
-            }
-        }
-
         public IList<string> Prerequisites
         {
             get { return this.prerequisites; }
@@ -69,7 +50,7 @@ namespace Bau
         {
             Guard.AgainstNullArgument("application", application);
 
-            var trace = this.alreadyInvoked ? null : " (first time)";
+            ////var trace = this.alreadyInvoked ? null : " (first time)";
             ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
             if (this.alreadyInvoked)
             {
@@ -96,11 +77,6 @@ namespace Bau
 
         public virtual void Execute()
         {
-            if (this.actions.Count == 0)
-            {
-                return;
-            }
-
             Console.WriteLine("Executing '{0}' Bau task.", this.Name);
             foreach (var action in this.actions)
             {

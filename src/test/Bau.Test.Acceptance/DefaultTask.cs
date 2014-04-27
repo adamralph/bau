@@ -5,6 +5,7 @@
 namespace Bau.Test.Acceptance
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -15,8 +16,9 @@ namespace Bau.Test.Acceptance
 
     public static class DefaultTask
     {
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void DefaultTaskExists(BauFile file, string tempFile, string output)
+        public static void DefaultTaskExists(Baufile file, string tempFile, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -24,7 +26,7 @@ namespace Bau.Test.Acceptance
                 .f(c =>
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
-                    file = BauFile.Create(
+                    file = Baufile.Create(
                         @"Require<BauPack>().Task(""default"", () => File.Create(@""" + tempFile + @""").Dispose());",
                         scenario).Using(c);
                 })
@@ -43,12 +45,12 @@ namespace Bau.Test.Acceptance
         [Scenario]
         [Example(@"Require<BauPack>();")]
         [Example(@"Require<BauPack>().Task(""foo"", () => { });")]
-        public static void DefaultTaskDoesNotExist(string code, BauFile file, string bauFilePath, Exception ex)
+        public static void DefaultTaskDoesNotExist(string code, Baufile file, Exception ex)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a baufile in the folder containing: {0}"
-                .f(() => file = BauFile.Create("Require<BauPack>();", scenario));
+                .f(() => file = Baufile.Create(code, scenario));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => file.Execute()));
