@@ -35,10 +35,10 @@ namespace Bau.Test.Acceptance
             "When I execute the baufile"
                 .f(() => output = file.Execute());
 
-            "Then the temporary file exists"
+            "Then the file exists"
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
-            "And am informed that the default task is being executed"
+            "And I am informed that the default task was executed"
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
@@ -49,7 +49,7 @@ namespace Bau.Test.Acceptance
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
-            "Given a baufile in the folder containing: {0}"
+            "Given a baufile containing: {0}"
                 .f(() => file = Baufile.Create(code, scenario));
 
             "When I execute the baufile"
