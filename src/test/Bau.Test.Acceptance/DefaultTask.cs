@@ -27,7 +27,7 @@ namespace Bau.Test.Acceptance
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     file = Baufile.Create(
-                        @"Require<BauPack>().Task(""default"", () => File.Create(@""" + tempFile + @""").Dispose());",
+                        @"Require<BauPack>().Task(""default"", () => File.Create(@""" + tempFile + @""").Dispose()).Execute();",
                         scenario).Using(c);
                 })
                 .Teardown(() => File.Delete(tempFile));
@@ -35,16 +35,16 @@ namespace Bau.Test.Acceptance
             "When I execute the baufile"
                 .f(() => output = file.Execute());
 
-            "Then I am informed that the default task is being executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
-
-            "And the temporary file exists"
+            "Then the temporary file exists"
                 .f(() => File.Exists(tempFile).Should().BeTrue());
+
+            "And am informed that the default task is being executed"
+                .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
         [Scenario]
-        [Example(@"Require<BauPack>();")]
-        [Example(@"Require<BauPack>().Task(""foo"", () => { });")]
+        [Example(@"Require<BauPack>().Execute();")]
+        [Example(@"Require<BauPack>().Task(""foo"", () => { }).Execute();")]
         public static void DefaultTaskDoesNotExist(string code, Baufile file, Exception ex)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();

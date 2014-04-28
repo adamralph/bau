@@ -4,6 +4,7 @@ obj
 *.suo
 *.user
 
-/src/packages
+artifacts
+packages
 
 *.sln.ide
