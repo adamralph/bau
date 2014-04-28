@@ -11,11 +11,13 @@ namespace Bau.Test.Acceptance.Support
 
     public sealed class Baufile : IDisposable
     {
+        ////private readonly string scenario;
         private readonly string folderFullName;
         private readonly string path;
 
         private Baufile(string code, string scenario)
         {
+            ////this.scenario = scenario;
             this.folderFullName = Path.Combine(Path.GetTempPath(), scenario);
             Directory.CreateDirectory(this.folderFullName);
 
@@ -49,9 +51,12 @@ namespace Bau.Test.Acceptance.Support
             {
                 var output = new StringBuilder();
 
+                ////var logFile = Path.Combine(Directory.GetCurrentDirectory(), "scriptcs." + this.scenario + ".log");
+
                 process.StartInfo.WorkingDirectory = Path.GetDirectoryName(this.path);
                 process.StartInfo.FileName = "scriptcs";
                 process.StartInfo.Arguments = this.path;
+                ////process.StartInfo.Arguments = this.path + " -debug -logfile " + logFile; // may be supported in scriptcs > 0.9
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.RedirectStandardOutput = true;

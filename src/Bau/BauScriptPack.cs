@@ -17,10 +17,5 @@ namespace Bau
             session.ImportNamespace("Bau");
             this.Context = new BauPack(null);
         }
-
-        public override void Terminate()
-        {
-            this.Context.Execute();
-        }
     }
 }

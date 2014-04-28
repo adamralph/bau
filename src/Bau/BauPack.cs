@@ -29,12 +29,12 @@ namespace Bau
             }
         }
 
-        public void Task(string name, Action action)
+        public BauPack Task(string name, Action action)
         {
-            this.Task(name, (Task task) => action());
+            return this.Task(name, (Task task) => action());
         }
 
-        public void Task<TTask>(string name, Action<TTask> action)
+        public BauPack Task<TTask>(string name, Action<TTask> action)
             where TTask : Task, new()
         {
             var task = this.Intern<TTask>(name);
@@ -50,6 +50,8 @@ namespace Bau
             {
                 task.Actions.Add(() => action(task));
             }
+
+            return this;
         }
 
         public void Execute()
