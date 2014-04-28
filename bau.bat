@@ -1,2 +1,3 @@
 @echo off
-scriptcs baufile.csx
+tools\scriptcs\scriptcs -install
+tools\scriptcs\scriptcs baufile.csx
