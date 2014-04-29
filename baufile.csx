@@ -12,9 +12,12 @@ var bau = Require<BauPack>();
 
 bau
     .Task("default")
+    .DependsOn("accept", "pack");
+
+bau
+    .Task("clean")
     .Do(() =>
     {
-        // clean
         if (Directory.Exists(output))
         {
             Directory.Delete(output, true);
@@ -32,8 +35,12 @@ bau
                 throw new Exception();
             }
         }
+    });
 
-        // restore
+bau
+    .Task("restore")
+    .Do(() =>
+    {
         using (var process = new Process())
         {
             process.StartInfo.FileName = nugetCommand;
@@ -46,8 +53,13 @@ bau
                 throw new Exception();
             }
         }
+    });
 
-        // build
+bau
+    .Task("build")
+    .DependsOn("clean", "restore")
+    .Do(() =>
+    {
         using (var process = new Process())
         {
             process.StartInfo.FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
@@ -60,8 +72,13 @@ bau
                 throw new Exception();
             }
         }
+    });
 
-        // accept
+bau
+    .Task("accept")
+    .DependsOn("build")
+    .Do(() =>
+    {
         using (var process = new Process())
         {
             process.StartInfo.FileName = xunitCommand;
@@ -74,8 +91,13 @@ bau
                 throw new Exception();
             }
         }
+    });
 
-        // pack
+bau
+    .Task("pack")
+    .DependsOn("build")
+    .Do(() =>
+    {
         Directory.CreateDirectory(output);
         using (var process = new Process())
         {
