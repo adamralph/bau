@@ -10,10 +10,9 @@ var nuspec = @"src\Bau\Bau.csproj";
 
 var bau = Require<BauPack>();
 
-// until we have dependencies in place, do everything in one task. dogfooding from the start!
-bau.Task(
-    "default",
-    () =>
+bau
+    .Task("default")
+    .Do(() =>
     {
         // clean
         if (Directory.Exists(output))
