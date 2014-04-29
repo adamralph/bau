@@ -24,7 +24,7 @@ namespace Bau
                 return this.name;
             }
 
-            set
+            internal set
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
@@ -36,14 +36,35 @@ namespace Bau
             }
         }
 
-        public IList<string> Prerequisites
-        {
-            get { return this.prerequisites; }
-        }
-
         public IList<Action> Actions
         {
             get { return this.actions; }
+        }
+
+        public Task DependsOn(params string[] tasks)
+        {
+            foreach (var task in tasks.Where(p => !this.prerequisites.Contains(p)))
+            {
+                if (string.IsNullOrWhiteSpace(task))
+                {
+                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
+                    throw new ArgumentException(message, "tasks");
+                }
+                
+                this.prerequisites.Add(task);
+            }
+
+            return this;
+        }
+
+        public Task Do(Action action)
+        {
+            if (action != null)
+            {
+                this.actions.Add(action);
+            }
+
+            return this;
         }
 
         public virtual void Invoke(BauPack application)
@@ -59,7 +80,7 @@ namespace Bau
             }
 
             this.alreadyInvoked = true;
-            foreach (var prerequisite in this.Prerequisites.Select(name => application.GetTask(name)))
+            foreach (var prerequisite in this.prerequisites.Select(name => application.GetTask(name)))
             {
                 prerequisite.Invoke(application);
             }
@@ -75,7 +96,7 @@ namespace Bau
             }
         }
 
-        public virtual void Execute()
+        protected virtual void Execute()
         {
             Console.WriteLine("Executing '{0}' Bau task.", this.Name);
             foreach (var action in this.actions)
