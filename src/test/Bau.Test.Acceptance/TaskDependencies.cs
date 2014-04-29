@@ -22,7 +22,7 @@ namespace Bau.Test.Acceptance
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
-                .f(c => baufile = Baufile.Create(scenario).Using(c).WriteLine(
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<BauPack>();"));
 
             "And a non-default task"
@@ -39,7 +39,8 @@ bau
             {
                 tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                 baufile.WriteLine(
-@"bau
+@"
+bau
     .Task(""default"")
     .DependsOn(""non-default"")
     .Do(() =>
@@ -48,14 +49,14 @@ bau
         using(var file = File.CreateText(@""" + tempFile + @"""))
         {
             file.Write(string.Join(Environment.NewLine, executed));
-
         };
     });");
             });
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
-@"bau.Execute();"));
+@"
+bau.Execute();"));
 
             "When I execute the baufile"
                 .f(() => output = baufile.Execute());

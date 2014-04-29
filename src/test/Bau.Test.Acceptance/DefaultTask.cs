@@ -23,10 +23,10 @@ namespace Bau.Test.Acceptance
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a baufile with a default task"
-                .f(c =>
+                .f(() =>
                 {
                     file = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
-                    baufile = Baufile.Create(scenario).Using(c).WriteLine(
+                    baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<BauPack>();
 bau
     .Task(""default"")
@@ -48,17 +48,19 @@ bau.Execute();");
 
         [Scenario]
         [Example(
+            "NoTask",
 @"Require<BauPack>().Execute();")]
         [Example(
+            "SomeOtherTask",
 @"var bau = Require<BauPack>();
 bau.Task(""foo"").Do(() => { });
 bau.Execute();")]
-        public static void DefaultTaskDoesNotExist(string code, Baufile baufile, Exception ex)
+        public static void DefaultTaskDoesNotExist(string tag, string code, Baufile baufile, Exception ex)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
-            "Given a baufile containing: {0}"
-                .f(c => baufile = Baufile.Create(scenario).Using(c).WriteLine(code));
+            "Given a baufile containing {0}"
+                .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Execute()));
