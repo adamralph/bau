@@ -18,45 +18,58 @@ namespace Bau.Test.Acceptance
     {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void DefaultTaskExists(Baufile file, string tempFile, string output)
+        public static void DefaultTaskExists(Baufile baufile, string file, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
-            "Given a baufile with a default task which creates a file"
-                .f(c =>
+            "Given a baufile with a default task"
+                .f(() =>
                 {
-                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
-                    file = Baufile.Create(
-                        @"Require<BauPack>().Task(""default"", () => File.Create(@""" + tempFile + @""").Dispose()).Execute();",
-                        scenario).Using(c);
+                    file = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
+@"var bau = Require<BauPack>();
+bau
+    .Task(""default"")
+    .Do(() => File.Create(@""" + file + @""").Dispose());
+
+bau.Execute();");
                 })
-                .Teardown(() => File.Delete(tempFile));
+                .Teardown(() => File.Delete(file));
 
             "When I execute the baufile"
-                .f(() => output = file.Execute());
+                .f(() => output = baufile.Execute());
 
-            "Then the file exists"
-                .f(() => File.Exists(tempFile).Should().BeTrue());
+            "Then the task is executed"
+                .f(() => File.Exists(file).Should().BeTrue());
 
             "And I am informed that the default task was executed"
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
         [Scenario]
-        [Example(@"Require<BauPack>().Execute();")]
-        [Example(@"Require<BauPack>().Task(""foo"", () => { }).Execute();")]
-        public static void DefaultTaskDoesNotExist(string code, Baufile file, Exception ex)
+        [Example(
+            "NoTask",
+@"Require<BauPack>().Execute();")]
+        [Example(
+            "SomeOtherTask",
+@"var bau = Require<BauPack>();
+bau.Task(""foo"").Do(() => { });
+bau.Execute();")]
+        public static void DefaultTaskDoesNotExist(string tag, string code, Baufile baufile, Exception ex)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
-            "Given a baufile containing: {0}"
-                .f(() => file = Baufile.Create(code, scenario));
+            "Given a baufile containing {0}"
+                .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => file.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Execute()));
 
-            "Then I am informed that the default task was not found"
-                .f(() => ex.Should().NotBeNull().And.Subject.As<Exception>().Message.Should().Contain("'default' task not found"));
+            "Then execution should fail"
+                .f(() => ex.Should().NotBeNull());
+
+            "And I am informed that the default task was not found"
+                .f(() => ex.Message.Should().Contain("'default' task not found"));
         }
     }
 }

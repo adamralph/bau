@@ -9,17 +9,20 @@ namespace Bau.Test.Acceptance.Support
     using System.IO;
     using System.Text;
 
-    public sealed class Baufile : IDisposable
+    public class Baufile
     {
-        ////private readonly string scenario;
-        private readonly string folderFullName;
+        private readonly string scenario;
         private readonly string path;
 
-        private Baufile(string code, string scenario)
+        private Baufile(string scenario)
         {
-            ////this.scenario = scenario;
-            this.folderFullName = Path.Combine(Path.GetTempPath(), scenario);
-            Directory.CreateDirectory(this.folderFullName);
+            this.scenario = scenario;
+            if (Directory.Exists(this.scenario))
+            {
+                Directory.Delete(this.scenario, true);
+            }
+            
+            Directory.CreateDirectory(this.scenario);
 
 #if DEBUG
             var bauOutputPath = @"..\..\..\..\Bau\bin\Debug";
@@ -27,22 +30,34 @@ namespace Bau.Test.Acceptance.Support
             var bauOutputPath = @"..\..\..\..\Bau\bin\Release";
 #endif
 
-            var binPath = Directory.CreateDirectory(Path.Combine(this.folderFullName, "bin")).FullName;
+            var binPath = Directory.CreateDirectory(Path.Combine(this.scenario, "bin")).FullName;
             foreach (var file in Directory.GetFiles(bauOutputPath, "*.dll", SearchOption.TopDirectoryOnly))
             {
                 File.Copy(file, Path.Combine(binPath, Path.GetFileName(file)), true);
             }
 
-            using (var writer = new StreamWriter(this.path = Path.Combine(this.folderFullName, "baufile.csx")))
+            File.Delete(this.path = Path.Combine(this.scenario, "baufile.csx"));
+        }
+
+        public static Baufile Create(string scenario, bool terminateLine = true)
+        {
+            return new Baufile(scenario);
+        }
+
+        public Baufile Write(string code)
+        {
+            using (var writer = new StreamWriter(this.path, true))
             {
                 writer.Write(code);
                 writer.Flush();
             }
+
+            return this;
         }
 
-        public static Baufile Create(string code, string scenario)
+        public Baufile WriteLine(string code)
         {
-            return new Baufile(code, scenario);
+            return this.Write(code + Environment.NewLine);
         }
 
         public string Execute()
@@ -55,7 +70,7 @@ namespace Bau.Test.Acceptance.Support
 
                 process.StartInfo.WorkingDirectory = Path.GetDirectoryName(this.path);
                 process.StartInfo.FileName = "scriptcs";
-                process.StartInfo.Arguments = this.path;
+                process.StartInfo.Arguments = "baufile.csx";
                 ////process.StartInfo.Arguments = this.path + " -debug -logfile " + logFile; // may be supported in scriptcs > 0.9
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.CreateNoWindow = true;
@@ -74,11 +89,6 @@ namespace Bau.Test.Acceptance.Support
 
                 return output.ToString();
             }
-        }
-
-        public void Dispose()
-        {
-            Directory.Delete(this.folderFullName, true);
         }
     }
 }

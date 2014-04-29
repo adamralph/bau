@@ -18,40 +18,14 @@ namespace Bau
 
         public BauPack(IEnumerable<string> topLevelTaskNames)
         {
-            if (topLevelTaskNames != null)
-            {
-                this.topLevelTaskNames.AddRange(topLevelTaskNames);
-            }
+            Guard.AgainstNullArgument("topLevelTaskNames", topLevelTaskNames);
 
-            if (this.topLevelTaskNames.Count == 0)
-            {
-                this.topLevelTaskNames.Add("default");
-            }
+            this.topLevelTaskNames.AddRange(topLevelTaskNames);
         }
 
-        public BauPack Task(string name, Action action)
+        public Task Task(string name)
         {
-            return this.Task(name, (Task task) => action());
-        }
-
-        public BauPack Task<TTask>(string name, Action<TTask> action)
-            where TTask : Task, new()
-        {
-            var task = this.Intern<TTask>(name);
-            ////if (prerequisites != null)
-            ////{
-            ////    foreach (var prerequisite in prerequisites.Where(p => !task.Prerequisites.Contains(p)))
-            ////    {
-            ////        task.Prerequisites.Add(prerequisite);
-            ////    }
-            ////}
-
-            if (action != null)
-            {
-                task.Actions.Add(() => action(task));
-            }
-
-            return this;
+            return this.Intern<Task>(name);
         }
 
         public void Execute()
@@ -82,7 +56,7 @@ namespace Bau
             return task;
         }
 
-        private TTask Intern<TTask>(string name) where TTask : Task, new()
+        private Task Intern<TTask>(string name) where TTask : Task, new()
         {
             Task task;
             if (!this.tasks.TryGetValue(name, out task))
