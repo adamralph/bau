@@ -15,7 +15,7 @@ namespace Bau.Test.Acceptance.Support
         private readonly string folderFullName;
         private readonly string path;
 
-        private Baufile(string code, string scenario)
+        private Baufile(string scenario)
         {
             ////this.scenario = scenario;
             this.folderFullName = Path.Combine(Path.GetTempPath(), scenario);
@@ -33,16 +33,28 @@ namespace Bau.Test.Acceptance.Support
                 File.Copy(file, Path.Combine(binPath, Path.GetFileName(file)), true);
             }
 
-            using (var writer = new StreamWriter(this.path = Path.Combine(this.folderFullName, "baufile.csx")))
+            File.Delete(this.path = Path.Combine(this.folderFullName, "baufile.csx"));
+        }
+
+        public static Baufile Create(string scenario, bool terminateLine = true)
+        {
+            return new Baufile(scenario);
+        }
+
+        public Baufile Write(string code)
+        {
+            using (var writer = new StreamWriter(this.path, true))
             {
                 writer.Write(code);
                 writer.Flush();
             }
+
+            return this;
         }
 
-        public static Baufile Create(string code, string scenario)
+        public Baufile WriteLine(string code)
         {
-            return new Baufile(code, scenario);
+            return this.Write(code + Environment.NewLine);
         }
 
         public string Execute()
