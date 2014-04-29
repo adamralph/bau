@@ -10,12 +10,14 @@ var nuspec = @"src\Bau\Bau.csproj";
 
 var bau = Require<BauPack>();
 
-// until we have dependencies in place, do everything in one task. dogfooding from the start!
-bau.Task(
-    "default",
-    () =>
+bau
+    .Task("default")
+    .DependsOn("accept", "pack");
+
+bau
+    .Task("clean")
+    .Do(() =>
     {
-        // clean
         if (Directory.Exists(output))
         {
             Directory.Delete(output, true);
@@ -33,8 +35,12 @@ bau.Task(
                 throw new Exception();
             }
         }
+    });
 
-        // restore
+bau
+    .Task("restore")
+    .Do(() =>
+    {
         using (var process = new Process())
         {
             process.StartInfo.FileName = nugetCommand;
@@ -47,8 +53,13 @@ bau.Task(
                 throw new Exception();
             }
         }
+    });
 
-        // build
+bau
+    .Task("build")
+    .DependsOn("clean", "restore")
+    .Do(() =>
+    {
         using (var process = new Process())
         {
             process.StartInfo.FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
@@ -61,8 +72,13 @@ bau.Task(
                 throw new Exception();
             }
         }
+    });
 
-        // accept
+bau
+    .Task("accept")
+    .DependsOn("build")
+    .Do(() =>
+    {
         using (var process = new Process())
         {
             process.StartInfo.FileName = xunitCommand;
@@ -75,8 +91,13 @@ bau.Task(
                 throw new Exception();
             }
         }
+    });
 
-        // pack
+bau
+    .Task("pack")
+    .DependsOn("build")
+    .Do(() =>
+    {
         Directory.CreateDirectory(output);
         using (var process = new Process())
         {
