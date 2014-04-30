@@ -422,5 +422,48 @@ bau.Execute();");
             "And I am informed that the non-existent task was not found"
                 .f(() => ex.Message.Should().Contain("'non-existent' task not found"));
         }
+
+        [Scenario]
+        public static void DependencyFails(Baufile baufile, string tempFile, Exception ex)
+        {
+            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+
+            "Given bau is required"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"var bau = Require<BauPack>();"));
+
+            "And a non-default task which fails"
+                .f(c => baufile.WriteLine(
+@"bau
+    .Task(""non-default"")
+    .Do(() => { throw new Exception();} );"));
+
+            "And a default task which depends on the non-default task"
+                .f(() =>
+                {
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile.WriteLine(
+@"bau
+    .Task(""default"")
+    .DependsOn(""non-default"")
+    .Do(() => File.CreateText(@""" + tempFile + @""").Dispose());");
+                });
+
+            "And the tasks are executed"
+                .f(() => baufile.WriteLine(
+@"bau.Execute();"));
+
+            "When I execute the baufile"
+                .f(() => ex = Record.Exception(() => baufile.Execute()));
+
+            "Then execution should fail"
+                .f(() => ex.Should().NotBeNull());
+
+            "And the default task is not executed"
+                .f(() => File.Exists(tempFile).Should().BeFalse());
+
+            "And I am informed that the non-default task was executed"
+                .f(() => ex.Message.Should().Contain("Executing 'non-default' Bau task."));
+        }
     }
 }
