@@ -28,9 +28,9 @@ namespace Bau.Test.Acceptance
                     file = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<BauPack>();
-bau
-    .Task(""default"")
-    .Do(() => File.Create(@""" + file + @""").Dispose());
+
+bau.Task(""default"")
+.Do(() => File.Create(@""" + file + @""").Dispose());
 
 bau.Execute();");
                 })

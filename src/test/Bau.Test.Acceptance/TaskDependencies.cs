@@ -32,9 +32,8 @@ namespace Bau.Test.Acceptance
 @"
 var executed = new List<string>();
 
-bau
-    .Task(""non-default"")
-    .Do(() => executed.Add(""non-default""));"));
+bau.Task(""non-default"")
+.Do(() => executed.Add(""non-default""));"));
 
             "And a default task which depends on the non-default task"
                 .f(() =>
@@ -42,17 +41,16 @@ bau
                 tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                 baufile.WriteLine(
 @"
-bau
-    .Task(""default"")
-    .DependsOn(""non-default"")
-    .Do(() =>
+bau.Task(""default"")
+.DependsOn(""non-default"")
+.Do(() =>
+{
+    executed.Add(""default"");
+    using(var file = File.CreateText(@""" + tempFile + @"""))
     {
-        executed.Add(""default"");
-        using(var file = File.CreateText(@""" + tempFile + @"""))
-        {
-            file.Write(string.Join(Environment.NewLine, executed));
-        };
-    });");
+        file.Write(string.Join(Environment.NewLine, executed));
+    };
+});");
             });
 
             "And the tasks are executed"
@@ -99,34 +97,31 @@ bau.Execute();"));
 @"
 var executed = new List<string>();
 
-bau
-    .Task(""non-default1"")
-    .Do(() => executed.Add(""non-default1""));"));
+bau.Task(""non-default1"")
+.Do(() => executed.Add(""non-default1""));"));
 
             "And a second non-default task"
                 .f(c => baufile.WriteLine(
 @"
-bau
-    .Task(""non-default2"")
-    .Do(() => executed.Add(""non-default2""));"));
+bau.Task(""non-default2"")
+.Do(() => executed.Add(""non-default2""));"));
 
             "And a default task which depends on both non-default tasks"
                 .f(() =>
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile.WriteLine(
-    @"
-bau
-    .Task(""default"")
-    .DependsOn(""non-default1"", ""non-default2"")
-    .Do(() =>
+@"
+bau.Task(""default"")
+.DependsOn(""non-default1"", ""non-default2"")
+.Do(() =>
+{
+    executed.Add(""default"");
+    using(var file = File.CreateText(@""" + tempFile + @"""))
     {
-        executed.Add(""default"");
-        using(var file = File.CreateText(@""" + tempFile + @"""))
-        {
-            file.Write(string.Join(Environment.NewLine, executed));
-        };
-    });");
+        file.Write(string.Join(Environment.NewLine, executed));
+    };
+});");
                 });
 
             "And the tasks are executed"
@@ -179,17 +174,15 @@ bau.Execute();"));
 @"
 var executed = new List<string>();
 
-bau
-    .Task(""non-default1"")
-    .Do(() => executed.Add(""non-default1""));"));
+bau.Task(""non-default1"")
+.Do(() => executed.Add(""non-default1""));"));
 
             "And a second non-default task which depends on the first non-default task"
                 .f(c => baufile.WriteLine(
 @"
-bau
-    .Task(""non-default2"")
-    .DependsOn(""non-default1"")
-    .Do(() => executed.Add(""non-default2""));"));
+bau.Task(""non-default2"")
+.DependsOn(""non-default1"")
+.Do(() => executed.Add(""non-default2""));"));
 
             "And a default task which depends on the second non-default task"
                 .f(() =>
@@ -197,17 +190,16 @@ bau
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile.WriteLine(
     @"
-bau
-    .Task(""default"")
-    .DependsOn(""non-default2"")
-    .Do(() =>
+bau.Task(""default"")
+.DependsOn(""non-default2"")
+.Do(() =>
+{
+    executed.Add(""default"");
+    using(var file = File.CreateText(@""" + tempFile + @"""))
     {
-        executed.Add(""default"");
-        using(var file = File.CreateText(@""" + tempFile + @"""))
-        {
-            file.Write(string.Join(Environment.NewLine, executed));
-        };
-    });");
+        file.Write(string.Join(Environment.NewLine, executed));
+    };
+});");
                 });
 
             "And the tasks are executed"
@@ -260,35 +252,32 @@ bau.Execute();"));
 @"
 var executed = new List<string>();
 
-bau
-    .Task(""non-default1"")
-    .Do(() => executed.Add(""non-default1""));"));
+bau.Task(""non-default1"")
+.Do(() => executed.Add(""non-default1""));"));
 
             "And a second non-default task which depends on the first non-default task"
                 .f(c => baufile.WriteLine(
 @"
-bau
-    .Task(""non-default2"")
-    .DependsOn(""non-default1"")
-    .Do(() => executed.Add(""non-default2""));"));
+bau.Task(""non-default2"")
+.DependsOn(""non-default1"")
+.Do(() => executed.Add(""non-default2""));"));
 
             "And a default task which depends on both the non-default tasks"
                 .f(() =>
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile.WriteLine(
-    @"
-bau
-    .Task(""default"")
-    .DependsOn(""non-default2"", ""non-default1"")
-    .Do(() =>
+@"
+bau.Task(""default"")
+.DependsOn(""non-default2"", ""non-default1"")
+.Do(() =>
+{
+    executed.Add(""default"");
+    using(var file = File.CreateText(@""" + tempFile + @"""))
     {
-        executed.Add(""default"");
-        using(var file = File.CreateText(@""" + tempFile + @"""))
-        {
-            file.Write(string.Join(Environment.NewLine, executed));
-        };
-    });");
+        file.Write(string.Join(Environment.NewLine, executed));
+    };
+});");
                 });
 
             "And the tasks are executed"
@@ -341,28 +330,26 @@ bau.Execute();"));
 @"
 var executed = new List<string>();
 
-bau
-    .Task(""non-default"")
-    .DependsOn(""default"")
-    .Do(() => executed.Add(""non-default""));"));
+bau.Task(""non-default"")
+.DependsOn(""default"")
+.Do(() => executed.Add(""non-default""));"));
 
             "And a default task which depends on the non-default task"
                 .f(() =>
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile.WriteLine(
-    @"
-bau
-    .Task(""default"")
-    .DependsOn(""non-default"")
-    .Do(() =>
+@"
+bau.Task(""default"")
+.DependsOn(""non-default"")
+.Do(() =>
+{
+    executed.Add(""default"");
+    using(var file = File.CreateText(@""" + tempFile + @"""))
     {
-        executed.Add(""default"");
-        using(var file = File.CreateText(@""" + tempFile + @"""))
-        {
-            file.Write(string.Join(Environment.NewLine, executed));
-        };
-    });");
+        file.Write(string.Join(Environment.NewLine, executed));
+    };
+});");
                 });
 
             "And the tasks are executed"
@@ -434,24 +421,25 @@ bau.Execute();");
 
             "And a non-default task which fails"
                 .f(c => baufile.WriteLine(
-@"bau
-    .Task(""non-default"")
-    .Do(() => { throw new Exception();} );"));
+@"
+bau.Task(""non-default"")
+.Do(() => { throw new Exception();} );"));
 
             "And a default task which depends on the non-default task"
                 .f(() =>
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile.WriteLine(
-@"bau
-    .Task(""default"")
-    .DependsOn(""non-default"")
-    .Do(() => File.CreateText(@""" + tempFile + @""").Dispose());");
+@"
+bau.Task(""default"")
+.DependsOn(""non-default"")
+.Do(() => File.CreateText(@""" + tempFile + @""").Dispose());");
                 });
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
-@"bau.Execute();"));
+@"
+bau.Execute();"));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Execute()));
