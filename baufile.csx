@@ -10,107 +10,100 @@ var nuspec = @"src\Bau\Bau.csproj";
 
 var bau = Require<BauPack>();
 
-bau
-    .Task("default")
-    .DependsOn("accept", "pack");
+bau.Task("default").DependsOn("accept", "pack");
 
-bau
-    .Task("clean")
-    .Do(() =>
+bau.Task("clean")
+.Do(() =>
+{
+    if (Directory.Exists(output))
     {
-        if (Directory.Exists(output))
+        Directory.Delete(output, true);
+    }
+    
+    using (var process = new Process())
+    {
+        process.StartInfo.FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
+        process.StartInfo.Arguments = solution + " /target:Clean /property:Configuration=Release";
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
         {
-            Directory.Delete(output, true);
+            throw new Exception();
         }
-        
-        using (var process = new Process())
-        {
-            process.StartInfo.FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
-            process.StartInfo.Arguments = solution + " /target:Clean /property:Configuration=Release";
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-            {
-                throw new Exception();
-            }
-        }
-    });
+    }
+});
 
-bau
-    .Task("restore")
-    .Do(() =>
+bau.Task("restore")
+.Do(() =>
+{
+    using (var process = new Process())
     {
-        using (var process = new Process())
+        process.StartInfo.FileName = nugetCommand;
+        process.StartInfo.Arguments = "restore " + solution;
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
         {
-            process.StartInfo.FileName = nugetCommand;
-            process.StartInfo.Arguments = "restore " + solution;
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-            {
-                throw new Exception();
-            }
+            throw new Exception();
         }
-    });
+    }
+});
 
-bau
-    .Task("build")
-    .DependsOn("clean", "restore")
-    .Do(() =>
+bau.Task("build")
+.DependsOn("clean", "restore")
+.Do(() =>
+{
+    using (var process = new Process())
     {
-        using (var process = new Process())
+        process.StartInfo.FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
+        process.StartInfo.Arguments = solution + " /target:Build /property:Configuration=Release";
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
         {
-            process.StartInfo.FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
-            process.StartInfo.Arguments = solution + " /target:Build /property:Configuration=Release";
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-            {
-                throw new Exception();
-            }
+            throw new Exception();
         }
-    });
+    }
+});
 
-bau
-    .Task("accept")
-    .DependsOn("build")
-    .Do(() =>
+bau.Task("accept")
+.DependsOn("build")
+.Do(() =>
+{
+    using (var process = new Process())
     {
-        using (var process = new Process())
+        process.StartInfo.FileName = xunitCommand;
+        process.StartInfo.Arguments = acceptance + " /html " + acceptance + "TestResults.html" + " /xml " + acceptance + "TestResults.xml";
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
         {
-            process.StartInfo.FileName = xunitCommand;
-            process.StartInfo.Arguments = acceptance + " /html " + acceptance + "TestResults.html" + " /xml " + acceptance + "TestResults.xml";
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-            {
-                throw new Exception();
-            }
+            throw new Exception();
         }
-    });
+    }
+});
 
-bau
-    .Task("pack")
-    .DependsOn("build")
-    .Do(() =>
+bau.Task("pack")
+.DependsOn("build")
+.Do(() =>
+{
+    Directory.CreateDirectory(output);
+    using (var process = new Process())
     {
-        Directory.CreateDirectory(output);
-        using (var process = new Process())
+        process.StartInfo.FileName = nugetCommand;
+        process.StartInfo.Arguments = "pack " + nuspec + " -Version " + version + " -OutputDirectory " + output + " -Properties Configuration=Release";
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
         {
-            process.StartInfo.FileName = nugetCommand;
-            process.StartInfo.Arguments = "pack " + nuspec + " -Version " + version + " -OutputDirectory " + output + " -Properties Configuration=Release";
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-            {
-                throw new Exception();
-            }
+            throw new Exception();
         }
-    });
+    }
+});
     
 bau.Execute();
