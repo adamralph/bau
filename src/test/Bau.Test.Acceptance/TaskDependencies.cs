@@ -12,9 +12,11 @@ namespace Bau.Test.Acceptance
     using Bau.Test.Acceptance.Support;
     using FluentAssertions;
     using Xbehave;
+    using Xunit;
 
     public static class TaskDependencies
     {
+        // happy path
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
         public static void SingleDependency(Baufile baufile, string tempFile, string[] excutedTasks, string output)
@@ -323,7 +325,7 @@ bau.Execute();"));
             "And I am informed that the default task was executed"
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
-        
+
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
         public static void CircularDependency(Baufile baufile, string tempFile, string[] excutedTasks, string output)
@@ -390,6 +392,35 @@ bau.Execute();"));
 
             "And I am informed that the default task was executed"
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
+        }
+
+        // sad path
+        [Scenario]
+        public static void NonExistentDependency(string file, Baufile baufile, Exception ex)
+        {
+            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+
+            "Given a default task with a non-existent dependency"
+                .f(() =>
+                {
+                    file = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
+@"var bau = Require<BauPack>();
+bau.Task(""default"").DependsOn(""non-existent"").Do(() => { });
+bau.Execute();");
+                });
+
+            "When I execute the baufile"
+                .f(() => ex = Record.Exception(() => baufile.Execute()));
+
+            "Then execution should fail"
+                .f(() => ex.Should().NotBeNull());
+
+            "And the task is not executed"
+                .f(() => File.Exists(file).Should().BeFalse());
+
+            "And I am informed that the non-existent task was not found"
+                .f(() => ex.Message.Should().Contain("'non-existent' task not found"));
         }
     }
 }
