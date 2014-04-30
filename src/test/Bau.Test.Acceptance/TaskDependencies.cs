@@ -5,7 +5,6 @@
 namespace Bau.Test.Acceptance
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -17,9 +16,8 @@ namespace Bau.Test.Acceptance
     public static class TaskDependencies
     {
         // happy path
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void SingleDependency(Baufile baufile, string tempFile, string[] excutedTasks, string output)
+        public static void SingleDependency(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -65,15 +63,15 @@ bau.Execute();"));
                 .f(() =>
                 {
                     File.Exists(tempFile).Should().BeTrue();
-                    excutedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    excutedTasks.Length.Should().Be(2);
+                    executedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    executedTasks.Length.Should().Be(2);
                 });
 
             "And the non-default task is executed first"
-                .f(() => excutedTasks[0].Should().Be("non-default"));
+                .f(() => executedTasks[0].Should().Be("non-default"));
 
             "And the default task is executed second"
-                .f(() => excutedTasks[1].Should().Be("default"));
+                .f(() => executedTasks[1].Should().Be("default"));
 
             "And I am informed that the non-default task was executed"
                 .f(() => output.Should().Contain("Executing 'non-default' Bau task."));
@@ -82,9 +80,8 @@ bau.Execute();"));
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void MultipleDependencies(Baufile baufile, string tempFile, string[] excutedTasks, string output)
+        public static void MultipleDependencies(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -136,18 +133,18 @@ bau.Execute();"));
                 .f(() =>
                 {
                     File.Exists(tempFile).Should().BeTrue();
-                    excutedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    excutedTasks.Length.Should().Be(3);
+                    executedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    executedTasks.Length.Should().Be(3);
                 });
 
             "And the first non-default task is executed first"
-                .f(() => excutedTasks[0].Should().Be("non-default1"));
+                .f(() => executedTasks[0].Should().Be("non-default1"));
 
             "And the second non-default task is executed second"
-                .f(() => excutedTasks[1].Should().Be("non-default2"));
+                .f(() => executedTasks[1].Should().Be("non-default2"));
 
             "And the default task is executed third"
-                .f(() => excutedTasks[2].Should().Be("default"));
+                .f(() => executedTasks[2].Should().Be("default"));
 
             "And I am informed that the first non-default task was executed"
                 .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
@@ -159,9 +156,8 @@ bau.Execute();"));
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void NestedDependencies(Baufile baufile, string tempFile, string[] excutedTasks, string output)
+        public static void NestedDependencies(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -214,18 +210,18 @@ bau.Execute();"));
                 .f(() =>
                 {
                     File.Exists(tempFile).Should().BeTrue();
-                    excutedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    excutedTasks.Length.Should().Be(3);
+                    executedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    executedTasks.Length.Should().Be(3);
                 });
 
             "And the first non-default task is executed first"
-                .f(() => excutedTasks[0].Should().Be("non-default1"));
+                .f(() => executedTasks[0].Should().Be("non-default1"));
 
             "And the second non-default task is executed second"
-                .f(() => excutedTasks[1].Should().Be("non-default2"));
+                .f(() => executedTasks[1].Should().Be("non-default2"));
 
             "And the default task is executed third"
-                .f(() => excutedTasks[2].Should().Be("default"));
+                .f(() => executedTasks[2].Should().Be("default"));
 
             "And I am informed that the first non-default task was executed"
                 .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
@@ -237,9 +233,8 @@ bau.Execute();"));
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void RepeatedDependency(Baufile baufile, string tempFile, string[] excutedTasks, string output)
+        public static void RepeatedDependency(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -292,18 +287,18 @@ bau.Execute();"));
                 .f(() =>
                 {
                     File.Exists(tempFile).Should().BeTrue();
-                    excutedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    excutedTasks.Length.Should().Be(3);
+                    executedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    executedTasks.Length.Should().Be(3);
                 });
 
             "And the first non-default task is executed first"
-                .f(() => excutedTasks[0].Should().Be("non-default1"));
+                .f(() => executedTasks[0].Should().Be("non-default1"));
 
             "And the second non-default task is executed second"
-                .f(() => excutedTasks[1].Should().Be("non-default2"));
+                .f(() => executedTasks[1].Should().Be("non-default2"));
 
             "And the default task is executed third"
-                .f(() => excutedTasks[2].Should().Be("default"));
+                .f(() => executedTasks[2].Should().Be("default"));
 
             "And I am informed that the first non-default task was executed"
                 .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
@@ -315,9 +310,8 @@ bau.Execute();"));
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void CircularDependency(Baufile baufile, string tempFile, string[] excutedTasks, string output)
+        public static void CircularDependency(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -364,15 +358,15 @@ bau.Execute();"));
                 .f(() =>
                 {
                     File.Exists(tempFile).Should().BeTrue();
-                    excutedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    excutedTasks.Length.Should().Be(2);
+                    executedTasks = File.ReadAllText(tempFile).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    executedTasks.Length.Should().Be(2);
                 });
 
             "And the non-default task is executed first"
-                .f(() => excutedTasks[0].Should().Be("non-default"));
+                .f(() => executedTasks[0].Should().Be("non-default"));
 
             "And the default task is executed second"
-                .f(() => excutedTasks[1].Should().Be("default"));
+                .f(() => executedTasks[1].Should().Be("default"));
 
             "And I am informed that the non-default task was executed"
                 .f(() => output.Should().Contain("Executing 'non-default' Bau task."));
@@ -383,14 +377,14 @@ bau.Execute();"));
 
         // sad path
         [Scenario]
-        public static void NonExistentDependency(string file, Baufile baufile, Exception ex)
+        public static void NonexistentDependency(Baufile baufile, string tempFile, Exception ex)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a default task with a non-existent dependency"
                 .f(() =>
                 {
-                    file = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<BauPack>();
 bau.Task(""default"").DependsOn(""non-existent"").Do(() => { });
@@ -404,7 +398,7 @@ bau.Execute();");
                 .f(() => ex.Should().NotBeNull());
 
             "And the task is not executed"
-                .f(() => File.Exists(file).Should().BeFalse());
+                .f(() => File.Exists(tempFile).Should().BeFalse());
 
             "And I am informed that the non-existent task was not found"
                 .f(() => ex.Message.Should().Contain("'non-existent' task not found"));

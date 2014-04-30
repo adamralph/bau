@@ -5,7 +5,6 @@
 namespace Bau.Test.Acceptance
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -16,31 +15,30 @@ namespace Bau.Test.Acceptance
 
     public static class DefaultTask
     {
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by xBehave.net.")]
         [Scenario]
-        public static void DefaultTaskExists(Baufile baufile, string file, string output)
+        public static void DefaultTaskExists(Baufile baufile, string tempFile, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a baufile with a default task"
                 .f(() =>
                 {
-                    file = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<BauPack>();
 
 bau.Task(""default"")
-.Do(() => File.Create(@""" + file + @""").Dispose());
+.Do(() => File.Create(@""" + tempFile + @""").Dispose());
 
 bau.Execute();");
                 })
-                .Teardown(() => File.Delete(file));
+                .Teardown(() => File.Delete(tempFile));
 
             "When I execute the baufile"
                 .f(() => output = baufile.Execute());
 
             "Then the task is executed"
-                .f(() => File.Exists(file).Should().BeTrue());
+                .f(() => File.Exists(tempFile).Should().BeTrue());
 
             "And I am informed that the default task was executed"
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));

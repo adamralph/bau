@@ -39,7 +39,7 @@ namespace Bau.Test.Acceptance.Support
             File.Delete(this.path = Path.Combine(this.scenario, "baufile.csx"));
         }
 
-        public static Baufile Create(string scenario, bool terminateLine = true)
+        public static Baufile Create(string scenario)
         {
             return new Baufile(scenario);
         }
