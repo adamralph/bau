@@ -7,7 +7,7 @@
     <authors>Adam Ralph, Bau contributors</authors>
     <description>Write your build scripts in C#.
 
-Require&lt;BauPack&gt;().Task("default", () => Console.WriteLine("Hello World!"));</description>
+Require&lt;BauPack&gt;().Do(() => Console.WriteLine("Hello World!"));</description>
     <projectUrl>https://github.com/bau-build/bau</projectUrl>
     <licenseUrl>https://github.com/bau-build/bau/blob/dev/license.txt</licenseUrl>
     <copyright>Copyright (c) Bau contributors. (baubuildch@gmail.com)</copyright>

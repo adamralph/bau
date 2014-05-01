@@ -36,35 +36,14 @@ namespace Bau
             }
         }
 
+        public IList<string> Prerequisites
+        {
+            get { return this.prerequisites; }
+        }
+
         public IList<Action> Actions
         {
             get { return this.actions; }
-        }
-
-        public Task DependsOn(params string[] tasks)
-        {
-            foreach (var task in tasks.Where(p => !this.prerequisites.Contains(p)))
-            {
-                if (string.IsNullOrWhiteSpace(task))
-                {
-                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
-                    throw new ArgumentException(message, "tasks");
-                }
-                
-                this.prerequisites.Add(task);
-            }
-
-            return this;
-        }
-
-        public Task Do(Action action)
-        {
-            if (action != null)
-            {
-                this.actions.Add(action);
-            }
-
-            return this;
         }
 
         public virtual void Invoke(BauPack application)

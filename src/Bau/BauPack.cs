@@ -15,6 +15,7 @@ namespace Bau
     {
         private readonly List<string> topLevelTaskNames = new List<string>();
         private readonly Dictionary<string, Task> tasks = new Dictionary<string, Task>();
+        private Task currentTask;
 
         public BauPack(IEnumerable<string> topLevelTaskNames)
         {
@@ -23,9 +24,38 @@ namespace Bau
             this.topLevelTaskNames.AddRange(topLevelTaskNames);
         }
 
-        public Task Task(string name)
+        public BauPack Task(string name)
         {
-            return this.Intern<Task>(name);
+            this.currentTask = this.Intern<Task>(name);
+            return this;
+        }
+
+        public BauPack DependsOn(params string[] tasks)
+        {
+            this.EnsureCurrentTask();
+            foreach (var task in tasks.Where(p => !this.currentTask.Prerequisites.Contains(p)))
+            {
+                if (string.IsNullOrWhiteSpace(task))
+                {
+                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
+                    throw new ArgumentException(message, "tasks");
+                }
+
+                this.currentTask.Prerequisites.Add(task);
+            }
+
+            return this;
+        }
+
+        public BauPack Do(Action action)
+        {
+            this.EnsureCurrentTask();
+            if (action != null)
+            {
+                this.currentTask.Actions.Add(action);
+            }
+
+            return this;
         }
 
         public void Execute()
@@ -77,6 +107,14 @@ namespace Bau
             }
 
             return typedTask;
+        }
+
+        private void EnsureCurrentTask()
+        {
+            if (this.currentTask == null)
+            {
+                this.Task("default");
+            }
         }
     }
 }
