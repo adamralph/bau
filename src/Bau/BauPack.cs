@@ -11,7 +11,7 @@ namespace Bau
     using System.Reflection;
     using ScriptCs.Contracts;
 
-    public class BauPack : IScriptPackContext, ITaskBuilder
+    public class BauPack : IScriptPackContext, IBauPack
     {
         public const string DefaultTask = "default";
 
@@ -34,7 +34,7 @@ namespace Bau
             get { return this.currentTask; }
         }
 
-        public ITaskBuilder DependsOn(params string[] otherTasks)
+        public IBauPack DependsOn(params string[] otherTasks)
         {
             this.EnsureCurrentTask();
             foreach (var task in otherTasks.Where(t => !this.currentTask.Dependencies.Contains(t)))
@@ -51,7 +51,7 @@ namespace Bau
             return this;
         }
 
-        public ITaskBuilder Do(Action action)
+        public IBauPack Do(Action action)
         {
             this.EnsureCurrentTask();
             if (action != null)
@@ -90,7 +90,7 @@ namespace Bau
             return task;
         }
 
-        public ITaskBuilder Intern<TTask>(string name = BauPack.DefaultTask) where TTask : Task, new()
+        public IBauPack Intern<TTask>(string name = BauPack.DefaultTask) where TTask : Task, new()
         {
             Task task;
             if (!this.tasks.TryGetValue(name, out task))

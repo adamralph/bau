@@ -6,16 +6,16 @@ namespace Bau
 {
     public static class BauPackExtensions
     {
-        public static ITaskBuilder Task(this ITaskBuilder builder, string name = BauPack.DefaultTask)
+        public static IBauPack Task(this IBauPack bau, string name = BauPack.DefaultTask)
         {
-            Guard.AgainstNullArgument("builder", builder);
+            Guard.AgainstNullArgument("bau", bau);
 
-            return builder.Intern<Task>(name);
+            return bau.Intern<Task>(name);
         }
 
-        public static ITaskBuilder<ExecTask> Exec(this ITaskBuilder builder, string name = BauPack.DefaultTask)
+        public static IBauPack<ExecTask> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
         {
-            return new TaskBuilder<ExecTask>(builder, name);
+            return new BauPack<ExecTask>(bau, name);
         }
     }
 }

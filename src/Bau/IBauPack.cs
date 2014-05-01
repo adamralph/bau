@@ -1,4 +1,4 @@
-﻿// <copyright file="ITaskBuilder.cs" company="Bau contributors">
+﻿// <copyright file="IBauPack.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -7,16 +7,16 @@ namespace Bau
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    public interface ITaskBuilder
+    public interface IBauPack
     {
         Task CurrentTask { get; }
 
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Fluent API.")]
-        ITaskBuilder Intern<TTask>(string name = BauPack.DefaultTask) where TTask : Task, new();
+        IBauPack Intern<TTask>(string name = BauPack.DefaultTask) where TTask : Task, new();
 
-        ITaskBuilder DependsOn(params string[] otherTasks);
+        IBauPack DependsOn(params string[] otherTasks);
 
-        ITaskBuilder Do(Action action);
+        IBauPack Do(Action action);
 
         void Execute();
     }
