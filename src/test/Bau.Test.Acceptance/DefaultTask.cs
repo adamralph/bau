@@ -25,12 +25,7 @@ namespace Bau.Test.Acceptance
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();
-
-bau.Task(""default"")
-.Do(() => File.Create(@""" + tempFile + @""").Dispose());
-
-bau.Execute();");
+                        @"Require<BauPack>().Do(() => File.Create(@""" + tempFile + @""").Dispose()).Execute();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
@@ -45,14 +40,8 @@ bau.Execute();");
         }
 
         [Scenario]
-        [Example(
-            "NoTask",
-@"Require<BauPack>().Execute();")]
-        [Example(
-            "SomeOtherTask",
-@"var bau = Require<BauPack>();
-bau.Task(""foo"").Do(() => { });
-bau.Execute();")]
+        [Example("NoTask", @"Require<BauPack>().Execute();")]
+        [Example("SomeOtherTask", @"Require<BauPack>().Task(""foo"").Do(() => { }).Execute();")]
         public static void DefaultTaskDoesNotExist(string tag, string code, Baufile baufile, Exception ex)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
