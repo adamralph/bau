@@ -5,12 +5,13 @@ var nugetCommand = @"packages\NuGet.CommandLine.2.8.1\tools\NuGet.exe";
 var xunitCommand = @"packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe";
 var solution = @"src\Bau.sln";
 var output = "artifacts";
+var component = @"src\test\Bau.Test.Component\bin\Release\Bau.Test.Component.dll";
 var acceptance = @"src\test\Bau.Test.Acceptance\bin\Release\Bau.Test.Acceptance.dll";
-var nuspec = @"src\Bau\Bau.csproj";
+var nuspecs = new[] { @"src\Bau\Bau.csproj", @"src\Bau.Exec\Bau.Exec.csproj", };
 
 var bau = Require<BauPack>();
 
-bau.Task("default").DependsOn("accept", "pack");
+bau.Task("default").DependsOn("component", "accept", "pack");
 
 bau.Task("clean")
 .Do(() =>
@@ -69,6 +70,24 @@ bau.Task("build")
     }
 });
 
+bau.Task("component")
+.DependsOn("build")
+.Do(() =>
+{
+    using (var process = new Process())
+    {
+        process.StartInfo.FileName = xunitCommand;
+        process.StartInfo.Arguments = component + " /html " + component + "TestResults.html" + " /xml " + component + "TestResults.xml";
+        process.StartInfo.UseShellExecute = false;
+        process.Start();
+        process.WaitForExit();
+        if (process.ExitCode != 0)
+        {
+            throw new Exception();
+        }
+    }
+});
+
 bau.Task("accept")
 .DependsOn("build")
 .Do(() =>
@@ -92,16 +111,25 @@ bau.Task("pack")
 .Do(() =>
 {
     Directory.CreateDirectory(output);
-    using (var process = new Process())
+    foreach (var nuspec in nuspecs)
     {
-        process.StartInfo.FileName = nugetCommand;
-        process.StartInfo.Arguments = "pack " + nuspec + " -Version " + version + " -OutputDirectory " + output + " -Properties Configuration=Release";
-        process.StartInfo.UseShellExecute = false;
-        process.Start();
-        process.WaitForExit();
-        if (process.ExitCode != 0)
+        using (var process = new Process())
         {
-            throw new Exception();
+            process.StartInfo.FileName = nugetCommand;
+            process.StartInfo.Arguments =
+                "pack " + nuspec +
+                " -Version " + version +
+                " -OutputDirectory " + output +
+                " -Properties Configuration=Release" +
+                " -IncludeReferencedProjects";
+
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                throw new Exception();
+            }
         }
     }
 });

@@ -1,21 +1,23 @@
-﻿// <copyright file="BauScriptPack.cs" company="Bau contributors">
+﻿// <copyright file="Pack.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace Bau.Exec
 {
     using System;
     using ScriptCs.Contracts;
 
     [CLSCompliant(false)]
-    public class BauScriptPack : ScriptPack<BauPack>
+    public class Pack : ScriptPack<BauExec>
     {
         public override void Initialize(IScriptPackSession session)
         {
-            Guard.AgainstNullArgument("session", session);
-
             session.ImportNamespace(this.GetType().Namespace);
-            this.Context = new BauPack();
+            this.Context = new BauExec();
         }
+    }
+
+    public class BauExec : IScriptPackContext
+    {
     }
 }

@@ -7,6 +7,7 @@ namespace Bau.Test.Acceptance.Support
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
     public class Baufile
@@ -21,17 +22,25 @@ namespace Bau.Test.Acceptance.Support
             {
                 Directory.Delete(this.scenario, true);
             }
-            
-            Directory.CreateDirectory(this.scenario);
+
+            FileSystem.CreateDirectory(this.scenario);
 
 #if DEBUG
-            var bauOutputPath = @"..\..\..\..\Bau\bin\Debug";
+            var outputPaths = new[]
+            {
+                @"..\..\..\..\Bau\bin\Debug",
+                @"..\..\..\..\Bau.Exec\bin\Debug",
+            };
 #else
-            var bauOutputPath = @"..\..\..\..\Bau\bin\Release";
+            var outputPaths = new[]
+            {
+                @"..\..\..\..\Bau\bin\Release",
+                @"..\..\..\..\Bau.Exec\bin\Release",
+            };
 #endif
-
-            var binPath = Directory.CreateDirectory(Path.Combine(this.scenario, "bin")).FullName;
-            foreach (var file in Directory.GetFiles(bauOutputPath, "*.dll", SearchOption.TopDirectoryOnly))
+            var binPath = Path.Combine(this.scenario, "bin");
+            FileSystem.CreateDirectory(binPath);
+            foreach (var file in outputPaths.SelectMany(bauOutputPath => Directory.GetFiles(bauOutputPath, "*.dll", SearchOption.TopDirectoryOnly)))
             {
                 File.Copy(file, Path.Combine(binPath, Path.GetFileName(file)), true);
             }

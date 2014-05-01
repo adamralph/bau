@@ -13,6 +13,7 @@ namespace Bau.Test.Acceptance
     using Xbehave;
     using Xunit;
 
+    // TODO (adamralph): add teardowns for temp files
     public static class TaskDependencies
     {
         // happy path
@@ -382,14 +383,8 @@ bau.Execute();"));
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a default task with a non-existent dependency"
-                .f(() =>
-                {
-                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
-                    baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();
-bau.Task(""default"").DependsOn(""non-existent"").Do(() => { });
-bau.Execute();");
-                });
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"Require<BauPack>().Task(""default"").DependsOn(""non-existent"").Do(() => { }).Execute();"));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Execute()));
