@@ -15,7 +15,7 @@ namespace Bau
 
         public static ITaskBuilder<ExecTask> Exec(this ITaskBuilder builder, string name = BauPack.DefaultTask)
         {
-            return new TaskBuilder<ExecTask>(builder).Intern(name);
+            return new TaskBuilder<ExecTask>(builder, name);
         }
     }
 }

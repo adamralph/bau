@@ -10,17 +10,17 @@ namespace Bau
     {
         private readonly ITaskBuilder builder;
 
-        public TaskBuilder(ITaskBuilder builder)
+        public TaskBuilder(ITaskBuilder builder, string name = BauPack.DefaultTask)
         {
             Guard.AgainstNullArgument("builder", builder);
 
             this.builder = builder;
+            this.builder.Intern<TTask>(name);
         }
 
-        public ITaskBuilder<TTask> Intern(string name = BauPack.DefaultTask)
+        public Task CurrentTask
         {
-            this.builder.Intern<TTask>(name);
-            return this;
+            get { return this.builder.CurrentTask; }
         }
 
         public ITaskBuilder<TTask> DependsOn(params string[] otherTasks)
@@ -31,13 +31,29 @@ namespace Bau
 
         public ITaskBuilder<TTask> Do(Action<TTask> action)
         {
-            this.builder.Do(() => action((TTask)this.builder.CurrentTask));
+            var task = (TTask)this.builder.CurrentTask;
+            this.builder.Do(() => action(task));
             return this;
         }
 
         public void Execute()
         {
             this.builder.Execute();
+        }
+
+        public ITaskBuilder Intern<UTask>(string name = BauPack.DefaultTask) where UTask : Task, new()
+        {
+            return this.builder.Intern<UTask>(name);
+        }
+
+        ITaskBuilder ITaskBuilder.DependsOn(params string[] otherTasks)
+        {
+            return this.builder.DependsOn(otherTasks);
+        }
+
+        public ITaskBuilder Do(Action action)
+        {
+            return this.builder.Do(action);
         }
     }
 }

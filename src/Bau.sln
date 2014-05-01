@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Test.Acceptance", "test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Test.Acceptance.CreateFile", "test\Bau.Test.Acceptance.CreateFile\Bau.Test.Acceptance.CreateFile.csproj", "{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Test.Component", "test\Bau.Test.Component\Bau.Test.Component.csproj", "{81551BBD-8350-4055-9E8D-7AB228E9EE4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81551BBD-8350-4055-9E8D-7AB228E9EE4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81551BBD-8350-4055-9E8D-7AB228E9EE4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81551BBD-8350-4055-9E8D-7AB228E9EE4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81551BBD-8350-4055-9E8D-7AB228E9EE4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +54,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC} = {28FDEE5B-453E-4977-A640-C8670DDC7258}
 		{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63} = {28FDEE5B-453E-4977-A640-C8670DDC7258}
+		{81551BBD-8350-4055-9E8D-7AB228E9EE4F} = {28FDEE5B-453E-4977-A640-C8670DDC7258}
 	EndGlobalSection
 EndGlobal

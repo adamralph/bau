@@ -6,14 +6,10 @@ namespace Bau
 {
     using System;
 
-    public interface ITaskBuilder<TTask> where TTask : Task, new()
+    public interface ITaskBuilder<TTask> : ITaskBuilder where TTask : Task, new()
     {
-        ITaskBuilder<TTask> Intern(string name = BauPack.DefaultTask);
-
-        ITaskBuilder<TTask> DependsOn(params string[] otherTasks);
+        new ITaskBuilder<TTask> DependsOn(params string[] otherTasks);
 
         ITaskBuilder<TTask> Do(Action<TTask> action);
-
-        void Execute();
     }
 }
