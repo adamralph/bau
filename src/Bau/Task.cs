@@ -46,7 +46,6 @@ namespace Bau
             get { return this.actions; }
         }
 
-        // TODO (adamralph): lift this into BauPack and add a settable Invoked property, make Execute public
         public virtual void Invoke(BauPack bau)
         {
             Guard.AgainstNullArgument("bau", bau);
@@ -76,7 +75,7 @@ namespace Bau
             }
         }
 
-        protected virtual void Execute()
+        public virtual void Execute()
         {
             Console.WriteLine("Executing '{0}' Bau task.", this.Name);
             foreach (var action in this.actions)

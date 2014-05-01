@@ -17,7 +17,7 @@ namespace Bau
 
         public string WorkingDirectory { get; set; }
 
-        protected override void Execute()
+        public override void Execute()
         {
             base.Execute();
 

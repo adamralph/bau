@@ -19,7 +19,6 @@ namespace Bau
         private readonly Dictionary<string, Task> tasks = new Dictionary<string, Task>();
         private Task currentTask;
 
-        // TODO (adamralph): change to params and default to default task, take responsibility out of BauScriptPack
         public BauPack(params string[] topLevelTasks)
         {
             this.topLevelTasks.AddRange(topLevelTasks);
