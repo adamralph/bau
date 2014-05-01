@@ -11,43 +11,47 @@ namespace Bau
     using System.Reflection;
     using ScriptCs.Contracts;
 
-    public class BauPack : IScriptPackContext
+    public class BauPack : IScriptPackContext, ITaskBuilder
     {
-        private readonly List<string> topLevelTaskNames = new List<string>();
+        public const string DefaultTask = "default";
+
+        private readonly List<string> topLevelTasks = new List<string>();
         private readonly Dictionary<string, Task> tasks = new Dictionary<string, Task>();
         private Task currentTask;
 
-        public BauPack(IEnumerable<string> topLevelTaskNames)
+        // TODO (adamralph): change to params and default to default task, take responsibility out of BauScriptPack
+        public BauPack(params string[] topLevelTasks)
         {
-            Guard.AgainstNullArgument("topLevelTaskNames", topLevelTaskNames);
-
-            this.topLevelTaskNames.AddRange(topLevelTaskNames);
+            this.topLevelTasks.AddRange(topLevelTasks);
+            if (this.topLevelTasks.Count == 0)
+            {
+                this.topLevelTasks.Add(BauPack.DefaultTask);
+            }
         }
 
-        public BauPack Task(string name)
+        public Task CurrentTask
         {
-            this.currentTask = this.Intern<Task>(name);
-            return this;
+            get { return this.currentTask; }
         }
 
-        public BauPack DependsOn(params string[] tasks)
+        public ITaskBuilder DependsOn(params string[] otherTasks)
         {
             this.EnsureCurrentTask();
-            foreach (var task in tasks.Where(p => !this.currentTask.Prerequisites.Contains(p)))
+            foreach (var task in otherTasks.Where(t => !this.currentTask.Dependencies.Contains(t)))
             {
                 if (string.IsNullOrWhiteSpace(task))
                 {
                     var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
-                    throw new ArgumentException(message, "tasks");
+                    throw new ArgumentException(message, "otherTasks");
                 }
 
-                this.currentTask.Prerequisites.Add(task);
+                this.currentTask.Dependencies.Add(task);
             }
 
             return this;
         }
 
-        public BauPack Do(Action action)
+        public ITaskBuilder Do(Action action)
         {
             this.EnsureCurrentTask();
             if (action != null)
@@ -66,7 +70,7 @@ namespace Bau
             Console.WriteLine("Bau version {0}.", version.InformationalVersion);
             Console.WriteLine("Copyright (c) Bau contributors. (baubuildch@gmail.com)");
 
-            foreach (var task in this.topLevelTaskNames.Select(name => this.GetTask(name)))
+            foreach (var task in this.topLevelTasks.Select(name => this.GetTask(name)))
             {
                 task.Invoke(this);
             }
@@ -86,7 +90,7 @@ namespace Bau
             return task;
         }
 
-        private Task Intern<TTask>(string name) where TTask : Task, new()
+        public ITaskBuilder Intern<TTask>(string name = BauPack.DefaultTask) where TTask : Task, new()
         {
             Task task;
             if (!this.tasks.TryGetValue(name, out task))
@@ -106,14 +110,15 @@ namespace Bau
                 throw new InvalidOperationException(message);
             }
 
-            return typedTask;
+            this.currentTask = typedTask;
+            return this;
         }
 
         private void EnsureCurrentTask()
         {
             if (this.currentTask == null)
             {
-                this.Task("default");
+                this.Intern<Task>(BauPack.DefaultTask);
             }
         }
     }

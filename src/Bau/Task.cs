@@ -11,11 +11,11 @@ namespace Bau
 
     public class Task
     {
-        private readonly List<string> prerequisites = new List<string>();
+        private readonly List<string> dependencies = new List<string>();
         private readonly List<Action> actions = new List<Action>();
 
         private string name;
-        private bool alreadyInvoked;
+        private bool invoked;
 
         public string Name
         {
@@ -36,9 +36,9 @@ namespace Bau
             }
         }
 
-        public IList<string> Prerequisites
+        public IList<string> Dependencies
         {
-            get { return this.prerequisites; }
+            get { return this.dependencies; }
         }
 
         public IList<Action> Actions
@@ -46,22 +46,23 @@ namespace Bau
             get { return this.actions; }
         }
 
-        public virtual void Invoke(BauPack application)
+        // TODO (adamralph): lift this into BauPack and add a settable Invoked property, make Execute public
+        public virtual void Invoke(BauPack bau)
         {
-            Guard.AgainstNullArgument("application", application);
+            Guard.AgainstNullArgument("bau", bau);
 
             ////var trace = this.alreadyInvoked ? null : " (first time)";
             ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
-            if (this.alreadyInvoked)
+            if (this.invoked)
             {
                 ////log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
                 return;
             }
 
-            this.alreadyInvoked = true;
-            foreach (var prerequisite in this.prerequisites.Select(name => application.GetTask(name)))
+            this.invoked = true;
+            foreach (var dependency in this.dependencies.Select(name => bau.GetTask(name)))
             {
-                prerequisite.Invoke(application);
+                dependency.Invoke(bau);
             }
 
             try

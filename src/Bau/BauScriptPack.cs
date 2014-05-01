@@ -15,7 +15,7 @@ namespace Bau
             Guard.AgainstNullArgument("session", session);
 
             session.ImportNamespace("Bau");
-            this.Context = new BauPack(new[] { "default" });
+            this.Context = new BauPack();
         }
     }
 }
