@@ -42,13 +42,13 @@
     <Compile Include="BauPackExtensions.cs" />
     <Compile Include="IBauPack{TTask}.cs" />
     <Compile Include="BauPack{TTask}.cs" />
-    <Compile Include="ExecTask.cs" />
     <Compile Include="IBauPack.cs" />
     <Compile Include="Task.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Bau.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

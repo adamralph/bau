@@ -1,13 +1,21 @@
-﻿// <copyright file="ExecTask.cs" company="Bau contributors">
+﻿// <copyright file="Plugin.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace Bau.Exec
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+
+    public static class Plugin
+    {
+        public static IBauPack<ExecTask> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
+        {
+            return new BauPack<ExecTask>(bau, name);
+        }
+    }
 
     public class ExecTask : Task
     {

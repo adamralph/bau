@@ -7,7 +7,7 @@ var solution = @"src\Bau.sln";
 var output = "artifacts";
 var component = @"src\test\Bau.Test.Component\bin\Release\Bau.Test.Component.dll";
 var acceptance = @"src\test\Bau.Test.Acceptance\bin\Release\Bau.Test.Acceptance.dll";
-var nuspec = @"src\Bau\Bau.csproj";
+var nuspecs = new[] { @"src\Bau\Bau.csproj", @"src\Bau.Exec\Bau.Exec.csproj", };
 
 var bau = Require<BauPack>();
 
@@ -111,16 +111,25 @@ bau.Task("pack")
 .Do(() =>
 {
     Directory.CreateDirectory(output);
-    using (var process = new Process())
+    foreach (var nuspec in nuspecs)
     {
-        process.StartInfo.FileName = nugetCommand;
-        process.StartInfo.Arguments = "pack " + nuspec + " -Version " + version + " -OutputDirectory " + output + " -Properties Configuration=Release";
-        process.StartInfo.UseShellExecute = false;
-        process.Start();
-        process.WaitForExit();
-        if (process.ExitCode != 0)
+        using (var process = new Process())
         {
-            throw new Exception();
+            process.StartInfo.FileName = nugetCommand;
+            process.StartInfo.Arguments =
+                "pack " + nuspec +
+                " -Version " + version +
+                " -OutputDirectory " + output +
+                " -Properties Configuration=Release" +
+                " -IncludeReferencedProjects";
+
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                throw new Exception();
+            }
         }
     }
 });

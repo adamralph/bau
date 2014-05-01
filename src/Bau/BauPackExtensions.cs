@@ -12,10 +12,5 @@ namespace Bau
 
             return bau.Intern<Task>(name);
         }
-
-        public static IBauPack<ExecTask> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
-        {
-            return new BauPack<ExecTask>(bau, name);
-        }
     }
 }

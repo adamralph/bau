@@ -8,6 +8,7 @@ namespace Bau.Test.Component
     using System.Globalization;
     using System.IO;
     using System.Reflection;
+    using Bau.Exec;
     using FluentAssertions;
     using Xbehave;
     using Xunit;
