@@ -21,16 +21,16 @@ namespace Bau.Test.Acceptance.Support
             {
                 Directory.Delete(this.scenario, true);
             }
-            
-            Directory.CreateDirectory(this.scenario);
+
+            FileSystem.CreateDirectory(this.scenario);
 
 #if DEBUG
             var bauOutputPath = @"..\..\..\..\Bau\bin\Debug";
 #else
             var bauOutputPath = @"..\..\..\..\Bau\bin\Release";
 #endif
-
-            var binPath = Directory.CreateDirectory(Path.Combine(this.scenario, "bin")).FullName;
+            var binPath = Path.Combine(this.scenario, "bin");
+            FileSystem.CreateDirectory(binPath);
             foreach (var file in Directory.GetFiles(bauOutputPath, "*.dll", SearchOption.TopDirectoryOnly))
             {
                 File.Copy(file, Path.Combine(binPath, Path.GetFileName(file)), true);
