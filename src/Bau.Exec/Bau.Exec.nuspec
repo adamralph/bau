@@ -3,7 +3,7 @@
   <metadata>
     <id>Bau.Exec</id>
     <version>0.0.0</version>
-    <title>Bau</title>
+    <title>Bau.Exec</title>
     <authors>Adam Ralph, Bau contributors</authors>
     <description>A Bau task plugin for executing arbitrary commands.
 
