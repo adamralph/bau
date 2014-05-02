@@ -5,10 +5,11 @@
     <version>0.0.0</version>
     <title>Bau</title>
     <authors>Adam Ralph, Bau contributors</authors>
-    <description>Write your build scripts in C#.
+    <description>The C# task runner.
 
-Require&lt;BauPack&gt;().Do(() => Console.WriteLine("Hello World!"));</description>
+Require&lt;BauPack&gt;().Do(() => Console.WriteLine("Hello World!")).Execute();</description>
     <projectUrl>https://github.com/bau-build/bau</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png</iconUrl>
     <licenseUrl>https://github.com/bau-build/bau/blob/dev/license.txt</licenseUrl>
     <copyright>Copyright (c) Bau contributors. (baubuildch@gmail.com)</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

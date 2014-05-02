@@ -47,12 +47,13 @@ Require<BauPack>()
         exec.Command = xunitCommand;
         exec.Args = new[] { acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml" };
     })
-.Exec("pack").DependsOn("build")
-    .Do(exec =>
+.Task("pack").DependsOn("build")
+    .Do(() =>
     {
         Directory.CreateDirectory(output);
         foreach (var nuspec in nuspecs)
         {
+            var exec = new ExecTask();
             exec.Command = nugetCommand;
             exec.Args = new[]
             {
@@ -62,6 +63,8 @@ Require<BauPack>()
                 "-Properties", "Configuration=Release",
                 "-IncludeReferencedProjects",
             };
+            
+            exec.Execute();
         }
     })
 .Execute();
