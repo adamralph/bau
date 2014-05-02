@@ -1,4 +1,4 @@
-# Bau
+![Bau](https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png)
 
 Write your build scripts in C# :sunglasses:.
 
@@ -27,7 +27,7 @@ To build manually, clone or fork this repository and see ['How to build'].
 
 Absolutely! Please feel free to raise issues, fork the source code, send pull requests, etc.
 
-No pull request is too small. Even whitespace fixes are appreciated. Before you contribute anything make sure you read [CONTRIBUTING.md].
+No pull request is too small. Even whitespace fixes are appreciated. Before you contribute anything make sure you read [CONTRIBUTING.md](https://github.com/bau-build/bau/blob/dev/CONTRIBUTING.md).
 
 ## What do the version numbers mean? ##
 
