@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{6A7E
 		samples\baufile.csx = samples\baufile.csx
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Samples.Greeter", "samples\Bau.Samples.Greeter\Bau.Samples.Greeter.csproj", "{351EB0C6-236B-43D6-8D0A-1724BAE25CFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Greeter", "samples\Bau.Samples.Greeter\Bau.Greeter.csproj", "{351EB0C6-236B-43D6-8D0A-1724BAE25CFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
