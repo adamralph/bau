@@ -8,8 +8,9 @@ namespace Bau
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using ScriptCs.Contracts;
 
-    public class Task
+    public class Task : ScriptPack<Task>, IScriptPackContext
     {
         private readonly List<string> dependencies = new List<string>();
         private readonly List<Action> actions = new List<Action>();
@@ -82,6 +83,25 @@ namespace Bau
             {
                 action();
             }
+
+            this.OnActionsExecuted();
+        }
+
+        public override void Initialize(IScriptPackSession session)
+        {
+            Guard.AgainstNullArgument("session", session);
+
+            base.Initialize(session);
+            session.ImportNamespace(this.GetType().Namespace);
+        }
+
+        public override IScriptPackContext GetContext()
+        {
+            return this;
+        }
+
+        protected virtual void OnActionsExecuted()
+        {
         }
     }
 }

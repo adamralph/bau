@@ -1,24 +1,16 @@
-﻿// <copyright file="Plugin.cs" company="Bau contributors">
+﻿// <copyright file="Exec.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau.Exec
+namespace BauExec
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using ScriptCs.Contracts;
+    using Bau;
 
-    public static class Plugin
-    {
-        public static IBauPack<ExecTask> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
-        {
-            return new BauPack<ExecTask>(bau, name);
-        }
-    }
-
-    public class ExecTask : Task
+    public class Exec : Task
     {
         public string Command { get; set; }
 
@@ -26,10 +18,8 @@ namespace Bau.Exec
 
         public string WorkingDirectory { get; set; }
 
-        public override void Execute()
+        protected override void OnActionsExecuted()
         {
-            base.Execute();
-
             if (this.Command == null)
             {
                 var message = string.Format(CultureInfo.InvariantCulture, "The '{0}' exec task has no command'.", this.Name);
@@ -80,17 +70,11 @@ namespace Bau.Exec
         }
     }
 
-    [CLSCompliant(false)]
-    public class Pack : ScriptPack<BauExec>
+    public static class Plugin
     {
-        public override void Initialize(IScriptPackSession session)
+        public static IBauPack<Exec> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
         {
-            session.ImportNamespace(this.GetType().Namespace);
-            this.Context = new BauExec();
+            return new BauPack<Exec>(bau, name);
         }
-    }
-
-    public class BauExec : IScriptPackContext
-    {
     }
 }

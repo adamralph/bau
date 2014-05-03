@@ -18,4 +18,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("0.1.0")]
 
 [assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]
