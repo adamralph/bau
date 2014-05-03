@@ -20,5 +20,5 @@ Require<BauPack>()
     })
 .Task("walk_dog")
     .DependsOn("make_coffee")
-    .Do(() => Console.WriteLine("Turned off alarm. Would have liked 5 more minutes, though."))
+    .Do(() => Console.WriteLine("Walked the dog."))
 .Execute();
