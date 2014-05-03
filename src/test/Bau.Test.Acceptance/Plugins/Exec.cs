@@ -24,6 +24,37 @@ namespace Bau.Test.Acceptance.Plugins
                 {
                     baufile = Baufile.Create(scenario).WriteLine(
 @"Require<BauPack>()
+.Task<Exec>(""default"")
+.Do(exec =>
+{
+    exec.WorkingDirectory = @""working"";
+    exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
+    exec.Args = new[] { ""foo.txt"" };
+})
+.Execute();");
+
+                    var workingFolder = Path.Combine(scenario, "working");
+                    FileSystem.CreateDirectory(workingFolder);
+                    createdFile = Path.Combine(workingFolder, "foo.txt");
+                });
+
+            "When I execute the baufile"
+                .f(() => output = baufile.Execute());
+
+            "Then the task succeeds"
+                .f(() => File.Exists(createdFile).Should().BeTrue());
+        }
+
+        [Scenario]
+        public static void ExtensionMethod(Baufile baufile, string createdFile, string output)
+        {
+            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+
+            "Given a baufile with an exec task which uses the Exec extension method"
+                .f(() =>
+                {
+                    baufile = Baufile.Create(scenario).WriteLine(
+@"Require<BauPack>()
 .Exec(""default"")
 .Do(exec =>
 {
@@ -52,7 +83,7 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which fails"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"Require<BauPack>().Exec().Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"").Execute();"));
+@"Require<BauPack>().Task<Exec>().Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"").Execute();"));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Execute()));
