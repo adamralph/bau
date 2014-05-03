@@ -20,51 +20,39 @@ Require<BauPack>()
             Directory.Delete(output, true);
         }
 
-        exec.Command = msBuildCommand;
-        exec.Args = new[] { solution, "/target:Clean", "/property:Configuration=Release" };
+        exec.Run(msBuildCommand).With(solution, "/target:Clean", "/property:Configuration=Release");
     })
 .Exec("restore")
-    .Do(exec =>
-    {
-        exec.Command = nugetCommand;
-        exec.Args = new[] { "restore", solution };
-    })
+    .Do(exec => exec
+        .Run(nugetCommand)
+        .With("restore", solution))
 .Exec("build").DependsOn("clean", "restore")
-    .Do(exec =>
-    {
-        exec.Command = msBuildCommand;
-        exec.Args = new[] { solution, "/target:Build", "/property:Configuration=Release" };
-    })
+    .Do(exec => exec
+        .Run(msBuildCommand)
+        .With(solution, "/target:Build", "/property:Configuration=Release"))
 .Exec("component").DependsOn("build")
-    .Do(exec =>
-    {
-        exec.Command = xunitCommand;
-        exec.Args = new[] { component, "/html", component + "TestResults.html", "/xml", component + "TestResults.xml" };
-    })
+    .Do(exec => exec
+        .Run(xunitCommand)
+        .With(component, "/html", component + "TestResults.html", "/xml", component + "TestResults.xml"))
 .Exec("accept").DependsOn("build")
-    .Do(exec =>
-    {
-        exec.Command = xunitCommand;
-        exec.Args = new[] { acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml" };
-    })
+    .Do(exec => exec
+        .Run(xunitCommand)
+        .With(acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml"))
 .Task("pack").DependsOn("build")
     .Do(() =>
     {
         Directory.CreateDirectory(output);
         foreach (var nuspec in nuspecs)
         {
-            var exec = new ExecTask();
-            exec.Command = nugetCommand;
-            exec.Args = new[]
-            {
-                "pack", nuspec,
-                "-Version", version,
-                "-OutputDirectory", output,
-                "-Properties", "Configuration=Release",
-                "-IncludeReferencedProjects",
-            };
-            
-            exec.Execute();
+            new ExecTask()
+                .Run(nugetCommand)
+                .With(
+                    "pack", nuspec,
+                    "-Version", version,
+                    "-OutputDirectory", output,
+                    "-Properties", "Configuration=Release",
+                    "-IncludeReferencedProjects")
+                .Execute();
         }
     })
 .Execute();
