@@ -8,6 +8,7 @@ namespace Bau.Exec
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using ScriptCs.Contracts;
 
     public static class Plugin
     {
@@ -77,5 +78,19 @@ namespace Bau.Exec
                 }
             }
         }
+    }
+
+    [CLSCompliant(false)]
+    public class Pack : ScriptPack<BauExec>
+    {
+        public override void Initialize(IScriptPackSession session)
+        {
+            session.ImportNamespace(this.GetType().Namespace);
+            this.Context = new BauExec();
+        }
+    }
+
+    public class BauExec : IScriptPackContext
+    {
     }
 }
