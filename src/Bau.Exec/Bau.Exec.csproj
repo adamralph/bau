@@ -7,7 +7,7 @@
     <ProjectGuid>{60E63D1D-71D9-4139-BD9A-E3509D940BE8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bau.Exec</RootNamespace>
+    <RootNamespace>BauExec</RootNamespace>
     <AssemblyName>Bau.Exec</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -37,7 +37,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Plugin.cs" />
+    <Compile Include="Exec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

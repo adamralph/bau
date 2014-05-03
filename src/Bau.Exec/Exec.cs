@@ -1,24 +1,17 @@
-﻿// <copyright file="Plugin.cs" company="Bau contributors">
+﻿// <copyright file="Exec.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau.Exec
+namespace BauExec
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using Bau;
     using ScriptCs.Contracts;
 
-    public static class Plugin
-    {
-        public static IBauPack<ExecTask> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
-        {
-            return new BauPack<ExecTask>(bau, name);
-        }
-    }
-
-    public class ExecTask : Task
+    public class Exec : Task
     {
         public string Command { get; set; }
 
@@ -77,6 +70,14 @@ namespace Bau.Exec
                     throw new InvalidOperationException(message);
                 }
             }
+        }
+    }
+
+    public static class Plugin
+    {
+        public static IBauPack<Exec> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
+        {
+            return new BauPack<Exec>(bau, name);
         }
     }
 
