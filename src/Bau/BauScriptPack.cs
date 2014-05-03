@@ -7,7 +7,6 @@ namespace Bau
     using System;
     using ScriptCs.Contracts;
 
-    [CLSCompliant(false)]
     public class BauScriptPack : ScriptPack<BauPack>
     {
         public override void Initialize(IScriptPackSession session)

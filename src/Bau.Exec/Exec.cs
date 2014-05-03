@@ -9,7 +9,6 @@ namespace BauExec
     using System.Diagnostics;
     using System.Globalization;
     using Bau;
-    using ScriptCs.Contracts;
 
     public class Exec : Task
     {
@@ -19,10 +18,8 @@ namespace BauExec
 
         public string WorkingDirectory { get; set; }
 
-        public override void Execute()
+        protected override void OnActionsExecuted()
         {
-            base.Execute();
-
             if (this.Command == null)
             {
                 var message = string.Format(CultureInfo.InvariantCulture, "The '{0}' exec task has no command'.", this.Name);
@@ -79,19 +76,5 @@ namespace BauExec
         {
             return new BauPack<Exec>(bau, name);
         }
-    }
-
-    [CLSCompliant(false)]
-    public class Pack : ScriptPack<BauExec>
-    {
-        public override void Initialize(IScriptPackSession session)
-        {
-            session.ImportNamespace(this.GetType().Namespace);
-            this.Context = new BauExec();
-        }
-    }
-
-    public class BauExec : IScriptPackContext
-    {
     }
 }
