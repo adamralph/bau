@@ -21,7 +21,7 @@ Our build server is kindly provided by [CodeBetter](http://codebetter.com/) and 
 
 Bau is available as a [NuGet package](https://nuget.org/packages/Bau/). For update notifications, follow [@baubuild](https://twitter.com/#!/baubuild).
 
-To build manually, clone or fork this repository and see ['How to build'].
+To build manually, clone or fork this repository and see ['How to build'](https://github.com/bau-build/bau/blob/dev/how_to_build.md).
 
 ## Can I help to improve it and/or fix bugs? ##
 
