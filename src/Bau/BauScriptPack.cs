@@ -2,19 +2,19 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace BauCore
 {
     using System;
     using ScriptCs.Contracts;
 
-    public class BauScriptPack : ScriptPack<BauPack>
+    public class BauScriptPack : ScriptPack<Bau>
     {
         public override void Initialize(IScriptPackSession session)
         {
             Guard.AgainstNullArgument("session", session);
 
             session.ImportNamespace(this.GetType().Namespace);
-            this.Context = new BauPack();
+            this.Context = new Bau();
         }
     }
 }

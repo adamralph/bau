@@ -7,7 +7,7 @@
     <ProjectGuid>{3302EC96-F250-49D0-B094-E960355D3799}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bau</RootNamespace>
+    <RootNamespace>BauCore</RootNamespace>
     <AssemblyName>Bau</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -37,12 +37,12 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BauPack.cs" />
+    <Compile Include="Bau.cs" />
     <Compile Include="BauScriptPack.cs" />
-    <Compile Include="BauPackExtensions.cs" />
-    <Compile Include="IBauPack{TTask}.cs" />
-    <Compile Include="BauPack{TTask}.cs" />
-    <Compile Include="IBauPack.cs" />
+    <Compile Include="BauExtensions.cs" />
+    <Compile Include="IBau{TTask}.cs" />
+    <Compile Include="Bau{TTask}.cs" />
+    <Compile Include="IBau.cs" />
     <Compile Include="Task.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

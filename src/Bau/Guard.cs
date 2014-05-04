@@ -2,7 +2,7 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace BauCore
 {
     using System;
     using System.Diagnostics;

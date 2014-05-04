@@ -2,7 +2,7 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace BauCore
 {
     using System;
     using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace Bau
             get { return this.actions; }
         }
 
-        public virtual void Invoke(BauPack bau)
+        public virtual void Invoke(Bau bau)
         {
             Guard.AgainstNullArgument("bau", bau);
 

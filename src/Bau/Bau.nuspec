@@ -7,7 +7,7 @@
     <authors>Adam Ralph, Bau contributors</authors>
     <description>The C# task runner.
 
-Require&lt;BauPack&gt;().Do(() => Console.WriteLine("Hello World!")).Execute();</description>
+Require&lt;Bau&gt;().Do(() => Console.WriteLine("Hello World!")).Execute();</description>
     <projectUrl>https://github.com/bau-build/bau</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png</iconUrl>
     <licenseUrl>https://github.com/bau-build/bau/blob/dev/license.txt</licenseUrl>

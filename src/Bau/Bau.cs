@@ -1,8 +1,8 @@
-﻿// <copyright file="BauPack.cs" company="Bau contributors">
+﻿// <copyright file="Bau.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace BauCore
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Bau
     using System.Reflection;
     using ScriptCs.Contracts;
 
-    public class BauPack : IScriptPackContext, IBauPack
+    public class Bau : IScriptPackContext, IBau
     {
         public const string DefaultTask = "default";
 
@@ -19,12 +19,12 @@ namespace Bau
         private readonly Dictionary<string, Task> tasks = new Dictionary<string, Task>();
         private Task currentTask;
 
-        public BauPack(params string[] topLevelTasks)
+        public Bau(params string[] topLevelTasks)
         {
             this.topLevelTasks.AddRange(topLevelTasks);
             if (this.topLevelTasks.Count == 0)
             {
-                this.topLevelTasks.Add(BauPack.DefaultTask);
+                this.topLevelTasks.Add(Bau.DefaultTask);
             }
         }
 
@@ -33,7 +33,7 @@ namespace Bau
             get { return this.currentTask; }
         }
 
-        public IBauPack DependsOn(params string[] otherTasks)
+        public IBau DependsOn(params string[] otherTasks)
         {
             this.EnsureCurrentTask();
             foreach (var task in otherTasks.Where(t => !this.currentTask.Dependencies.Contains(t)))
@@ -50,7 +50,7 @@ namespace Bau
             return this;
         }
 
-        public IBauPack Do(Action action)
+        public IBau Do(Action action)
         {
             this.EnsureCurrentTask();
             if (action != null)
@@ -89,7 +89,7 @@ namespace Bau
             return task;
         }
 
-        public IBauPack Intern<TTask>(string name = BauPack.DefaultTask) where TTask : Task, new()
+        public IBau Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
         {
             Task task;
             if (!this.tasks.TryGetValue(name, out task))
@@ -117,7 +117,7 @@ namespace Bau
         {
             if (this.currentTask == null)
             {
-                this.Intern<Task>(BauPack.DefaultTask);
+                this.Intern<Task>(Bau.DefaultTask);
             }
         }
     }

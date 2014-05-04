@@ -3,7 +3,7 @@
 //   scriptcs baufile.csx
 //
 // inspired by on http://jasonseifer.com/2010/04/06/rake-tutorial
-Require<BauPack>()
+Require<Bau>()
     .DependsOn("groom_myself", "walk_dog")
 .Task("turn_off_alarm")
     .Do(() => Console.WriteLine("Turned off alarm. Would have liked 5 more minutes, though."))
