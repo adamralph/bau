@@ -53,7 +53,7 @@ Require<BauPack>()
         Directory.CreateDirectory(output);
         foreach (var nuspec in nuspecs)
         {
-            var exec = new ExecTask();
+            var exec = new Exec();
             exec.Command = nugetCommand;
             exec.Args = new[]
             {
