@@ -8,7 +8,7 @@ namespace BauExec
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using Bau;
+    using BauCore;
 
     public class Exec : Task
     {
@@ -72,9 +72,9 @@ namespace BauExec
 
     public static class Plugin
     {
-        public static IBauPack<Exec> Exec(this IBauPack bau, string name = BauPack.DefaultTask)
+        public static IBau<Exec> Exec(this IBau bau, string name = Bau.DefaultTask)
         {
-            return new BauPack<Exec>(bau, name);
+            return new Bau<Exec>(bau, name);
         }
     }
 }

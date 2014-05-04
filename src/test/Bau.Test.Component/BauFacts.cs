@@ -1,4 +1,4 @@
-﻿// <copyright file="BauPackFacts.cs" company="Bau contributors">
+﻿// <copyright file="BauFacts.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -8,17 +8,18 @@ namespace Bau.Test.Component
     using System.Globalization;
     using System.IO;
     using System.Reflection;
+    using BauCore;
     using BauExec;
     using FluentAssertions;
     using Xbehave;
     using Xunit;
 
-    public static class BauPackFacts
+    public static class BauFacts
     {
         [Fact]
         public static void SyntaxWorks()
         {
-            new BauPack()
+            new Bau()
             .Task()
                 .DependsOn("task1", "task3")
                 .Do(() => { })

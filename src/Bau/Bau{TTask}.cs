@@ -1,16 +1,16 @@
-﻿// <copyright file="BauPack{TTask}.cs" company="Bau contributors">
+﻿// <copyright file="Bau{TTask}.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau
+namespace BauCore
 {
     using System;
 
-    public class BauPack<TTask> : IBauPack<TTask> where TTask : Task, new()
+    public class Bau<TTask> : IBau<TTask> where TTask : Task, new()
     {
-        private readonly IBauPack bau;
+        private readonly IBau bau;
 
-        public BauPack(IBauPack bau, string name = BauPack.DefaultTask)
+        public Bau(IBau bau, string name = Bau.DefaultTask)
         {
             Guard.AgainstNullArgument("bau", bau);
 
@@ -23,13 +23,13 @@ namespace Bau
             get { return this.bau.CurrentTask; }
         }
 
-        public IBauPack<TTask> DependsOn(params string[] otherTasks)
+        public IBau<TTask> DependsOn(params string[] otherTasks)
         {
             this.bau.DependsOn(otherTasks);
             return this;
         }
 
-        public IBauPack<TTask> Do(Action<TTask> action)
+        public IBau<TTask> Do(Action<TTask> action)
         {
             var task = (TTask)this.bau.CurrentTask;
             this.bau.Do(() => action(task));
@@ -41,17 +41,17 @@ namespace Bau
             this.bau.Execute();
         }
 
-        public IBauPack Intern<UTask>(string name = BauPack.DefaultTask) where UTask : Task, new()
+        public IBau Intern<UTask>(string name = Bau.DefaultTask) where UTask : Task, new()
         {
             return this.bau.Intern<UTask>(name);
         }
 
-        IBauPack IBauPack.DependsOn(params string[] otherTasks)
+        IBau IBau.DependsOn(params string[] otherTasks)
         {
             return this.bau.DependsOn(otherTasks);
         }
 
-        public IBauPack Do(Action action)
+        public IBau Do(Action action)
         {
             return this.bau.Do(action);
         }

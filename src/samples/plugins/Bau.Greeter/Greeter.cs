@@ -2,10 +2,10 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-// Require<BauPack>().Greeter().Do(g => g.Greeting = "Hello world!").Execute();
+// Require<Bau>().Greeter().Do(g => g.Greeting = "Hello world!").Execute();
 namespace BauGreeter
 {
-    using Bau;
+    using BauCore;
 
     public class Greeter : Task
     {
@@ -19,9 +19,9 @@ namespace BauGreeter
 
     public static class Plugin
     {
-        public static IBauPack<Greeter> Greeter(this IBauPack bau, string name = BauPack.DefaultTask)
+        public static IBau<Greeter> Greeter(this IBau bau, string name = Bau.DefaultTask)
         {
-            return new BauPack<Greeter>(bau, name);
+            return new Bau<Greeter>(bau, name);
         }
     }
 }
