@@ -10,7 +10,7 @@ var component = @"src\test\Bau.Test.Component\bin\Release\Bau.Test.Component.dll
 var acceptance = @"src\test\Bau.Test.Acceptance\bin\Release\Bau.Test.Acceptance.dll";
 var nuspecs = new[] { @"src\Bau\Bau.csproj", @"src\Bau.Exec\Bau.Exec.csproj", };
 
-Require<BauPack>()
+Require<Bau>()
 .Task("default").DependsOn("component", "accept", "pack")
 .Exec("clean")
     .Do(exec =>
