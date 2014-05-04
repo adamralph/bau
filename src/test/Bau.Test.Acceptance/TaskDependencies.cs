@@ -24,7 +24,7 @@ namespace Bau.Test.Acceptance
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();"));
+@"var bau = Require<Bau>();"));
 
             "And a non-default task"
                 .f(c => baufile.WriteLine(
@@ -88,7 +88,7 @@ bau.Execute();"));
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();"));
+@"var bau = Require<Bau>();"));
 
             "And a non-default task"
                 .f(c => baufile.WriteLine(
@@ -164,7 +164,7 @@ bau.Execute();"));
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();"));
+@"var bau = Require<Bau>();"));
 
             "And a non-default task"
                 .f(c => baufile.WriteLine(
@@ -241,7 +241,7 @@ bau.Execute();"));
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();"));
+@"var bau = Require<Bau>();"));
 
             "And a non-default task"
                 .f(c => baufile.WriteLine(
@@ -318,7 +318,7 @@ bau.Execute();"));
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();"));
+@"var bau = Require<Bau>();"));
 
             "And a non-default task which depends on the default task"
                 .f(c => baufile.WriteLine(
@@ -384,7 +384,7 @@ bau.Execute();"));
 
             "Given a default task with a non-existent dependency"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"Require<BauPack>().Task(""default"").DependsOn(""non-existent"").Do(() => { }).Execute();"));
+@"Require<Bau>().Task(""default"").DependsOn(""non-existent"").Do(() => { }).Execute();"));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Execute()));
@@ -406,7 +406,7 @@ bau.Execute();"));
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<BauPack>();"));
+@"var bau = Require<Bau>();"));
 
             "And a non-default task which fails"
                 .f(c => baufile.WriteLine(
