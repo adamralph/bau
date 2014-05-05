@@ -69,7 +69,7 @@ namespace Bau.Test.Acceptance.Support
             return this.Write(code + Environment.NewLine);
         }
 
-        public string Execute()
+        public string Execute(params string[] tasks)
         {
             using (var process = new Process())
             {
@@ -79,7 +79,15 @@ namespace Bau.Test.Acceptance.Support
 
                 process.StartInfo.WorkingDirectory = Path.GetDirectoryName(this.path);
                 process.StartInfo.FileName = "scriptcs";
-                process.StartInfo.Arguments = "baufile.csx";
+                if (tasks.Length == 0)
+                {
+                    process.StartInfo.Arguments = "baufile.csx";
+                }
+                else
+                {
+                    process.StartInfo.Arguments = "baufile.csx -- " + string.Join(" ", tasks);
+                }
+
                 ////process.StartInfo.Arguments = this.path + " -debug -logfile " + logFile; // may be supported in scriptcs > 0.9
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.CreateNoWindow = true;

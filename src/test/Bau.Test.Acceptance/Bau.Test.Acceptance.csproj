@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecificTasks.cs" />
     <Compile Include="Plugins\Exec.cs" />
     <Compile Include="ScriptExecution.cs" />
     <Compile Include="Support\FileSystem.cs" />
