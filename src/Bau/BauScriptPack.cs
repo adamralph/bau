@@ -14,7 +14,7 @@ namespace BauCore
             Guard.AgainstNullArgument("session", session);
 
             session.ImportNamespace(this.GetType().Namespace);
-            this.Context = new Bau();
+            this.Context = new Bau(session.ScriptArgs);
         }
     }
 }
