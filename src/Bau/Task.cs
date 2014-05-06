@@ -67,6 +67,7 @@ namespace BauCore
 
             try
             {
+                Console.WriteLine("Executing '{0}' Bau task.", this.Name);
                 this.Execute();
             }
             catch (Exception ex)
@@ -78,7 +79,6 @@ namespace BauCore
 
         public virtual void Execute()
         {
-            Console.WriteLine("Executing '{0}' Bau task.", this.Name);
             foreach (var action in this.actions)
             {
                 action();
