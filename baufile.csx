@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
 var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
