@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Bau</id>
-    <version>0.0.0</version>
+    <version>0.1.0</version>
     <title>Bau</title>
     <authors>Adam Ralph, Bau contributors</authors>
     <description>The C# task runner.
