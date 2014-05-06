@@ -1,4 +1,4 @@
-﻿// <copyright file="DefaultTask.cs" company="Bau contributors">
+﻿// <copyright file="TaskExecution.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -13,7 +13,7 @@ namespace Bau.Test.Acceptance
     using Xbehave;
     using Xunit;
 
-    public static class DefaultTask
+    public static class TaskExecution
     {
         [Scenario]
         public static void DefaultTaskExists(Baufile baufile, string tempFile, string output)
