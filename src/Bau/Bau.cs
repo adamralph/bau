@@ -61,6 +61,41 @@ namespace BauCore
             return this;
         }
 
+        public void Invoke(string task)
+        {
+            Task taskRef;
+            if (!this.tasks.TryGetValue(task, out taskRef))
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task not found.", task);
+                throw new InvalidOperationException(message);
+            }
+
+            ////var trace = this.alreadyInvoked ? null : " (first time)";
+            ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
+            if (taskRef.Invoked)
+            {
+                ////log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
+                return;
+            }
+
+            taskRef.Invoked = true;
+            foreach (var dependency in taskRef.Dependencies)
+            {
+                this.Invoke(dependency);
+            }
+
+            try
+            {
+                Console.WriteLine("Executing '{0}' Bau task.", task);
+                taskRef.Execute();
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
+                throw new InvalidOperationException(message, ex);
+            }
+        }
+
         public void Execute()
         {
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
@@ -69,32 +104,26 @@ namespace BauCore
             Console.WriteLine("Bau version {0}.", version.InformationalVersion);
             Console.WriteLine("Copyright (c) Bau contributors. (baubuildch@gmail.com)");
 
-            foreach (var task in this.topLevelTasks.Select(name => this.GetTask(name)))
+            foreach (var task in this.topLevelTasks)
             {
-                task.Invoke(this);
+                this.Invoke(task);
             }
 
             Console.WriteLine("Bau succeeded.");
         }
 
-        public Task GetTask(string name)
-        {
-            Task task;
-            if (!this.tasks.TryGetValue(name, out task))
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task not found.", name);
-                throw new InvalidOperationException(message);
-            }
-
-            return task;
-        }
-
         public IBau Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", name);
+                throw new ArgumentException(message, "name");
+            }
+
             Task task;
             if (!this.tasks.TryGetValue(name, out task))
             {
-                this.tasks.Add(name, task = new TTask() { Name = name });
+                this.tasks.Add(name, task = new TTask());
             }
 
             var typedTask = task as TTask;

@@ -71,7 +71,7 @@
     <Compile Include="Support\FileSystem.cs" />
     <Compile Include="TaskDependencies.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DefaultTask.cs" />
+    <Compile Include="TaskExecution.cs" />
     <Compile Include="Support\Baufile.cs" />
     <Compile Include="Support\MethodBaseExtensions.cs" />
   </ItemGroup>

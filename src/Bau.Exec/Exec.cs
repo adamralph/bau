@@ -22,15 +22,12 @@ namespace BauExec
         {
             if (this.Command == null)
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "The '{0}' exec task has no command'.", this.Name);
-                throw new InvalidOperationException(message);
+                throw new InvalidOperationException("The command is null.");
             }
 
             if (string.IsNullOrWhiteSpace(this.Command))
             {
-                var message = string.Format(
-                    CultureInfo.InvariantCulture, "The '{0}' exec task has an invalid command'.", this.Name);
-                throw new InvalidOperationException(message);
+                throw new InvalidOperationException("The command is invalid.");
             }
 
             using (var process = new Process())
