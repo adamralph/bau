@@ -6,8 +6,6 @@ namespace BauCore
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using ScriptCs.Contracts;
 
     public class Task : ScriptPack<Task>, IScriptPackContext
@@ -15,27 +13,7 @@ namespace BauCore
         private readonly List<string> dependencies = new List<string>();
         private readonly List<Action> actions = new List<Action>();
 
-        private string name;
-        private bool invoked;
-
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-
-            internal set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", value);
-                    throw new ArgumentException(message, "value");
-                }
-
-                this.name = value;
-            }
-        }
+        public bool Invoked { get; set; }
 
         public IList<string> Dependencies
         {
@@ -45,36 +23,6 @@ namespace BauCore
         public IList<Action> Actions
         {
             get { return this.actions; }
-        }
-
-        public virtual void Invoke(Bau bau)
-        {
-            Guard.AgainstNullArgument("bau", bau);
-
-            ////var trace = this.alreadyInvoked ? null : " (first time)";
-            ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
-            if (this.invoked)
-            {
-                ////log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
-                return;
-            }
-
-            this.invoked = true;
-            foreach (var dependency in this.dependencies.Select(name => bau.GetTask(name)))
-            {
-                dependency.Invoke(bau);
-            }
-
-            try
-            {
-                Console.WriteLine("Executing '{0}' Bau task.", this.Name);
-                this.Execute();
-            }
-            catch (Exception ex)
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", this.name, ex.Message);
-                throw new InvalidOperationException(message, ex);
-            }
         }
 
         public virtual void Execute()
