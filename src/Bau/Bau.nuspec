@@ -2,6 +2,7 @@
 <package>
   <metadata>
     <id>Bau</id>
+    <!-- The version will be replaced by the build -->
     <version>0.0.0</version>
     <title>Bau</title>
     <authors>Adam Ralph, Bau contributors</authors>
