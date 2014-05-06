@@ -1,6 +1,7 @@
 using System.Diagnostics;
 
 var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
+var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
 var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), @"Microsoft.NET\Framework\v4.0.30319\MSBuild.exe");
 var nugetCommand = @"packages\NuGet.CommandLine.2.8.1\tools\NuGet.exe";
 var xunitCommand = @"packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe";
@@ -8,7 +9,7 @@ var solution = @"src\Bau.sln";
 var output = "artifacts";
 var component = @"src\test\Bau.Test.Component\bin\Release\Bau.Test.Component.dll";
 var acceptance = @"src\test\Bau.Test.Acceptance\bin\Release\Bau.Test.Acceptance.dll";
-var nuspecs = new[] { @"src\Bau\Bau.csproj", @"src\Bau.Exec\Bau.Exec.csproj", };
+var packs = new[] { @"src\Bau\Bau", @"src\Bau.Exec\Bau.Exec", };
 
 Require<Bau>()
 .Task("default").DependsOn("component", "accept", "pack")
@@ -51,20 +52,39 @@ Require<Bau>()
     .Do(() =>
     {
         Directory.CreateDirectory(output);
-        foreach (var nuspec in nuspecs)
+        foreach (var pack in packs)
         {
-            var exec = new Exec();
-            exec.Command = nugetCommand;
-            exec.Args = new[]
+            File.Copy(pack + ".nuspec", pack + ".nuspec.original", true);
+        }
+        
+        try
+        {
+            foreach (var pack in packs)
             {
-                "pack", nuspec,
-                "-Version", version,
-                "-OutputDirectory", output,
-                "-Properties", "Configuration=Release",
-                "-IncludeReferencedProjects",
-            };
+                var text = File.ReadAllText(pack + ".nuspec");
+                text = text.Replace("0.0.0", version + versionSuffix);
+                File.WriteAllText(pack + ".nuspec", text);
             
-            exec.Execute();
+                var exec = new Exec();
+                exec.Command = nugetCommand;
+                exec.Args = new[]
+                {
+                    "pack", pack + ".csproj",
+                    "-OutputDirectory", output,
+                    "-Properties", "Configuration=Release",
+                    "-IncludeReferencedProjects",
+                };
+                
+                exec.Execute();
+            }
+        }
+        finally
+        {
+            foreach (var pack in packs)
+            {
+                File.Copy(pack + ".nuspec.original", pack + ".nuspec", true);
+                File.Delete(pack + ".nuspec.original");
+            }
         }
     })
 .Execute();

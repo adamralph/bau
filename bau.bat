@@ -1,3 +1,5 @@
+REM TIP: copy this file to your PATH so you can type 'bau' next to any baufile.csx
+
 @ECHO OFF
 
 REM this can be removed when https://github.com/scriptcs/scriptcs/issues/297 is fixed
