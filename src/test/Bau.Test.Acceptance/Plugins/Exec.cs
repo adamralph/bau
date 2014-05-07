@@ -15,93 +15,72 @@ namespace Bau.Test.Acceptance.Plugins
     public static class Exec
     {
         [Scenario]
-        public static void ExecutingACommand(Baufile baufile, string createdFile, string output)
+        public static void ExecutingACommand(Baufile baufile)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which succeeds"
-                .f(() =>
-                {
-                    baufile = Baufile.Create(scenario).WriteLine(
+                .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
 @"Require<Bau>()
 .Task<Exec>(""default"")
 .Do(exec =>
 {
-    exec.WorkingDirectory = @""working"";
+    exec.WorkingDirectory = @""" + scenario + @""";
     exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
     exec.Args = new[] { ""foo.txt"" };
 })
-.Execute();");
-
-                    var workingFolder = Path.Combine(scenario, "working");
-                    FileSystem.CreateDirectory(workingFolder);
-                    createdFile = Path.Combine(workingFolder, "foo.txt");
-                });
+.Execute();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => baufile.Execute());
 
             "Then the task succeeds"
-                .f(() => File.Exists(createdFile).Should().BeTrue());
+                .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
         }
 
         [Scenario]
-        public static void ExecutingACommandUsingTheExtensionMethod(Baufile baufile, string createdFile, string output)
+        public static void ExecutingACommandUsingTheExtensionMethod(Baufile baufile)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which uses the Exec extension method"
-                .f(() =>
-                {
-                    baufile = Baufile.Create(scenario).WriteLine(
+                .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
 @"Require<Bau>()
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.WorkingDirectory = @""working"";
+    exec.WorkingDirectory = @""" + scenario + @""";
     exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
     exec.Args = new[] { ""foo.txt"" };
 })
-.Execute();");
-
-                    var workingFolder = Path.Combine(scenario, "working");
-                    FileSystem.CreateDirectory(workingFolder);
-                    createdFile = Path.Combine(workingFolder, "foo.txt");
-                });
+.Execute();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => baufile.Execute());
 
             "Then the task succeeds"
-                .f(() => File.Exists(createdFile).Should().BeTrue());
+                .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
         }
 
         [Scenario]
-        public static void ExecutingACommandUsingFluentSyntax(Baufile baufile, string createdFile, string output)
+        public static void ExecutingACommandUsingFluentSyntax(Baufile baufile)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which uses the Exec extension method"
-                .f(() =>
-                {
-                    baufile = Baufile.Create(scenario).WriteLine(
+                .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
 @"Require<Bau>()
 .Exec(""default"")
-.Do(exec => exec.Run(@""..\Bau.Test.Acceptance.CreateFile.exe"").With(""foo.txt"").In(@""working""))
-.Execute();");
-
-                    var workingFolder = Path.Combine(scenario, "working");
-                    FileSystem.CreateDirectory(workingFolder);
-                    createdFile = Path.Combine(workingFolder, "foo.txt");
-                });
+.Do(exec => exec.Run(@""..\Bau.Test.Acceptance.CreateFile.exe"").With(""foo.txt"").In(@""" + scenario + @"""))
+.Execute();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => baufile.Execute());
 
             "Then the task succeeds"
-                .f(() => File.Exists(createdFile).Should().BeTrue());
+                .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
         }
-        
+
         [Scenario]
         public static void ExecutionFails(Baufile baufile, Exception ex)
         {

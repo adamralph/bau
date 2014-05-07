@@ -5,6 +5,7 @@
 namespace Bau.Test.Acceptance.Support
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -12,100 +13,118 @@ namespace Bau.Test.Acceptance.Support
 
     public class Baufile
     {
-        private readonly string scenario;
+        private static readonly string directory = "scenarios";
+
         private readonly string path;
+        private readonly string name;
+        private readonly string log;
 
-        private Baufile(string scenario)
+        static Baufile()
         {
-            this.scenario = scenario;
-            if (Directory.Exists(this.scenario))
+            FileSystem.EnsureDirectoryCreated(directory);
+            var bin = Path.Combine(directory, "bin");
+            FileSystem.EnsureDirectoryCreated(bin);
+
+            var assemblyDirectories = new[]
             {
-                Directory.Delete(this.scenario, true);
-            }
-
-            FileSystem.CreateDirectory(this.scenario);
-
 #if DEBUG
-            var outputPaths = new[]
-            {
                 @"..\..\..\..\Bau\bin\Debug",
                 @"..\..\..\..\Bau.Exec\bin\Debug",
-            };
 #else
-            var outputPaths = new[]
-            {
                 @"..\..\..\..\Bau\bin\Release",
                 @"..\..\..\..\Bau.Exec\bin\Release",
-            };
 #endif
-            var binPath = Path.Combine(this.scenario, "bin");
-            FileSystem.CreateDirectory(binPath);
-            foreach (var file in outputPaths.SelectMany(bauOutputPath => Directory.GetFiles(bauOutputPath, "*.dll", SearchOption.TopDirectoryOnly)))
+            };
+
+            foreach (var source in assemblyDirectories.SelectMany(bauOutputPath =>
+                System.IO.Directory.GetFiles(bauOutputPath, "*.dll", SearchOption.TopDirectoryOnly)))
             {
-                File.Copy(file, Path.Combine(binPath, Path.GetFileName(file)), true);
+                var destination = Path.Combine(bin, Path.GetFileName(source));
+                if (!File.Exists(destination) || File.GetLastWriteTimeUtc(source) > File.GetLastWriteTimeUtc(destination))
+                {
+                    File.Copy(source, destination, true);
+                }
             }
-
-            File.Delete(this.path = Path.Combine(this.scenario, "baufile.csx"));
         }
 
-        public static Baufile Create(string scenario)
+        private Baufile(string scenario, bool createWorkingDirectory)
         {
-            return new Baufile(scenario);
+            File.Delete(this.path = Path.Combine(directory, this.name = string.Concat("baufile.", scenario, ".csx")));
+            File.Delete(this.log = Path.Combine(directory, string.Concat("baufile.", scenario, ".log")));
+
+            if (createWorkingDirectory)
+            {
+                FileSystem.EnsureDirectoryDeleted(Path.Combine(directory, scenario));
+                FileSystem.EnsureDirectoryCreated(Path.Combine(directory, scenario));
+            }
         }
 
-        public Baufile Write(string code)
+        public static string Directory
+        {
+            get { return directory; }
+        }
+
+        public static Baufile Create(string scenario, bool createWorkingDirectory = false)
+        {
+            return new Baufile(scenario, createWorkingDirectory);
+        }
+
+        public Baufile WriteLine(string code)
         {
             using (var writer = new StreamWriter(this.path, true))
             {
-                writer.Write(code);
+                writer.WriteLine(code);
                 writer.Flush();
             }
 
             return this;
         }
 
-        public Baufile WriteLine(string code)
-        {
-            return this.Write(code + Environment.NewLine);
-        }
-
         public string Execute(params string[] tasks)
         {
+            var info = new ProcessStartInfo();
+            info.FileName = "scriptcs";
+
+            var args = new List<string>();
+            args.Add(this.name);
+            args.Add("-debug");
+
+            if (tasks.Length > 0)
+            {
+                args.Add("--");
+                args.AddRange(tasks);
+            }
+
+            info.Arguments = string.Join(" ", args);
+            info.WorkingDirectory = directory;
+            info.UseShellExecute = false;
+            info.CreateNoWindow = true;
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
+
+            var output = new StringBuilder();
             using (var process = new Process())
             {
-                var output = new StringBuilder();
-
-                ////var logFile = Path.Combine(Directory.GetCurrentDirectory(), "scriptcs." + this.scenario + ".log");
-
-                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(this.path);
-                process.StartInfo.FileName = "scriptcs";
-                if (tasks.Length == 0)
-                {
-                    process.StartInfo.Arguments = "baufile.csx";
-                }
-                else
-                {
-                    process.StartInfo.Arguments = "baufile.csx -- " + string.Join(" ", tasks);
-                }
-
-                ////process.StartInfo.Arguments = this.path + " -debug -logfile " + logFile; // may be supported in scriptcs > 0.9
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.OutputDataReceived += (sender, args) => output.AppendLine(args.Data);
-                process.ErrorDataReceived += (sender, args) => output.AppendLine(args.Data);
+                process.StartInfo = info;
+                process.OutputDataReceived += (sender, e) => output.AppendLine(e.Data);
+                process.ErrorDataReceived += (sender, e) => output.AppendLine(e.Data);
                 process.Start();
                 process.BeginOutputReadLine();
                 process.WaitForExit();
+
+                using (var writer = new StreamWriter(this.log, true))
+                {
+                    writer.WriteLine(output.ToString());
+                    writer.Flush();
+                }
 
                 if (process.ExitCode != 0)
                 {
                     throw new InvalidOperationException(output.ToString());
                 }
-
-                return output.ToString();
             }
+
+            return output.ToString();
         }
     }
 }
