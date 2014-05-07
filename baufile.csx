@@ -10,70 +10,59 @@ var acceptance = @"src\test\Bau.Test.Acceptance\bin\Release\Bau.Test.Acceptance.
 var packs = new[] { @"src\Bau\Bau", @"src\Bau.Exec\Bau.Exec", };
 
 Require<Bau>()
-.Task("default").DependsOn("component", "accept", "pack")
+.Task("default")
+    .DependsOn("component", "accept", "pack")
 .Exec("clean")
-    .Do(exec =>
-    {
-        if (Directory.Exists(output))
-        {
-            Directory.Delete(output, true);
-        }
-
-        exec.Command = msBuildCommand;
-        exec.Args = new[] { solution, "/target:Clean", "/property:Configuration=Release" };
-    })
+    .Do(exec => exec
+        .Run(msBuildCommand)
+        .With(solution, "/target:Clean", "/property:Configuration=Release"))
+.Task("clobber")
+    .DependsOn("clean")
+    .Do(() => { if (Directory.Exists(output)) Directory.Delete(output, true); })
 .Exec("restore")
-    .Do(exec =>
-    {
-        exec.Command = nugetCommand;
-        exec.Args = new[] { "restore", solution };
-    })
-.Exec("build").DependsOn("clean", "restore")
-    .Do(exec =>
-    {
-        exec.Command = msBuildCommand;
-        exec.Args = new[] { solution, "/target:Build", "/property:Configuration=Release" };
-    })
-.Exec("component").DependsOn("build")
-    .Do(exec =>
-    {
-        exec.Command = xunitCommand;
-        exec.Args = new[] { component, "/html", component + "TestResults.html", "/xml", component + "TestResults.xml" };
-    })
-.Exec("accept").DependsOn("build")
-    .Do(exec =>
-    {
-        exec.Command = xunitCommand;
-        exec.Args = new[] { acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml" };
-    })
-.Task("pack").DependsOn("build")
+    .Do(exec => exec
+        .Run(nugetCommand)
+        .With("restore", solution))
+.Exec("build")
+    .DependsOn("clean", "restore")
+    .Do(exec => exec
+        .Run(msBuildCommand)
+        .With(solution, "/target:Build", "/property:Configuration=Release"))
+.Exec("component")
+    .DependsOn("build")
+    .Do(exec => exec
+        .Run(xunitCommand)
+        .With(component, "/html", component + "TestResults.html", "/xml", component + "TestResults.xml"))
+.Exec("accept")
+    .DependsOn("build")
+    .Do(exec => exec
+        .Run(xunitCommand)
+        .With(acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml"))
+.Task("pack")
+    .DependsOn("build", "clobber")
     .Do(() =>
     {
+        System.Threading.Thread.Sleep(100); // HACK (adamralph): wait for the directory to be deleted in clobber
         Directory.CreateDirectory(output);
+
         foreach (var pack in packs)
         {
             File.Copy(pack + ".nuspec", pack + ".nuspec.original", true);
         }
-        
+
         try
         {
             foreach (var pack in packs)
             {
-                var text = File.ReadAllText(pack + ".nuspec");
-                text = text.Replace("0.0.0", version + versionSuffix);
-                File.WriteAllText(pack + ".nuspec", text);
-            
-                var exec = new Exec();
-                exec.Command = nugetCommand;
-                exec.Args = new[]
-                {
-                    "pack", pack + ".csproj",
-                    "-OutputDirectory", output,
-                    "-Properties", "Configuration=Release",
-                    "-IncludeReferencedProjects",
-                };
-                
-                exec.Execute();
+                File.WriteAllText(pack + ".nuspec", File.ReadAllText(pack + ".nuspec").Replace("0.0.0", version + versionSuffix));
+                new Exec()
+                    .Run(nugetCommand)
+                    .With(
+                        "pack", pack + ".csproj",
+                        "-OutputDirectory", output,
+                        "-Properties", "Configuration=Release",
+                        "-IncludeReferencedProjects")
+                    .Execute();
             }
         }
         finally
