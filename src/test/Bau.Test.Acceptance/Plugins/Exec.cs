@@ -15,7 +15,7 @@ namespace Bau.Test.Acceptance.Plugins
     public static class Exec
     {
         [Scenario]
-        public static void ExecutionSucceeds(Baufile baufile, string createdFile, string output)
+        public static void ExecutingACommand(Baufile baufile, string createdFile, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -46,7 +46,7 @@ namespace Bau.Test.Acceptance.Plugins
         }
 
         [Scenario]
-        public static void ExtensionMethod(Baufile baufile, string createdFile, string output)
+        public static void ExecutingACommandUsingTheExtensionMethod(Baufile baufile, string createdFile, string output)
         {
             var scenario = MethodInfo.GetCurrentMethod().GetFullName();
 
@@ -76,6 +76,32 @@ namespace Bau.Test.Acceptance.Plugins
                 .f(() => File.Exists(createdFile).Should().BeTrue());
         }
 
+        [Scenario]
+        public static void ExecutingACommandUsingFluentSyntax(Baufile baufile, string createdFile, string output)
+        {
+            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+
+            "Given a baufile with an exec task which uses the Exec extension method"
+                .f(() =>
+                {
+                    baufile = Baufile.Create(scenario).WriteLine(
+@"Require<Bau>()
+.Exec(""default"")
+.Do(exec => exec.Run(@""..\Bau.Test.Acceptance.CreateFile.exe"").With(""foo.txt"").In(@""working""))
+.Execute();");
+
+                    var workingFolder = Path.Combine(scenario, "working");
+                    FileSystem.CreateDirectory(workingFolder);
+                    createdFile = Path.Combine(workingFolder, "foo.txt");
+                });
+
+            "When I execute the baufile"
+                .f(() => output = baufile.Execute());
+
+            "Then the task succeeds"
+                .f(() => File.Exists(createdFile).Should().BeTrue());
+        }
+        
         [Scenario]
         public static void ExecutionFails(Baufile baufile, Exception ex)
         {
