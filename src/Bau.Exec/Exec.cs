@@ -18,6 +18,24 @@ namespace BauExec
 
         public string WorkingDirectory { get; set; }
 
+        public Exec Run(string command)
+        {
+            this.Command = command;
+            return this;
+        }
+
+        public Exec With(params string[] args)
+        {
+            this.Args = args;
+            return this;
+        }
+
+        public Exec In(string workingDirectory)
+        {
+            this.WorkingDirectory = workingDirectory;
+            return this;
+        }
+
         protected override void OnActionsExecuted()
         {
             if (this.Command == null)
