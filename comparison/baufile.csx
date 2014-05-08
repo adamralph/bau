@@ -1,19 +1,18 @@
+// Build with Bau at least once before building with other runners to ensure NuGet and xunit.net executables are present
 // 1. install scriptcs: http://chocolatey.org/packages/ScriptCs
 // 2. install packages: scriptcs -install
-// 3. execute baufile: scriptcs baufile.csx
-
+// 3. execute baufile:  scriptcs baufile.csx
 
 
 var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
 var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "../src/Bau.sln";
-var component = "../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
-var acceptance = "../src/test/Bau.Test.Acceptance/bin/Release/Bau.Test.Acceptance.dll";
+var test = "../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 
 Require<Bau>()
 
-.Task("default").DependsOn("component", "accept")
+.Task("default").DependsOn("test")
 
 .Exec("clean").Do(exec => exec
     .Run(msBuildCommand)
@@ -27,12 +26,8 @@ Require<Bau>()
     .Run(msBuildCommand)
     .With(solution, "/target:Build", "/property:Configuration=Release"))
 
-.Exec("component").DependsOn("build").Do(exec => exec
+.Exec("test").DependsOn("build").Do(exec => exec
     .Run(xunitCommand)
-    .With(component, "/html", component + "TestResults.html", "/xml", component + "TestResults.xml"))
-
-.Exec("accept").DependsOn("build").Do(exec => exec
-    .Run(xunitCommand)
-    .With(acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml"))
+    .With(test, "/html", test + ".TestResults.html", "/xml", test + ".TestResults.xml"))
 
 .Execute();
