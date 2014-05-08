@@ -6,5 +6,6 @@ obj
 
 artifacts
 packages
+node_modules
 
 *.sln.ide
