@@ -4,14 +4,8 @@
 
 namespace Bau.Test.Component
 {
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
     using BauCore;
     using BauExec;
-    using FluentAssertions;
-    using Xbehave;
     using Xunit;
 
     public static class BauFacts
