@@ -6,7 +6,7 @@ These guidelines are for code changes but we are always very grateful to receive
 
 ## Preparation
 
-Before starting work on a *functional* change, i.e. a new feature, a change to an existing feature or a bug, please ensure an [issue](https://github.com/bau-build/bau/issues/) has been raised. Indicate your intention to work on the issue by writing a comment against it. This will prevent duplication of effort. If the change is non-trivial, it's usually best to propose a design in the issue comments.
+Before starting work on a *functional* change, i.e. a new feature, a change to an existing feature or a bug, please ensure an [issue](https://github.com/bau-build/bau/issues/) has been raised. If not, go ahead and raise one. Indicate your intention to work on the issue by writing a comment against it. This will prevent duplication of effort. If the change is non-trivial, it's usually best to propose a design in the issue comments.
 
 It is **not** necessary to raise an issue for non-functional changes, e.g. refactoring, adding tests, reformatting code, documentation, updating packages, etc.
 
