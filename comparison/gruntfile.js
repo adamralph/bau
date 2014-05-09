@@ -2,22 +2,23 @@
 // 1. install scriptcs: http://chocolatey.org/packages/ScriptCs
 // 2. install packages: scriptcs -install
 
-// Next, to build with grunt: 
+// Next, to build with Grunt:
 // 1. install node:       http://chocolatey.org/packages/nodejs.install
 // 2. install grunt-cli:  npm install -g grunt-cli
 // 3. install modules:    npm install
 // 4. execute gruntfile:  grunt
 
-var nugetCommand = 'packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe';
-var xunitCommand = 'packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
-var solution = '../src/Bau.sln';
-var test = '../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll';
-
-path = require('path');
-
 module.exports = function(grunt) {
 
+  var nugetCommand = 'packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe';
+  var xunitCommand = 'packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
+  var solution = '../src/Bau.sln';
+  var test = '../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll';
+
+  path = require('path');
+
   grunt.initConfig({
+
     msbuild: {
       clean: {
         src: [solution],
@@ -28,6 +29,7 @@ module.exports = function(grunt) {
           version: 4.0
         }
       },
+
       build: {
         src: [solution],
         options: {
@@ -38,10 +40,13 @@ module.exports = function(grunt) {
         }
       }
     },
+
     exec: {
+
       restore: {
         command: function() { return path.join(__dirname, nugetCommand) + ' restore ' + solution; },
       },
+
       test: {
         command: function() { return path.join(__dirname, xunitCommand) + ' ' + test + ' /html ' + test + '.TestResults.html /xml ' + test + '.TestResults.xml'; },
       }

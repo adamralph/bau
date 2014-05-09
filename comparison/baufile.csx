@@ -1,4 +1,8 @@
-// Build with Bau at least once before building with other runners to ensure NuGet and xunit.net executables are present
+
+
+
+
+// To build with Bau:
 // 1. install scriptcs: http://chocolatey.org/packages/ScriptCs
 // 2. install packages: scriptcs -install
 // 3. execute baufile:  scriptcs baufile.csx
