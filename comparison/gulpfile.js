@@ -3,47 +3,49 @@
 // 2. install packages: scriptcs -install
 
 // Next, to build with gulp: 
-// 1. install node:       http://chocolatey.org/packages/nodejs.install
-// 2. install grunt-cli:  npm install -g gulp
-// 3. install modules:    npm install
-// 4. execute gruntfile:  gulp
+// 1. install node:           http://chocolatey.org/packages/nodejs.install
+// 2. install gulp globally:  npm install -g gulp
+// 3. install modules:        npm install
+// 4. execute gulpfile:       gulp
 
-// The callbacks are passed in to provide a hint to gulp that these tasks need to run synchronously. I had looked at simply returning the pipe as well
-// so that the tasks would simple chain. However, that didn't work for me.
+'option strict;'
 
-// I believe this is fairly idiomatic for a gulp impl but I'd prefer someone with more knowledge provide insight.
+var gulp = require('gulp');
+var path = require('path');
+var exec = require('child_process').exec;
 
+var msBuildCommand = path.join(process.env.WINDIR, "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
 var nugetCommand = 'packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe';
 var xunitCommand = 'packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
 var solution = '../src/Bau.sln';
 var test = '../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll';
 
-var gulp = require('gulp');
-var msbuild = require('gulp-msbuild');
-var shell = require('gulp-shell')
-
-path = require('path');
-
 gulp.task('clean', function(cb) {
-    gulp.src(solution)
-        .pipe(msbuild({
-            targets: ['Clean'],
-            })
-        );
-	cb();
+  exec(msBuildCommand + ' ' + solution + ' /target:Clean /property:Configuration=Release /verbosity:minimal', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
 });
 
-gulp.task('test', ['build'], shell.task([path.join(__dirname, xunitCommand) + ' ' + test + ' /html ' + test + '.TestResults.html /xml ' + test + '.TestResults.xml']));
+gulp.task('restore', function(cb) {
+  exec(path.join(__dirname, nugetCommand) + ' restore ' + solution, function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
+});
 
-gulp.task('restore', shell.task(path.join(__dirname, nugetCommand) + ' restore ' + solution));
+gulp.task('build', ['clean', 'restore'], function(cb) {
+  exec(msBuildCommand + ' ' + solution + ' /target:Build /property:Configuration=Release /verbosity:minimal', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
+});
 
-gulp.task('build', ['restore'], function(cb) {
-    gulp.src(solution)
-        .pipe(msbuild({
-			configuration: 'Release'
-            })
-        );
-	cb();
+gulp.task('test', ['build'], function(cb) {
+  exec(path.join(__dirname, xunitCommand) + ' ' + test + ' /html ' + test + '.TestResults.html /xml ' + test + '.TestResults.xml', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
 });
 
 gulp.task('default', ['test']);
+
+var output = function (err, stdout, stderr, cb) {
+  if (stdout) {
+    console.log(stdout);
+  }
+
+  if (stderr) {
+    console.log(stderr);
+  }
+  
+  cb(err);
+};

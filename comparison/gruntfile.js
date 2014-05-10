@@ -9,13 +9,14 @@
 // 4. execute gruntfile:  grunt
 
 module.exports = function(grunt) {
+  'option strict;'
+
+  var path = require('path');
 
   var nugetCommand = 'packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe';
   var xunitCommand = 'packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
   var solution = '../src/Bau.sln';
   var test = '../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll';
-
-  path = require('path');
 
   grunt.initConfig({
 
@@ -23,8 +24,9 @@ module.exports = function(grunt) {
       clean: {
         src: [solution],
         options: {
-          projectConfiguration: 'Release',
           targets: ['Clean'],
+          projectConfiguration: 'Release',
+          verbosity: 'minimal',
           stdout: true,
           version: 4.0
         }
@@ -33,8 +35,9 @@ module.exports = function(grunt) {
       build: {
         src: [solution],
         options: {
-          projectConfiguration: 'Release',
           targets: ['Build'],
+          projectConfiguration: 'Release',
+          verbosity: 'minimal',
           stdout: true,
           version: 4.0
         }
@@ -44,11 +47,11 @@ module.exports = function(grunt) {
     exec: {
 
       restore: {
-        command: function() { return path.join(__dirname, nugetCommand) + ' restore ' + solution; },
+        command: path.join(__dirname, nugetCommand) + ' restore ' + solution,
       },
 
       test: {
-        command: function() { return path.join(__dirname, xunitCommand) + ' ' + test + ' /html ' + test + '.TestResults.html /xml ' + test + '.TestResults.xml'; },
+        command: path.join(__dirname, xunitCommand) + ' ' + test + ' /html ' + test + '.TestResults.html /xml ' + test + '.TestResults.xml',
       }
     },
   });
@@ -56,9 +59,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-msbuild');
   grunt.loadNpmTasks('grunt-exec');
 
+  grunt.registerTask('clean',   [                     'msbuild:clean']);
+  grunt.registerTask('restore', [                     'exec:restore']);
+  grunt.registerTask('build',   ['clean', 'restore',  'msbuild:build']);
+  grunt.registerTask('test',    ['build',             'exec:test']);
   grunt.registerTask('default', ['test']);
-  grunt.registerTask('clean', ['msbuild:clean']);
-  grunt.registerTask('restore', ['exec:restore']);
-  grunt.registerTask('build', ['clean', 'restore', 'msbuild:build']);
-  grunt.registerTask('test', ['build', 'exec:test']);
 };

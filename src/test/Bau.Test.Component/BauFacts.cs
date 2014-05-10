@@ -19,12 +19,12 @@ namespace Bau.Test.Component
                 .Do(() => { })
             .Exec("task1")
                 .DependsOn("task2")
-                .Do(exec => exec.Command = "ipconfig")
+                .Do(exec => exec.Run("noop.bat"))
             .Task("task2")
                 .DependsOn("task3")
                 .Do(() => { })
             .Exec("task3")
-                .Do(exec => exec.Command = "ipconfig")
+                .Do(exec => exec.Run("noop.bat"))
             .Execute();
         }
     }
