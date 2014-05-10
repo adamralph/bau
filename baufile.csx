@@ -2,6 +2,7 @@ var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "Assem
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
 var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
 var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
+var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY"); if (string.IsNullOrWhiteSpace(nugetVerbosity)) { nugetVerbosity = "quiet"; };
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "src/Bau.sln";
 var output = "artifacts/output";
@@ -90,7 +91,8 @@ Require<Bau>()
                         "pack", pack + ".csproj",
                         "-OutputDirectory", output,
                         "-Properties", "Configuration=Release",
-                        "-IncludeReferencedProjects")
+                        "-IncludeReferencedProjects",
+                        "-Verbosity " + nugetVerbosity)
                     .Execute();
             }
         }
