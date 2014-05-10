@@ -15,7 +15,7 @@ Require<Bau>()
 
 .Exec("clean").Do(exec => exec
     .Run(msBuildCommand)
-    .With(solution, "/target:Clean", "/property:Configuration=Release"))
+    .With(solution, "/target:Clean", "/property:Configuration=Release", "/maxcpucount", "/nodeReuse:false"))
 
 .Task("clobber").DependsOn("clean").Do(() =>
     {
@@ -31,7 +31,7 @@ Require<Bau>()
 
 .Exec("build").DependsOn("clean", "restore").Do(exec => exec
     .Run(msBuildCommand)
-    .With(solution, "/target:Build", "/property:Configuration=Release"))
+    .With(solution, "/target:Build", "/property:Configuration=Release", "/maxcpucount", "/nodeReuse:false"))
 
 .Exec("component").DependsOn("build").Do(exec => exec
     .Run(xunitCommand)
