@@ -4,7 +4,8 @@ var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), 
 var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "src/Bau.sln";
-var output = "artifacts";
+var output = "artifacts/output";
+var logs = "artifacts/logs";
 var component = "src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 var acceptance = "src/test/Bau.Test.Acceptance/bin/Release/Bau.Test.Acceptance.dll";
 var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", };
@@ -13,9 +14,25 @@ Require<Bau>()
 
 .Task("default").DependsOn("component", "accept", "pack")
 
-.Exec("clean").Do(exec => exec
+.Task("logs").Do(() =>
+    {
+        if (!Directory.Exists(logs))
+        {
+            Directory.CreateDirectory(logs);
+            System.Threading.Thread.Sleep(100); // HACK (adamralph): wait for the directory to be created
+        }
+    })
+
+.Exec("clean").DependsOn("logs").Do(exec => exec
     .Run(msBuildCommand)
-    .With(solution, "/target:Clean", "/property:Configuration=Release", "/maxcpucount", "/nodeReuse:false"))
+    .With(
+        solution,
+        "/target:Clean",
+        "/property:Configuration=Release",
+        "/maxcpucount",
+        "/nodeReuse:false",
+        "/fileLogger",
+        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/clean.log"))
 
 .Task("clobber").DependsOn("clean").Do(() =>
     {
@@ -29,9 +46,16 @@ Require<Bau>()
     .Run(nugetCommand)
     .With("restore", solution))
 
-.Exec("build").DependsOn("clean", "restore").Do(exec => exec
+.Exec("build").DependsOn("clean", "restore", "logs").Do(exec => exec
     .Run(msBuildCommand)
-    .With(solution, "/target:Build", "/property:Configuration=Release", "/maxcpucount", "/nodeReuse:false"))
+    .With(
+        solution,
+        "/target:Build",
+        "/property:Configuration=Release",
+        "/maxcpucount",
+        "/nodeReuse:false",
+        "/fileLogger",
+        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/build.log"))
 
 .Exec("component").DependsOn("build").Do(exec => exec
     .Run(xunitCommand)
