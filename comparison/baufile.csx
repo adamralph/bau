@@ -20,7 +20,7 @@ Require<Bau>()
 
 .Exec("clean").Do(exec => exec
     .Run(msBuildCommand)
-    .With(solution, "/target:Clean", "/property:Configuration=Release"))
+    .With(solution, "/target:Clean", "/property:Configuration=Release /verbosity:minimal"))
 
 .Exec("restore").Do(exec => exec
     .Run(nugetCommand)
@@ -28,7 +28,7 @@ Require<Bau>()
 
 .Exec("build").DependsOn("clean", "restore").Do(exec => exec
     .Run(msBuildCommand)
-    .With(solution, "/target:Build", "/property:Configuration=Release"))
+    .With(solution, "/target:Build", "/property:Configuration=Release /verbosity:minimal"))
 
 .Exec("test").DependsOn("build").Do(exec => exec
     .Run(xunitCommand)
