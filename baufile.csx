@@ -21,6 +21,7 @@ var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "src/Bau.sln";
 var output = "artifacts/output";
+var tests = "artifacts/tests";
 var logs = "artifacts/logs";
 var component = "src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 var acceptance = "src/test/Bau.Test.Acceptance/bin/Release/Bau.Test.Acceptance.dll";
@@ -78,19 +79,34 @@ Require<Bau>()
         "/verbosity:minimal",
         "/nologo"))
 
-.Exec("component").DependsOn("build").Do(exec => exec
-    .Run(xunitCommand)
-    .With(component, "/html", component + "TestResults.html", "/xml", component + "TestResults.xml"))
-
-.Exec("accept").DependsOn("build").Do(exec => exec
-    .Run(xunitCommand)
-    .With(acceptance, "/html", acceptance + "TestResults.html", "/xml", acceptance + "TestResults.xml"))
-
-.Task("pack").DependsOn("build", "clobber").Do(() =>
+.Task("tests").Do(() =>
     {
-        System.Threading.Thread.Sleep(100); // HACK (adamralph): wait for the directory to be deleted in clobber
-        Directory.CreateDirectory(output);
+        if (!Directory.Exists(tests))
+        {
+            Directory.CreateDirectory(tests);
+            System.Threading.Thread.Sleep(100); // HACK (adamralph): wait for the directory to be created
+        }
+    })
 
+.Exec("component").DependsOn("build", "tests").Do(exec => exec
+    .Run(xunitCommand)
+    .With(component, "/html", GetTestResultsPath(tests, component, "html"), "/xml", GetTestResultsPath(tests, component, "xml")))
+
+.Exec("accept").DependsOn("build", "tests").Do(exec => exec
+    .Run(xunitCommand)
+    .With(acceptance, "/html", GetTestResultsPath(tests, acceptance, "html"), "/xml", GetTestResultsPath(tests, acceptance, "xml")))
+
+.Task("output").Do(() =>
+    {
+        if (!Directory.Exists(output))
+        {
+            Directory.CreateDirectory(output);
+            System.Threading.Thread.Sleep(100); // HACK (adamralph): wait for the directory to be created
+        }
+    })
+
+.Task("pack").DependsOn("build", "clobber", "output").Do(() =>
+    {
         foreach (var pack in packs)
         {
             File.Copy(pack + ".nuspec", pack + ".nuspec.original", true);
@@ -123,3 +139,14 @@ Require<Bau>()
     })
 
 .Execute();
+
+string GetTestResultsPath(string directory, string assembly, string extension)
+{
+    return Path.GetFullPath(
+        Path.Combine(
+            directory,
+            string.Concat(
+                Path.GetFileNameWithoutExtension(assembly),
+                ".TestResults.",
+                extension)));
+}
