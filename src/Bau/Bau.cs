@@ -6,6 +6,7 @@ namespace BauCore
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -84,16 +85,7 @@ namespace BauCore
                 this.Invoke(dependency);
             }
 
-            try
-            {
-                Console.WriteLine("Executing '{0}' Bau task.", task);
-                taskRef.Execute();
-            }
-            catch (Exception ex)
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
-                throw new InvalidOperationException(message, ex);
-            }
+            this.Invoke(taskRef, task);
         }
 
         public void Execute()
@@ -147,6 +139,51 @@ namespace BauCore
             if (this.currentTask == null)
             {
                 this.Intern<Task>(Bau.DefaultTask);
+            }
+        }
+
+        private void Invoke(Task task, string taskName)
+        {
+            try
+            {
+                new TaskInvoker(task, taskName).Invoke();
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", taskName, ex.Message);
+                throw new InvalidOperationException(message, ex);
+            }
+        }
+
+        private class TaskInvoker
+        {
+            private readonly Task task;
+            private readonly string taskName;
+            private readonly Stopwatch stopwatch = new Stopwatch();
+
+            public TaskInvoker(Task task, string taskName)
+            {
+                this.task = task;
+                this.taskName = taskName;
+            }
+
+            public void Invoke()
+            {
+                this.Before();
+                this.task.Execute();
+                this.After();
+            }
+
+            private void Before()
+            {
+                this.stopwatch.Start();
+                Console.WriteLine("Executing '{0}' Bau task.", this.taskName);
+            }
+
+            private void After()
+            {
+                this.stopwatch.Stop();
+                Console.WriteLine("Finished '{0}' in {1} seconds.", this.taskName, this.stopwatch.Elapsed.TotalSeconds);
             }
         }
     }
