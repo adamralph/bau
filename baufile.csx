@@ -1,8 +1,23 @@
-var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
+// parameters
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
+var msBuildFileVerbosity = Environment.GetEnvironmentVariable("MSBUILD_FILE_VERBOSITY");
+var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY");
+
+// parameter defaults
+if (string.IsNullOrWhiteSpace(msBuildFileVerbosity))
+{
+    msBuildFileVerbosity = "normal";
+};
+
+if (string.IsNullOrWhiteSpace(nugetVerbosity))
+{
+    nugetVerbosity = "quiet";
+};
+
+// solution specific variables
+var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
 var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
 var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
-var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY"); if (string.IsNullOrWhiteSpace(nugetVerbosity)) { nugetVerbosity = "quiet"; };
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "src/Bau.sln";
 var output = "artifacts/output";
@@ -11,6 +26,7 @@ var component = "src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll"
 var acceptance = "src/test/Bau.Test.Acceptance/bin/Release/Bau.Test.Acceptance.dll";
 var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", };
 
+// solution agnostic tasks
 Require<Bau>()
 
 .Task("default").DependsOn("component", "accept", "pack")
@@ -33,7 +49,7 @@ Require<Bau>()
         "/maxcpucount",
         "/nodeReuse:false",
         "/fileLogger",
-        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/clean.log",
+        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=" + msBuildFileVerbosity + ";LogFile=" + logs + "/clean.log",
         "/verbosity:minimal",
         "/nologo"))
 
@@ -58,7 +74,7 @@ Require<Bau>()
         "/maxcpucount",
         "/nodeReuse:false",
         "/fileLogger",
-        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/build.log",
+        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=" + msBuildFileVerbosity + ";LogFile=" + logs + "/build.log",
         "/verbosity:minimal",
         "/nologo"))
 
