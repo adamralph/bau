@@ -32,7 +32,9 @@ Require<Bau>()
         "/maxcpucount",
         "/nodeReuse:false",
         "/fileLogger",
-        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/clean.log"))
+        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/clean.log",
+        "/verbosity:minimal",
+        "/nologo"))
 
 .Task("clobber").DependsOn("clean").Do(() =>
     {
@@ -55,7 +57,9 @@ Require<Bau>()
         "/maxcpucount",
         "/nodeReuse:false",
         "/fileLogger",
-        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/build.log"))
+        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=detailed;LogFile=" + logs + "/build.log",
+        "/verbosity:minimal",
+        "/nologo"))
 
 .Exec("component").DependsOn("build").Do(exec => exec
     .Run(xunitCommand)
