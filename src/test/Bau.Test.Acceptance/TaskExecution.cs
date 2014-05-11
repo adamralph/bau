@@ -37,6 +37,9 @@ namespace Bau.Test.Acceptance
 
             "And I am informed that the default task was executed"
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
+
+            "And I am informed about execution time"
+                .f(() => output.Should().Contain("Finished 'default' in "));
         }
 
         [Scenario]
