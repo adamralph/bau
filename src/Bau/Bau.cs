@@ -12,7 +12,7 @@ namespace BauCore
     using System.Reflection;
     using ScriptCs.Contracts;
 
-    public class Bau : IScriptPackContext, IBau
+    public class Bau : IScriptPackContext, ITaskBuilder
     {
         public const string DefaultTask = "default";
 
@@ -34,7 +34,7 @@ namespace BauCore
             get { return this.currentTask; }
         }
 
-        public IBau DependsOn(params string[] otherTasks)
+        public ITaskBuilder DependsOn(params string[] otherTasks)
         {
             this.EnsureCurrentTask();
             foreach (var task in otherTasks.Where(t => !this.currentTask.Dependencies.Contains(t)))
@@ -51,7 +51,7 @@ namespace BauCore
             return this;
         }
 
-        public IBau Do(Action action)
+        public ITaskBuilder Do(Action action)
         {
             this.EnsureCurrentTask();
             if (action != null)
@@ -112,7 +112,7 @@ namespace BauCore
             Console.WriteLine("Bau succeeded.");
         }
 
-        public IBau Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
+        public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
         {
             if (string.IsNullOrWhiteSpace(name))
             {

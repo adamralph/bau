@@ -19,9 +19,9 @@ namespace BauGreeter
 
     public static class Plugin
     {
-        public static IBau<Greeter> Greeter(this IBau bau, string name = Bau.DefaultTask)
+        public static ITaskBuilder<Greeter> Greeter(this ITaskBuilder builder, string name = Bau.DefaultTask)
         {
-            return new Bau<Greeter>(bau, name);
+            return new TaskBuilder<Greeter>(builder, name);
         }
     }
 }
