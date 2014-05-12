@@ -18,7 +18,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void SingleTask(Baufile baufile, string tempFile, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with a non-default task"
                 .f(() =>
@@ -42,7 +42,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void MultipleTasks(Baufile baufile, string tempFile1, string tempFile2, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -91,9 +91,9 @@ bau.Execute();"));
         [Scenario]
         [Example("NoTask", @"Require<Bau>().Execute();")]
         [Example("SomeOtherTask", @"Require<Bau>().Task(""foo"").Do(() => { }).Execute();")]
-        public static void NonExistentTask(string tag, string code, Baufile baufile, Exception ex)
+        public static void NonexistentTask(string tag, string code, Baufile baufile, Exception ex)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile containing {0}"
                 .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));

@@ -18,7 +18,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void DefaultTaskExists(Baufile baufile, string tempFile, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with a default task"
                 .f(() =>
@@ -47,7 +47,7 @@ namespace Bau.Test.Acceptance
         [Example("SomeOtherTask", @"Require<Bau>().Task(""foo"").Do(() => { }).Execute();")]
         public static void DefaultTaskDoesNotExist(string tag, string code, Baufile baufile, Exception ex)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile containing {0}"
                 .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
@@ -65,7 +65,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void ExecutingAnInlineTask(Baufile baufile, string tempFile, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with a default task with an inline task"
                 .f(() =>

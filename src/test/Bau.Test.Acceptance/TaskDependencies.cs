@@ -20,7 +20,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void SingleDependency(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -84,7 +84,7 @@ bau.Execute();"));
         [Scenario]
         public static void MultipleDependencies(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -160,7 +160,7 @@ bau.Execute();"));
         [Scenario]
         public static void NestedDependencies(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -237,7 +237,7 @@ bau.Execute();"));
         [Scenario]
         public static void RepeatedDependency(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -314,7 +314,7 @@ bau.Execute();"));
         [Scenario]
         public static void CircularDependency(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -380,7 +380,7 @@ bau.Execute();"));
         [Scenario]
         public static void NonexistentDependency(Baufile baufile, string tempFile, Exception ex)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a default task with a non-existent dependency"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
@@ -402,7 +402,7 @@ bau.Execute();"));
         [Scenario]
         public static void DependencyFails(Baufile baufile, string tempFile, Exception ex)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
