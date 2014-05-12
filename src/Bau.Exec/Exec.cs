@@ -87,9 +87,9 @@ namespace BauExec
 
     public static class Plugin
     {
-        public static IBau<Exec> Exec(this IBau bau, string name = Bau.DefaultTask)
+        public static ITaskBuilder<Exec> Exec(this ITaskBuilder builder, string name = Bau.DefaultTask)
         {
-            return new Bau<Exec>(bau, name);
+            return new TaskBuilder<Exec>(builder, name);
         }
     }
 }
