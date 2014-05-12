@@ -16,6 +16,7 @@ namespace BauCore
 
         IBau DependsOn(params string[] otherTasks);
 
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do", Justification = "By design.")]
         IBau Do(Action action);
 
         void Execute();

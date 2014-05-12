@@ -4,7 +4,6 @@
 
 namespace BauCore
 {
-    using System;
     using ScriptCs.Contracts;
 
     public class BauScriptPack : ScriptPack<Bau>

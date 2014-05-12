@@ -13,7 +13,9 @@ namespace Bau.Test.Acceptance.Support
         {
             Guard.AgainstNullArgument("method", method);
 
-            return string.Concat(method.DeclaringType.FullName, ".", method.Name);
+            return method.DeclaringType == null
+                ? method.Name
+                : string.Concat(method.DeclaringType.FullName, ".", method.Name);
         }
     }
 }

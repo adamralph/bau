@@ -7,9 +7,11 @@ namespace Bau.Test.Acceptance.Support
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using LiteGuard;
 
     public class Baufile
     {
@@ -19,6 +21,7 @@ namespace Bau.Test.Acceptance.Support
         private readonly string name;
         private readonly string log;
 
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "They are initialized inline. The constructor does other things.")]
         static Baufile()
         {
             FileSystem.EnsureDirectoryCreated(directory);
@@ -82,25 +85,25 @@ namespace Bau.Test.Acceptance.Support
 
         public string Execute(params string[] tasks)
         {
-            var info = new ProcessStartInfo();
-            info.FileName = "scriptcs";
+            Guard.AgainstNullArgument("tasks", tasks);
 
-            var args = new List<string>();
-            args.Add(this.name);
-            args.Add("-debug");
-
+            var args = new List<string> { this.name, "-debug" };
             if (tasks.Length > 0)
             {
                 args.Add("--");
                 args.AddRange(tasks);
             }
 
-            info.Arguments = string.Join(" ", args);
-            info.WorkingDirectory = directory;
-            info.UseShellExecute = false;
-            info.CreateNoWindow = true;
-            info.RedirectStandardOutput = true;
-            info.RedirectStandardError = true;
+            var info = new ProcessStartInfo
+            {
+                FileName = "scriptcs",
+                Arguments = string.Join(" ", args),
+                WorkingDirectory = directory,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
 
             var output = new StringBuilder();
             using (var process = new Process())

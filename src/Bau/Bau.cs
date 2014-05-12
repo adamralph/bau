@@ -85,7 +85,15 @@ namespace BauCore
                 this.Invoke(dependency);
             }
 
-            this.Invoke(taskRef, task);
+            try
+            {
+                new TaskExecutor(taskRef, task).Execute();
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
+                throw new InvalidOperationException(message, ex);
+            }
         }
 
         public void Execute()
@@ -138,36 +146,23 @@ namespace BauCore
         {
             if (this.currentTask == null)
             {
-                this.Intern<Task>(Bau.DefaultTask);
+                this.Intern<Task>();
             }
         }
 
-        private void Invoke(Task task, string taskName)
-        {
-            try
-            {
-                new TaskInvoker(task, taskName).Invoke();
-            }
-            catch (Exception ex)
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", taskName, ex.Message);
-                throw new InvalidOperationException(message, ex);
-            }
-        }
-
-        private class TaskInvoker
+        private class TaskExecutor
         {
             private readonly Task task;
             private readonly string taskName;
             private readonly Stopwatch stopwatch = new Stopwatch();
 
-            public TaskInvoker(Task task, string taskName)
+            public TaskExecutor(Task task, string taskName)
             {
                 this.task = task;
                 this.taskName = taskName;
             }
 
-            public void Invoke()
+            public void Execute()
             {
                 this.Before();
                 this.task.Execute();

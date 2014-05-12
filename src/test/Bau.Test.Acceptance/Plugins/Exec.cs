@@ -17,7 +17,7 @@ namespace Bau.Test.Acceptance.Plugins
         [Scenario]
         public static void ExecutingACommand(Baufile baufile)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which succeeds"
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
@@ -41,7 +41,7 @@ namespace Bau.Test.Acceptance.Plugins
         [Scenario]
         public static void ExecutingACommandUsingTheExtensionMethod(Baufile baufile)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which uses the Exec extension method"
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
@@ -65,7 +65,7 @@ namespace Bau.Test.Acceptance.Plugins
         [Scenario]
         public static void ExecutingACommandUsingFluentSyntax(Baufile baufile)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which uses the Exec extension method"
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
@@ -84,7 +84,7 @@ namespace Bau.Test.Acceptance.Plugins
         [Scenario]
         public static void ExecutionFails(Baufile baufile, Exception ex)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile with an exec task which fails"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(

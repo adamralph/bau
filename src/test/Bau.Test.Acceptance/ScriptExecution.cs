@@ -16,7 +16,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void CompilationFails(Baufile baufile, Exception ex)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile containing an unknown name"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"x"));
@@ -34,7 +34,7 @@ namespace Bau.Test.Acceptance
         [Scenario]
         public static void ExecutionFails(Baufile baufile, Exception ex, string message)
         {
-            var scenario = MethodInfo.GetCurrentMethod().GetFullName();
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a baufile which throws an exception"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(

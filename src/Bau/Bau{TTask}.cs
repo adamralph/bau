@@ -41,9 +41,9 @@ namespace BauCore
             this.bau.Execute();
         }
 
-        public IBau Intern<UTask>(string name = Bau.DefaultTask) where UTask : Task, new()
+        public IBau Intern<TNewTask>(string name = Bau.DefaultTask) where TNewTask : Task, new()
         {
-            return this.bau.Intern<UTask>(name);
+            return this.bau.Intern<TNewTask>(name);
         }
 
         IBau IBau.DependsOn(params string[] otherTasks)
