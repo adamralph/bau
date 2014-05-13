@@ -8,6 +8,7 @@ namespace Bau.Test.Acceptance
     using System.Globalization;
     using System.IO;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using Bau.Test.Acceptance.Support;
     using FluentAssertions;
     using Xbehave;
@@ -441,6 +442,46 @@ bau.Execute();"));
 
             "And I am informed that the non-default task was executed"
                 .f(() => ex.Message.Should().Contain("Executing 'non-default' Bau task."));
+        }
+
+        [Scenario]
+        public static void DepencencyReenable(Baufile baufile, string tempFile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Give bau is required"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"var bau = Require<Bau>();"));
+
+            "And a default task"
+                .f(() => baufile.WriteLine(
+@"
+bau.Task(""default"")
+.Do(() => Console.WriteLine(""test output""));"));
+
+            "Which is executed"
+                .f(() => baufile.WriteLine(
+@"
+bau.Execute();"));
+
+            "Then reenabled"
+                .f(() => baufile.WriteLine(
+@"
+bau.Reenable(""default"");"));
+
+            "And executed again"
+                .f(() => baufile.WriteLine(
+@"
+bau.Execute();"));
+
+            "When I execute bau file"
+                .f(() => output = baufile.Execute());
+
+            "Then I should see that default task was run twice"
+                .f(() =>
+                {
+                    Assert.Equal(2, Regex.Matches(output, "test output").Count);
+                });
         }
     }
 }
