@@ -20,5 +20,7 @@ namespace BauCore
         ITaskBuilder Do(Action action);
 
         void Execute();
+
+        void Reenable(string task);
     }
 }
