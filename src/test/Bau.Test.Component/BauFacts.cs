@@ -27,5 +27,20 @@ namespace Bau.Test.Component
                 .Do(exec => exec.Run("noop.bat"))
             .Execute();
         }
+
+        [Fact]
+        public static void ReenableWorks()
+        {
+            var executeCounter = 0;
+
+            var bau = new Bau().Task()
+                .Do(() => { executeCounter++; });
+
+            bau.Execute();
+            bau.Reenable(Bau.DefaultTask);
+            bau.Execute();
+
+            Assert.Equal(2, executeCounter);
+        }
     }
 }
