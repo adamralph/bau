@@ -41,6 +41,6 @@ namespace Bau.Test.Component
             bau.Execute();
 
             Assert.Equal(2, executeCounter);
-      }
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace BauCore
 
         public void Invoke(string task)
         {
-            Task taskRef = this.GetTask(task);
+            var taskRef = this.GetTask(task);
 
             ////var trace = this.alreadyInvoked ? null : " (first time)";
             ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
@@ -139,8 +139,7 @@ namespace BauCore
 
         public void Reenable(string task)
         {
-            Task taskRef = this.GetTask(task);
-            taskRef.Invoked = false;
+            this.GetTask(task).Invoked = false;
         }
 
         private void EnsureCurrentTask()
@@ -153,14 +152,15 @@ namespace BauCore
 
         private Task GetTask(string task)
         {
-            Task taskRef;
-            if (!this.tasks.TryGetValue(task, out taskRef))
+            try
+            {
+                return this.tasks[task];
+            }
+            catch (KeyNotFoundException ex)
             {
                 var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task not found.", task);
-                throw new InvalidOperationException(message);
+                throw new InvalidOperationException(message, ex);
             }
-
-            return taskRef;
         }
 
         private class TaskExecutor

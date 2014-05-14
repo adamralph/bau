@@ -377,6 +377,41 @@ bau.Execute();"));
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
+        [Scenario]
+        public static void ReenablingATask(Baufile baufile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Give bau is required"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"var bau = Require<Bau>();"));
+
+            "And a non-default task"
+                .f(() => baufile.WriteLine(
+@"
+bau.Task(""non-default"").Do(() => Console.WriteLine(""non-default task output""));"));
+
+            "And a default task which depends on the non-default task whilst reenabling it and invoking it again"
+                .f(() => baufile.WriteLine(
+@"
+bau.Task(""default"").DependsOn(""non-default"").Do(() =>
+{
+    bau.Reenable(""non-default"");
+    bau.Invoke(""non-default"");
+});"));
+
+            "And the tasks are executed"
+                .f(() => baufile.WriteLine(
+@"
+bau.Execute();"));
+
+            "When I execute the bau file"
+                .f(() => output = baufile.Execute());
+
+            "Then the non-default task is executed twice"
+                .f(() => Regex.Matches(output, "non-default task output").Count.Should().Be(2));
+        }
+
         // sad path
         [Scenario]
         public static void NonexistentDependency(Baufile baufile, string tempFile, Exception ex)
@@ -442,46 +477,6 @@ bau.Execute();"));
 
             "And I am informed that the non-default task was executed"
                 .f(() => ex.Message.Should().Contain("Executing 'non-default' Bau task."));
-        }
-
-        [Scenario]
-        public static void DepencencyReenable(Baufile baufile, string tempFile, string output)
-        {
-            var scenario = MethodBase.GetCurrentMethod().GetFullName();
-
-            "Give bau is required"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<Bau>();"));
-
-            "And a default task"
-                .f(() => baufile.WriteLine(
-@"
-bau.Task(""default"")
-.Do(() => Console.WriteLine(""test output""));"));
-
-            "Which is executed"
-                .f(() => baufile.WriteLine(
-@"
-bau.Execute();"));
-
-            "Then reenabled"
-                .f(() => baufile.WriteLine(
-@"
-bau.Reenable(""default"");"));
-
-            "And executed again"
-                .f(() => baufile.WriteLine(
-@"
-bau.Execute();"));
-
-            "When I execute bau file"
-                .f(() => output = baufile.Execute());
-
-            "Then I should see that default task was run twice"
-                .f(() =>
-                {
-                    Assert.Equal(2, Regex.Matches(output, "test output").Count);
-                });
         }
     }
 }
