@@ -142,6 +142,17 @@ namespace BauCore
             this.GetTask(task).Invoked = false;
         }
 
+        public void ReenableWithDependencies(string task)
+        {
+            var taskRef = this.GetTask(task);
+            taskRef.Invoked = false;
+
+            foreach (var dependentTask in taskRef.Dependencies)
+            {
+                this.ReenableWithDependencies(dependentTask);
+            }
+        }
+
         private void EnsureCurrentTask()
         {
             if (this.currentTask == null)

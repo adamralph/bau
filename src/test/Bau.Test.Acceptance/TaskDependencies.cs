@@ -382,22 +382,29 @@ bau.Execute();"));
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Give bau is required"
+            "Given bau is required"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<Bau>();"));
 
             "And a non-default task"
                 .f(() => baufile.WriteLine(
 @"
-bau.Task(""non-default"").Do(() => Console.WriteLine(""non-default task output""));"));
+bau.Task(""non-default1"").Do(() => Console.WriteLine(""non-default task output""));"));
 
-            "And a default task which depends on the non-default task whilst reenabling it and invoking it again"
+            "And a second non-default task which depends on the first non-default task"
+                .f(c => baufile.WriteLine(
+@"
+bau.Task(""non-default2"")
+.DependsOn(""non-default1"")
+.Do(() => Console.WriteLine(""non-default2 task output""));"));
+
+            "And a default task which depends on the second non-default task whilst reenabling it and invoking it again"
                 .f(() => baufile.WriteLine(
 @"
-bau.Task(""default"").DependsOn(""non-default"").Do(() =>
+bau.Task(""default"").DependsOn(""non-default2"").Do(() =>
 {
-    bau.Reenable(""non-default"");
-    bau.Invoke(""non-default"");
+    bau.Reenable(""non-default2"");
+    bau.Invoke(""non-default2"");
 });"));
 
             "And the tasks are executed"
@@ -408,8 +415,56 @@ bau.Execute();"));
             "When I execute the bau file"
                 .f(() => output = baufile.Execute());
 
-            "Then the non-default task is executed twice"
+            "Then the second non-default task is executed twice"
+                .f(() => Regex.Matches(output, "non-default2 task output").Count.Should().Be(2));
+
+            "And the first non-default task is executed once"
+                .f(() => Regex.Matches(output, "non-default task output").Count.Should().Be(1));            
+        }
+
+        [Scenario]
+        public static void ReenablingATaskWithDependencies(Baufile baufile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given bau is required"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"var bau = Require<Bau>();"));
+
+            "And a non-default task"
+                .f(() => baufile.WriteLine(
+@"
+bau.Task(""non-default1"").Do(() => Console.WriteLine(""non-default task output""));"));
+
+            "And a second non-default task which depends on the first non-default task"
+                .f(c => baufile.WriteLine(
+@"
+bau.Task(""non-default2"")
+.DependsOn(""non-default1"")
+.Do(() => Console.WriteLine(""non-default2 task output""));"));
+
+            "And a default task which depends on the second non-default task whilst reenabling it and invoking it again"
+                .f(() => baufile.WriteLine(
+@"
+bau.Task(""default"").DependsOn(""non-default2"").Do(() =>
+{
+    bau.ReenableWithDependencies(""non-default2"");
+    bau.Invoke(""non-default2"");
+});"));
+
+            "And the tasks are executed"
+                .f(() => baufile.WriteLine(
+@"
+bau.Execute();"));
+
+            "When I execute the bau file"
+                .f(() => output = baufile.Execute());
+
+            "Then the first non-default task is executed twice"
                 .f(() => Regex.Matches(output, "non-default task output").Count.Should().Be(2));
+
+            "And second non-default task is executed twice"
+                .f(() => Regex.Matches(output, "non-default2 task output").Count.Should().Be(2));                
         }
 
         // sad path

@@ -60,5 +60,10 @@ namespace BauCore
         {
             this.builder.Reenable(task);
         }
+
+        public void ReenableWithDependencies(string task)
+        {
+            this.builder.ReenableWithDependencies(task);
+        }
     }
 }
