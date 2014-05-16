@@ -14,6 +14,12 @@ It is **not** necessary to raise an issue for non-functional changes, e.g. refac
 
 All new features must be covered by acceptance tests in the `Bau.Test.Acceptance` project.
 
+Component tests are left to your discretion and are often not required but sometimes the committers may ask you to add some to the `Bau.Test.Component` project before accepting the new feature.
+
+Both acceptance and component tests should be worded as Given, When Then, (And, But) using natural language free of any implementation details.
+
+Unit tests are usually not required but feel free to add them to the `Bau.Test.Unit` project. Unit tests should be structured as Arrange, Act and Assert steps, labelled with comments.
+
 ## Spaces not Tabs
 
 Pull requests containing tabs will not be accepted. Make sure you set your editor to replace tabs with spaces. Indents for all file types should be 4 characters wide.

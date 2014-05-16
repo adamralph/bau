@@ -2,7 +2,7 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace Bau.Test.Component
+namespace BauCore.Test.Unit
 {
     using BauCore;
     using FakeItEasy;
