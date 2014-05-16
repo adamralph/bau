@@ -41,7 +41,7 @@ namespace BauCore.Test.Component
 
             "And the other non-default task is executed first"
                 .f(() => executedTasks[0].Should().Be("other-non-default"));
-            
+
             "And the non-default task is executed second"
                 .f(() => executedTasks[1].Should().Be("non-default"));
 
