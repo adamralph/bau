@@ -4,7 +4,6 @@
 
 namespace BauCore.Test.Component
 {
-    using System.Reflection;
     using BauCore.Test.Component.Support;
     using FluentAssertions;
     using Xbehave;
@@ -14,8 +13,6 @@ namespace BauCore.Test.Component
         [Scenario]
         public static void ExecutingAnInlineTask(ITaskBuilder builder, bool executed)
         {
-            var scenario = MethodBase.GetCurrentMethod().GetFullName();
-
             "Given a default task with an inline task"
                 .f(() => builder = ScriptCs.Require<Bau>().Do(() =>
                 {
