@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{81551BBD-8350-4055-9E8D-7AB228E9EE4F}</ProjectGuid>
+    <ProjectGuid>{547AF348-2D55-4181-873D-65F51F630863}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BauCore.Test.Component</RootNamespace>
-    <AssemblyName>Bau.Test.Component</AssemblyName>
+    <RootNamespace>BauCore.Test.Unit</RootNamespace>
+    <AssemblyName>Bau.Test.Unit</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,51 +34,40 @@
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <CodeAnalysisDictionary Include="..\..\Bau.Dictionary.xml">
       <Link>Properties\Bau.Dictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InlineTasks.cs" />
-    <Compile Include="SpecificTasks.cs" />
-    <Compile Include="Support\BauFile.cs" />
-    <Compile Include="Support\ScriptCs.cs" />
-    <Compile Include="Support\FileSystem.cs" />
-    <Compile Include="Support\MethodBaseExtensions.cs" />
-    <Compile Include="RenablingTasks.cs" />
-    <Compile Include="TaskDependencies.cs" />
-    <Compile Include="DefaultTask.cs" />
+    <Compile Include="BauScriptPackFacts.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions">
+    <Reference Include="FakeItEasy, Version=1.20.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FakeItEasy.1.20.0\lib\net40\FakeItEasy.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=3.0.90.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentAssertions.3.0.90\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="FluentAssertions.Core">
+    <Reference Include="FluentAssertions.Core, Version=3.0.90.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentAssertions.3.0.90\lib\net45\FluentAssertions.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="LiteGuard">
-      <HintPath>..\..\packages\LiteGuard.0.8.0\lib\net35\LiteGuard.dll</HintPath>
     </Reference>
     <Reference Include="ScriptCs.Contracts, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ScriptCs.Contracts.0.9.0\lib\net45\ScriptCs.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Xbehave">
-      <HintPath>..\..\packages\Xbehave.1.1.0\lib\net45\Xbehave.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit">
+    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Bau\Bau.csproj">

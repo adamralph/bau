@@ -1,4 +1,5 @@
 // parameters
+var ci = Environment.GetEnvironmentVariable("CI");
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
 var msBuildFileVerbosity = Environment.GetEnvironmentVariable("MSBUILD_FILE_VERBOSITY");
 var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY");
@@ -23,6 +24,7 @@ var solution = "src/Bau.sln";
 var output = "artifacts/output";
 var tests = "artifacts/tests";
 var logs = "artifacts/logs";
+var unit = "src/test/Bau.Test.Unit/bin/Release/Bau.Test.Unit.dll";
 var component = "src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 var acceptance = "src/test/Bau.Test.Acceptance/bin/Release/Bau.Test.Acceptance.dll";
 var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", };
@@ -30,7 +32,9 @@ var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", };
 // solution agnostic tasks
 Require<Bau>()
 
-.Task("default").DependsOn("component", "accept", "pack")
+.Task("default").DependsOn(string.IsNullOrWhiteSpace(ci) ? new[] { "unit", "component", "pack" } : new[] { "unit", "component", "accept", "pack" })
+
+.Task("all").DependsOn("unit", "component", "accept", "pack")
 
 .Task("logs").Do(() =>
     {
@@ -87,6 +91,10 @@ Require<Bau>()
             System.Threading.Thread.Sleep(100); // HACK (adamralph): wait for the directory to be created
         }
     })
+
+.Exec("unit").DependsOn("build", "tests").Do(exec => exec
+    .Run(xunitCommand)
+    .With(unit, "/html", GetTestResultsPath(tests, unit, "html"), "/xml", GetTestResultsPath(tests, unit, "xml")))
 
 .Exec("component").DependsOn("build", "tests").Do(exec => exec
     .Run(xunitCommand)

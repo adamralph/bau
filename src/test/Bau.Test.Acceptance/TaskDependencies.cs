@@ -476,7 +476,7 @@ bau.Execute();"));
                 .f(() => File.Exists(tempFile).Should().BeFalse());
 
             "And I am informed that the non-default task was executed"
-                .f(() => ex.Message.Should().Contain("Executing 'non-default' Bau task."));
+                .f(() => ex.Message.Should().Contain("'non-default' task failed."));
         }
     }
 }

@@ -25,3 +25,11 @@ Using a command prompt, navigate to your clone root folder and execute:
 `bau.bat`
 
 This executes the default build tasks. After the build has completed, the build artifacts will be located in `artifacts`.
+
+To run the acceptance tests (and all dependencies), execute:
+
+`bau.bat accept`
+
+To run *all* tasks, execute:
+
+`bau.bat all`
