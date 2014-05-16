@@ -8,13 +8,11 @@ namespace Bau.Test.Acceptance
     using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using System.Text.RegularExpressions;
     using Bau.Test.Acceptance.Support;
     using FluentAssertions;
     using Xbehave;
     using Xunit;
 
-    // TODO (adamralph): add teardowns for temp files
     public static class TaskDependencies
     {
         // happy path
@@ -51,7 +49,8 @@ bau.Task(""default"")
         file.Write(string.Join(Environment.NewLine, executed));
     };
 });");
-            });
+            })
+            .Teardown(() => File.Delete(tempFile));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
@@ -121,7 +120,8 @@ bau.Task(""default"")
         file.Write(string.Join(Environment.NewLine, executed));
     };
 });");
-                });
+                })
+                .Teardown(() => File.Delete(tempFile));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
@@ -198,7 +198,8 @@ bau.Task(""default"")
         file.Write(string.Join(Environment.NewLine, executed));
     };
 });");
-                });
+                })
+                .Teardown(() => File.Delete(tempFile));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
@@ -275,7 +276,8 @@ bau.Task(""default"")
         file.Write(string.Join(Environment.NewLine, executed));
     };
 });");
-                });
+                })
+                .Teardown(() => File.Delete(tempFile));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
@@ -346,7 +348,8 @@ bau.Task(""default"")
         file.Write(string.Join(Environment.NewLine, executed));
     };
 });");
-                });
+                })
+                .Teardown(() => File.Delete(tempFile));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
@@ -377,41 +380,6 @@ bau.Execute();"));
                 .f(() => output.Should().Contain("Executing 'default' Bau task."));
         }
 
-        [Scenario]
-        public static void ReenablingATask(Baufile baufile, string output)
-        {
-            var scenario = MethodBase.GetCurrentMethod().GetFullName();
-
-            "Give bau is required"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<Bau>();"));
-
-            "And a non-default task"
-                .f(() => baufile.WriteLine(
-@"
-bau.Task(""non-default"").Do(() => Console.WriteLine(""non-default task output""));"));
-
-            "And a default task which depends on the non-default task whilst reenabling it and invoking it again"
-                .f(() => baufile.WriteLine(
-@"
-bau.Task(""default"").DependsOn(""non-default"").Do(() =>
-{
-    bau.Reenable(""non-default"");
-    bau.Invoke(""non-default"");
-});"));
-
-            "And the tasks are executed"
-                .f(() => baufile.WriteLine(
-@"
-bau.Execute();"));
-
-            "When I execute the bau file"
-                .f(() => output = baufile.Execute());
-
-            "Then the non-default task is executed twice"
-                .f(() => Regex.Matches(output, "non-default task output").Count.Should().Be(2));
-        }
-
         // sad path
         [Scenario]
         public static void NonexistentDependency(Baufile baufile, string tempFile, Exception ex)
@@ -419,8 +387,14 @@ bau.Execute();"));
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given a default task with a non-existent dependency"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"Require<Bau>().Task(""default"").DependsOn(""non-existent"").Do(() => { }).Execute();"));
+                .f(() =>
+                {
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
+@"Require<Bau>().Task(""default"").DependsOn(""non-existent"")
+.Do(() => File.CreateText(@""" + tempFile + @""").Dispose()).Execute();");
+                })
+                .Teardown(() => File.Delete(tempFile));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Execute()));
@@ -459,7 +433,8 @@ bau.Task(""non-default"")
 bau.Task(""default"")
 .DependsOn(""non-default"")
 .Do(() => File.CreateText(@""" + tempFile + @""").Dispose());");
-                });
+                })
+                .Teardown(() => File.Delete(tempFile));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(

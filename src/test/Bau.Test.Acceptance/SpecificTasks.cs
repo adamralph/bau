@@ -25,7 +25,7 @@ namespace Bau.Test.Acceptance
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
-                        @"Require<Bau>().Task(""non-default"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Execute();");
+@"Require<Bau>().Task(""non-default"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Execute();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
