@@ -82,7 +82,7 @@ namespace BauCore
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            BauConsole.WriteTaskExecuting(task);
+            BauConsole.WriteTaskStarting(task);
 
             try
             {

@@ -15,19 +15,22 @@ namespace BauCore
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
 
-            using (new ConsoleColorizer(ConsoleColor.Black, ConsoleColor.White))
+            using (new LineWriter(ConsoleColor.Gray))
             {
-                Console.Write("~BAU ");
-            }
+                using (new ConsoleColorizer(ConsoleColor.Black, ConsoleColor.White))
+                {
+                    Console.Write(" BAU ");
+                }
 
-            using (new ConsoleColorizer(ConsoleColor.Gray))
-            {
-                Console.Write(" {0} ", version.InformationalVersion);
-            }
+                using (new ConsoleColorizer(ConsoleColor.Gray))
+                {
+                    Console.Write(" {0} ", version.InformationalVersion);
+                }
 
-            using (new ConsoleColorizer(ConsoleColor.DarkGray))
-            {
-                Console.WriteLine("Copyright (c) Bau contributors. (baubuildch@gmail.com)");
+                using (new ConsoleColorizer(ConsoleColor.DarkGray))
+                {
+                    Console.Write("Copyright (c) Bau contributors (baubuildch@gmail.com)");
+                }
             }
         }
 
@@ -59,17 +62,16 @@ namespace BauCore
         {
             using (new LineWriter(ConsoleColor.Red))
             {
-                Console.Write(" ");
                 WriteTask(task);
                 Console.Write(" task not found");
             }
         }
 
-        public static void WriteTaskExecuting(string task)
+        public static void WriteTaskStarting(string task)
         {
             using (new LineWriter(ConsoleColor.Gray))
             {
-                Console.Write("Executing ");
+                Console.Write("Starting ");
                 WriteTask(task);
                 Console.Write("...");
             }
@@ -104,7 +106,7 @@ namespace BauCore
         private static void WriteTask(string task)
         {
             Console.Write("'");
-            using (new ConsoleColorizer(ConsoleColor.Cyan))
+            using (new ConsoleColorizer(ConsoleColor.DarkCyan))
             {
                 Console.Write(task);
             }
@@ -114,7 +116,7 @@ namespace BauCore
 
         private static void WriteMilliseconds(double milliseconds)
         {
-            using (new ConsoleColorizer(ConsoleColor.DarkMagenta))
+            using (new ConsoleColorizer(ConsoleColor.DarkYellow))
             {
                 Console.Write(milliseconds.ToStringFromMilliseconds());
             }

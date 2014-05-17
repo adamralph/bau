@@ -36,7 +36,7 @@ namespace Bau.Test.Acceptance
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().ContainEquivalentOf("executing 'default'"));
+                .f(() => output.Should().ContainEquivalentOf("starting 'default'"));
 
             "And I am informed about execution time"
                 .f(() => output.Should().ContainEquivalentOf("finished 'default' after "));
