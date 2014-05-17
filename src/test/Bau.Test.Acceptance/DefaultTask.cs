@@ -36,10 +36,10 @@ namespace Bau.Test.Acceptance
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("starting 'default'"));
 
             "And I am informed about execution time"
-                .f(() => output.Should().Contain("Finished 'default' in "));
+                .f(() => output.Should().ContainEquivalentOf("finished 'default' after "));
         }
 
         [Scenario]
@@ -59,7 +59,7 @@ namespace Bau.Test.Acceptance
                 .f(() => ex.Should().NotBeNull());
 
             "And I am informed that the default task was not found"
-                .f(() => ex.Message.Should().Contain("'default' task not found"));
+                .f(() => ex.Message.Should().ContainEquivalentOf("'default' task not found"));
         }
     }
 }

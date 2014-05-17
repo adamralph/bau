@@ -9,7 +9,6 @@ namespace BauCore
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-    using System.Reflection;
     using ScriptCs.Contracts;
 
     public class Bau : IScriptPackContext, ITaskBuilder
@@ -41,6 +40,7 @@ namespace BauCore
             {
                 if (string.IsNullOrWhiteSpace(task))
                 {
+                    BauConsole.WriteInvalidTaskName(task);
                     var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
                     throw new ArgumentException(message, "otherTasks");
                 }
@@ -80,37 +80,38 @@ namespace BauCore
                 this.Invoke(dependency);
             }
 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            BauConsole.WriteTaskStarting(task);
+
             try
             {
-                new TaskExecutor(taskRef, task).Execute();
+                taskRef.Execute();
             }
             catch (Exception ex)
             {
+                BauConsole.WriteTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
                 var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
                 throw new InvalidOperationException(message, ex);
             }
+
+            BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
         }
 
         public void Execute()
         {
-            var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
-                .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
-
-            Console.WriteLine("Bau version {0}.", version.InformationalVersion);
-            Console.WriteLine("Copyright (c) Bau contributors. (baubuildch@gmail.com)");
-
+            BauConsole.WriteHeader();
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
             }
-
-            Console.WriteLine("Bau succeeded.");
         }
 
         public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
         {
             if (string.IsNullOrWhiteSpace(name))
             {
+                BauConsole.WriteInvalidTaskName(name);
                 var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", name);
                 throw new ArgumentException(message, "name");
             }
@@ -124,6 +125,7 @@ namespace BauCore
             var typedTask = task as TTask;
             if (typedTask == null)
             {
+                BauConsole.WriteTasksAlreadyExists(name, task.GetType().Name);
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
                     "'{0}' task already exists with type '{1}'.",
@@ -158,40 +160,9 @@ namespace BauCore
             }
             catch (KeyNotFoundException ex)
             {
+                BauConsole.WriteTaskNotFound(task);
                 var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task not found.", task);
                 throw new InvalidOperationException(message, ex);
-            }
-        }
-
-        private class TaskExecutor
-        {
-            private readonly Task task;
-            private readonly string taskName;
-            private readonly Stopwatch stopwatch = new Stopwatch();
-
-            public TaskExecutor(Task task, string taskName)
-            {
-                this.task = task;
-                this.taskName = taskName;
-            }
-
-            public void Execute()
-            {
-                this.Before();
-                this.task.Execute();
-                this.After();
-            }
-
-            private void Before()
-            {
-                this.stopwatch.Start();
-                Console.WriteLine("Executing '{0}' Bau task.", this.taskName);
-            }
-
-            private void After()
-            {
-                this.stopwatch.Stop();
-                Console.WriteLine("Finished '{0}' in {1} seconds.", this.taskName, this.stopwatch.Elapsed.TotalSeconds);
             }
         }
     }
