@@ -33,8 +33,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default", "other-non-default")
                         .Do(() => executedTasks.Add("default")));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then four tasks are executed"
                 .f(() => executedTasks.Count.Should().Be(4));

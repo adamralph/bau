@@ -18,8 +18,8 @@ namespace BauCore.Test.Component
             "Given a default task"
                 .f(() => builder = ScriptCs.Require<Bau>().Do(() => executed = true));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then the task is executed"
                 .f(() => executed.Should().BeTrue());
@@ -31,8 +31,8 @@ namespace BauCore.Test.Component
             "Given no tasks"
                 .f(() => builder = ScriptCs.Require<Bau>());
 
-            "When I execute"
-                .f(() => ex = Record.Exception(() => builder.Execute()));
+            "When I run the builder"
+                .f(() => ex = Record.Exception(() => builder.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
@@ -47,8 +47,8 @@ namespace BauCore.Test.Component
             "Given no tasks"
                 .f(() => builder = ScriptCs.Require<Bau>().Task("foo").Do(() => { }));
 
-            "When I execute"
-                .f(() => ex = Record.Exception(() => builder.Execute()));
+            "When I run the builder"
+                .f(() => ex = Record.Exception(() => builder.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

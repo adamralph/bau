@@ -80,31 +80,28 @@ namespace BauCore
                 this.Invoke(dependency);
             }
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            BauConsole.WriteTaskStarting(task);
-
-            try
-            {
-                taskRef.Execute();
-            }
-            catch (Exception ex)
-            {
-                BauConsole.WriteTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
-                throw new InvalidOperationException(message, ex);
-            }
-
-            BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
+            Execute(task, taskRef);
         }
 
-        public void Execute()
+        public void Execute(string task)
+        {
+            Execute(task, this.GetTask(task));
+        }
+
+        public void Run()
         {
             BauConsole.WriteHeader();
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
             }
+        }
+
+        [Obsolete("Use Run() instead.")]
+        public void Execute()
+        {
+            BauConsole.WriteExecuteDeprecated();
+            this.Run();
         }
 
         public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
@@ -142,6 +139,26 @@ namespace BauCore
         public void Reenable(string task)
         {
             this.GetTask(task).Invoked = false;
+        }
+
+        private static void Execute(string task, Task taskRef)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            BauConsole.WriteTaskStarting(task);
+
+            try
+            {
+                taskRef.Execute();
+            }
+            catch (Exception ex)
+            {
+                BauConsole.WriteTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
+                throw new InvalidOperationException(message, ex);
+            }
+
+            BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
         }
 
         private void EnsureCurrentTask()

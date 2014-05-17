@@ -21,8 +21,8 @@ namespace BauCore.Test.Component
             "And a non-default task"
                 .f(() => builder.Task("non-default").Do(() => executed = true));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then the task is executed"
                 .f(() => executed.Should().BeTrue());
@@ -40,8 +40,8 @@ namespace BauCore.Test.Component
             "And another non-default task"
                 .f(() => builder.Task("non-default2").Do(() => executed2 = true));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then the first task is executed"
                 .f(() => executed1.Should().BeTrue());
@@ -59,8 +59,8 @@ namespace BauCore.Test.Component
             "And no tasks"
                 .f(() => { });
 
-            "When I execute"
-                .f(() => ex = Record.Exception(() => builder.Execute()));
+            "When I run the builder"
+                .f(() => ex = Record.Exception(() => builder.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
@@ -78,8 +78,8 @@ namespace BauCore.Test.Component
             "And another task exists"
                 .f(() => builder.Task("foo").Do(() => { }));
 
-            "When I execute"
-                .f(() => ex = Record.Exception(() => builder.Execute()));
+            "When I run the builder"
+                .f(() => ex = Record.Exception(() => builder.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

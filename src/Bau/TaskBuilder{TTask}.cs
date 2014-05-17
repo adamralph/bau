@@ -36,9 +36,15 @@ namespace BauCore
             return this;
         }
 
+        public void Run()
+        {
+            this.builder.Run();
+        }
+
+        [Obsolete("Use Run() instead.")]
         public void Execute()
         {
-            this.builder.Execute();
+            this.Run();
         }
 
         public ITaskBuilder Intern<TNewTask>(string name = Bau.DefaultTask) where TNewTask : Task, new()
@@ -56,9 +62,19 @@ namespace BauCore
             return this.builder.Do(action);
         }
 
+        public void Invoke(string task)
+        {
+            this.builder.Invoke(task);
+        }
+
         public void Reenable(string task)
         {
             this.builder.Reenable(task);
+        }
+
+        public void Execute(string task)
+        {
+            this.builder.Execute(task);
         }
     }
 }
