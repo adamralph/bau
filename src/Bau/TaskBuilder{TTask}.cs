@@ -56,9 +56,19 @@ namespace BauCore
             return this.builder.Do(action);
         }
 
+        public void Invoke(string task)
+        {
+            this.builder.Invoke(task);
+        }
+
         public void Reenable(string task)
         {
             this.builder.Reenable(task);
+        }
+
+        public void Execute(string task)
+        {
+            this.builder.Execute(task);
         }
     }
 }

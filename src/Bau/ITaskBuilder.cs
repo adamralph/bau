@@ -21,6 +21,10 @@ namespace BauCore
 
         void Execute();
 
+        void Invoke(string task);
+
         void Reenable(string task);
+
+        void Execute(string task);
     }
 }

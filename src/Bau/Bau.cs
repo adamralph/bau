@@ -80,22 +80,12 @@ namespace BauCore
                 this.Invoke(dependency);
             }
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            BauConsole.WriteTaskStarting(task);
+            Execute(task, taskRef);
+        }
 
-            try
-            {
-                taskRef.Execute();
-            }
-            catch (Exception ex)
-            {
-                BauConsole.WriteTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
-                throw new InvalidOperationException(message, ex);
-            }
-
-            BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
+        public void Execute(string task)
+        {
+            Execute(task, this.GetTask(task));
         }
 
         public void Execute()
@@ -150,6 +140,26 @@ namespace BauCore
             {
                 this.Intern<Task>();
             }
+        }
+
+        private static void Execute(string task, Task taskRef)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            BauConsole.WriteTaskStarting(task);
+
+            try
+            {
+                taskRef.Execute();
+            }
+            catch (Exception ex)
+            {
+                BauConsole.WriteTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
+                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
+                throw new InvalidOperationException(message, ex);
+            }
+
+            BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
         }
 
         private Task GetTask(string task)
