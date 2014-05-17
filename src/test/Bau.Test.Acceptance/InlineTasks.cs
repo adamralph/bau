@@ -42,7 +42,7 @@ namespace Bau.Test.Acceptance
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
             "And I should not be informed that a task with no name was executed"
-                .f(() => output.Should().NotContain("Executing '' Bau task."));
+                .f(() => output.Should().NotContainEquivalentOf("executing ''"));
         }
     }
 }

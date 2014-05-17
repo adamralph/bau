@@ -75,10 +75,10 @@ bau.Execute();"));
                 .f(() => executedTasks[1].Should().Be("default"));
 
             "And I am informed that the non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default'"));
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'default'"));
         }
 
         [Scenario]
@@ -149,13 +149,13 @@ bau.Execute();"));
                 .f(() => executedTasks[2].Should().Be("default"));
 
             "And I am informed that the first non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default1'"));
 
             "And I am informed that the second non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default2' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default2'"));
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'default'"));
         }
 
         [Scenario]
@@ -227,13 +227,13 @@ bau.Execute();"));
                 .f(() => executedTasks[2].Should().Be("default"));
 
             "And I am informed that the first non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default1'"));
 
             "And I am informed that the second non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default2' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default2'"));
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'default'"));
         }
 
         [Scenario]
@@ -305,13 +305,13 @@ bau.Execute();"));
                 .f(() => executedTasks[2].Should().Be("default"));
 
             "And I am informed that the first non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default1'"));
 
             "And I am informed that the second non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default2' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default2'"));
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'default'"));
         }
 
         [Scenario]
@@ -374,10 +374,10 @@ bau.Execute();"));
                 .f(() => executedTasks[1].Should().Be("default"));
 
             "And I am informed that the non-default task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default'"));
 
             "And I am informed that the default task was executed"
-                .f(() => output.Should().Contain("Executing 'default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'default'"));
         }
 
         // sad path
@@ -406,7 +406,7 @@ bau.Execute();"));
                 .f(() => File.Exists(tempFile).Should().BeFalse());
 
             "And I am informed that the non-existent task was not found"
-                .f(() => ex.Message.Should().Contain("'non-existent' task not found"));
+                .f(() => ex.Message.Should().ContainEquivalentOf("'non-existent' task not found"));
         }
 
         [Scenario]
@@ -451,7 +451,7 @@ bau.Execute();"));
                 .f(() => File.Exists(tempFile).Should().BeFalse());
 
             "And I am informed that the non-default task was executed"
-                .f(() => ex.Message.Should().Contain("'non-default' task failed."));
+                .f(() => ex.Message.Should().ContainEquivalentOf("'non-default' task failed."));
         }
     }
 }

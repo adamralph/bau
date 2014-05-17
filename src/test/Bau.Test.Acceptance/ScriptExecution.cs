@@ -28,7 +28,7 @@ namespace Bau.Test.Acceptance
                 .f(() => ex.Should().NotBeNull());
 
             "And I am informed that member could not be found"
-                .f(() => ex.Message.Should().Contain("The name 'x' does not exist in the current context"));
+                .f(() => ex.Message.Should().ContainEquivalentOf("the name 'x' does not exist in the current context"));
         }
 
         [Scenario]

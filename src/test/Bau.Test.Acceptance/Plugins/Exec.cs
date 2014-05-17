@@ -97,7 +97,7 @@ namespace Bau.Test.Acceptance.Plugins
                 .f(() => ex.Should().NotBeNull());
 
             "And I am informed that the task failed"
-                .f(() => ex.Message.Should().Contain("'default' task failed"));
+                .f(() => ex.Message.Should().ContainEquivalentOf("'default' task failed"));
 
             "And I am informed that the command exited with a non-zero exit code"
                 .f(() =>

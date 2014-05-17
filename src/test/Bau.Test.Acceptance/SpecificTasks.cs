@@ -36,7 +36,7 @@ namespace Bau.Test.Acceptance
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
             "And I am informed that the task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default'"));
         }
 
         [Scenario]
@@ -82,10 +82,10 @@ bau.Execute();"));
                 .f(() => File.Exists(tempFile2).Should().BeTrue());
 
             "And I am informed that the first task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default1' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default1'"));
 
             "And I am informed that the second task was executed"
-                .f(() => output.Should().Contain("Executing 'non-default2' Bau task."));
+                .f(() => output.Should().ContainEquivalentOf("executing 'non-default2'"));
         }
 
         [Scenario]
@@ -105,7 +105,7 @@ bau.Execute();"));
                 .f(() => ex.Should().NotBeNull());
 
             "And I am informed that the non-existent task was not found"
-                .f(() => ex.Message.Should().Contain("'non-existent' task not found"));
+                .f(() => ex.Message.Should().ContainEquivalentOf("'non-existent' task not found"));
         }
     }
 }
