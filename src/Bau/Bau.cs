@@ -88,13 +88,20 @@ namespace BauCore
             Execute(task, this.GetTask(task));
         }
 
-        public void Execute()
+        public void Run()
         {
             BauConsole.WriteHeader();
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
             }
+        }
+
+        [Obsolete("Use Run() instead.")]
+        public void Execute()
+        {
+            BauConsole.WriteExecuteDeprecated();
+            this.Run();
         }
 
         public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
@@ -134,14 +141,6 @@ namespace BauCore
             this.GetTask(task).Invoked = false;
         }
 
-        private void EnsureCurrentTask()
-        {
-            if (this.currentTask == null)
-            {
-                this.Intern<Task>();
-            }
-        }
-
         private static void Execute(string task, Task taskRef)
         {
             var stopwatch = new Stopwatch();
@@ -160,6 +159,14 @@ namespace BauCore
             }
 
             BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
+        }
+
+        private void EnsureCurrentTask()
+        {
+            if (this.currentTask == null)
+            {
+                this.Intern<Task>();
+            }
         }
 
         private Task GetTask(string task)

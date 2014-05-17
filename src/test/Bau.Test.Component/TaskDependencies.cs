@@ -27,8 +27,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default")
                         .Do(() => executedTasks.Add("default")));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then both tasks are executed"
                 .f(() => executedTasks.Count.Should().Be(2));
@@ -58,8 +58,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default1", "non-default2")
                         .Do(() => executedTasks.Add("default")));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then all three tasks are executed"
                 .f(() => executedTasks.Count.Should().Be(3));
@@ -92,8 +92,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default2")
                         .Do(() => executedTasks.Add("default")));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then all three tasks are executed"
                 .f(() => executedTasks.Count.Should().Be(3));
@@ -126,8 +126,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default1", "non-default2")
                         .Do(() => executedTasks.Add("default")));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then all three tasks are executed"
                 .f(() => executedTasks.Count.Should().Be(3));
@@ -155,8 +155,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default")
                         .Do(() => executedTasks.Add("default")));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then both tasks are executed"
                 .f(() => executedTasks.Count.Should().Be(2));
@@ -179,8 +179,8 @@ namespace BauCore.Test.Component
                         {
                         }));
 
-            "When I execute"
-                .f(() => ex = Record.Exception(() => builder.Execute()));
+            "When I run the builder"
+                .f(() => ex = Record.Exception(() => builder.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
@@ -205,8 +205,8 @@ namespace BauCore.Test.Component
                     .Task("default").DependsOn("non-default")
                         .Do(() => defaultExecuted = true));
 
-            "When I execute"
-                .f(() => ex = Record.Exception(() => builder.Execute()));
+            "When I run the builder"
+                .f(() => ex = Record.Exception(() => builder.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

@@ -34,6 +34,14 @@ namespace BauCore
             }
         }
 
+        public static void WriteExecuteDeprecated()
+        {
+            using (new LineWriter(ConsoleColor.Yellow))
+            {
+                Console.Write("Bau.Execute() (with no parameters) will be removed shortly. Use Bau.Run() instead.");
+            }
+        }
+
         public static void WriteInvalidTaskName(string task)
         {
             using (new LineWriter(ConsoleColor.Red))

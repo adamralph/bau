@@ -21,8 +21,8 @@ namespace BauCore.Test.Component
                     task.Execute();
                 }));
 
-            "When I execute"
-                .f(() => builder.Execute());
+            "When I run the builder"
+                .f(() => builder.Run());
 
             "Then the inline task is executed"
                 .f(() => executed.Should().BeTrue());
