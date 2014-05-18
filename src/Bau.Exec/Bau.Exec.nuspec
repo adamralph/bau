@@ -8,7 +8,7 @@
     <authors>Adam Ralph, Bau contributors</authors>
     <description>A Bau task plugin for executing arbitrary commands.
 
-Require&lt;Bau&gt;().Exec().Do(exec => exec.Command = "foo.exe").Execute();</description>
+Require&lt;Bau&gt;().Exec().Do(exec => exec.Command = "foo.exe").Run();</description>
     <projectUrl>https://github.com/bau-build/bau/tree/dev/src/Bau.Exec</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png</iconUrl>
     <licenseUrl>https://github.com/bau-build/bau/blob/dev/license.txt</licenseUrl>

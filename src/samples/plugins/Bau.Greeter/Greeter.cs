@@ -2,7 +2,7 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-// Require<Bau>().Greeter().Do(g => g.Greeting = "Hello world!").Execute();
+// Require<Bau>().Greeter().Do(g => g.Greeting = "Hello world!").Run();
 namespace BauGreeter
 {
     using BauCore;
