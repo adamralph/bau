@@ -22,7 +22,7 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"x"));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => baufile.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
@@ -41,7 +41,7 @@ namespace Bau.Test.Acceptance
                     @"throw new Exception(""" + (message = Guid.NewGuid().ToString()) + @""");"));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => baufile.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

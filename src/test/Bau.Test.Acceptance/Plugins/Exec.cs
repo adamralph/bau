@@ -29,10 +29,10 @@ namespace Bau.Test.Acceptance.Plugins
     exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
     exec.Args = new[] { ""foo.txt"" };
 })
-.Execute();"));
+.Run();"));
 
             "When I execute the baufile"
-                .f(() => baufile.Execute());
+                .f(() => baufile.Run());
 
             "Then the task succeeds"
                 .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
@@ -53,10 +53,10 @@ namespace Bau.Test.Acceptance.Plugins
     exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
     exec.Args = new[] { ""foo.txt"" };
 })
-.Execute();"));
+.Run();"));
 
             "When I execute the baufile"
-                .f(() => baufile.Execute());
+                .f(() => baufile.Run());
 
             "Then the task succeeds"
                 .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
@@ -72,10 +72,10 @@ namespace Bau.Test.Acceptance.Plugins
 @"Require<Bau>()
 .Exec(""default"")
 .Do(exec => exec.Run(@""..\Bau.Test.Acceptance.CreateFile.exe"").With(""foo.txt"").In(@""" + scenario + @"""))
-.Execute();"));
+.Run();"));
 
             "When I execute the baufile"
-                .f(() => baufile.Execute());
+                .f(() => baufile.Run());
 
             "Then the task succeeds"
                 .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
@@ -88,10 +88,10 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which fails"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"Require<Bau>().Task<Exec>().Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"").Execute();"));
+@"Require<Bau>().Task<Exec>().Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"").Run();"));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => baufile.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Run()));
 
             "Then execution fails"
                 .f(() => ex.Should().NotBeNull());

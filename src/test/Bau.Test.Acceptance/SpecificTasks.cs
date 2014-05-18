@@ -25,12 +25,12 @@ namespace Bau.Test.Acceptance
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
-@"Require<Bau>().Task(""non-default"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Execute();");
+@"Require<Bau>().Task(""non-default"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Run();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
             "When I execute the non-default task"
-                .f(() => output = baufile.Execute("non-default"));
+                .f(() => output = baufile.Run("non-default"));
 
             "Then the task is executed"
                 .f(() => File.Exists(tempFile).Should().BeTrue());
@@ -70,10 +70,10 @@ bau.Task(""non-default2"").Do(() => File.Create(@""" + tempFile2 + @""").Dispose
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute both non-default tasks"
-                .f(() => output = baufile.Execute("non-default1", "non-default2"));
+                .f(() => output = baufile.Run("non-default1", "non-default2"));
 
             "Then the first task is executed"
                 .f(() => File.Exists(tempFile1).Should().BeTrue());
@@ -89,8 +89,8 @@ bau.Execute();"));
         }
 
         [Scenario]
-        [Example("NoTask", @"Require<Bau>().Execute();")]
-        [Example("SomeOtherTask", @"Require<Bau>().Task(""foo"").Do(() => { }).Execute();")]
+        [Example("NoTask", @"Require<Bau>().Run();")]
+        [Example("SomeOtherTask", @"Require<Bau>().Task(""foo"").Do(() => { }).Run();")]
         public static void NonexistentTask(string tag, string code, Baufile baufile, Exception ex)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
@@ -99,7 +99,7 @@ bau.Execute();"));
                 .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
 
             "When I execute a non-existent task"
-                .f(() => ex = Record.Exception(() => baufile.Execute("non-existent")));
+                .f(() => ex = Record.Exception(() => baufile.Run("non-existent")));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

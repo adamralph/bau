@@ -55,10 +55,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then two tasks are executed"
                 .f(() =>
@@ -126,10 +126,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then three tasks are executed"
                 .f(() =>
@@ -204,10 +204,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then three tasks are executed"
                 .f(() =>
@@ -282,10 +282,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then three tasks are executed"
                 .f(() =>
@@ -354,10 +354,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then two tasks are executed"
                 .f(() =>
@@ -392,12 +392,12 @@ bau.Execute();"));
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>().Task(""default"").DependsOn(""non-existent"")
-.Do(() => File.CreateText(@""" + tempFile + @""").Dispose()).Execute();");
+.Do(() => File.CreateText(@""" + tempFile + @""").Dispose()).Run();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => baufile.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
@@ -439,10 +439,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => baufile.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

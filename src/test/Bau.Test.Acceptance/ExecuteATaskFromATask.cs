@@ -52,10 +52,10 @@ var bau = Require<Bau>();"));
 
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
-@".Execute();"));
+@".Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then two tasks are executed"
                 .f(() =>

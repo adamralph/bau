@@ -83,7 +83,7 @@ namespace Bau.Test.Acceptance.Support
             return this;
         }
 
-        public string Execute(params string[] tasks)
+        public string Run(params string[] tasks)
         {
             Guard.AgainstNullArgument("tasks", tasks);
 
