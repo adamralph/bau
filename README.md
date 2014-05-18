@@ -13,7 +13,7 @@ Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugi
 ##### Task definition
 ```C#
 // baufile.csx
-Require<Bau>().Do(() => Console.WriteLine("Hello world!")).Execute();
+Require<Bau>().Do(() => Console.WriteLine("Hello world!")).Run();
 ```
 
 ##### Dependencies between tasks
@@ -29,7 +29,7 @@ Require<Bau>()
 	.Do(() => message += " world!")
 .Task("hello")
 	.Do(() => message = "Hello")
-.Execute();
+.Run();
 ```
 Tasks can be defined in any order, can depend on any number of other tasks `DependsOn("foo", "bar")`, can be referenced multiple times with multiple calls to `Task("baz")` and can have multiple actions assigned to them with multiple calls to `Do()`.
 
