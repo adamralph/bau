@@ -4,17 +4,19 @@ The C# task runner.
 
 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1253%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1253&guest=1) [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
 
-Bau is a community driven, modular, cross platform task runner built upon the [scriptcs](https://github.com/scriptcs/scriptcs) + [NuGet](https://www.nuget.org/) ecosystem.
+Bau is a community driven, cross platform, pluggable task runner built on the [scriptcs](https://github.com/scriptcs/scriptcs) + [NuGet](https://www.nuget.org/) ecosystem.
 
-The core Bau library is packaged as a [script pack](https://github.com/scriptcs/scriptcs/wiki/Script-Packs) and provides task definition,
+The core Bau library is packaged as a [script pack](https://github.com/scriptcs/scriptcs/wiki/Script-Packs) and provides task definition, dependencies between tasks and task running.
 
+Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugins), taking advantage of Bau's modular, pluggable architecture.
+
+##### Task definition
 ```C#
 // baufile.csx
 Require<Bau>().Do(() => Console.WriteLine("Hello world!")).Execute();
 ```
 
-dependencies between tasks
-
+##### Dependencies between tasks
 ```C#
 // baufile.csx
 string message;
@@ -29,14 +31,12 @@ Require<Bau>()
 	.Do(() => message = "Hello")
 .Execute();
 ```
+Tasks can be defined in any order, can depend on any number of other tasks `DependsOn("foo", "bar")`, can be referenced multiple times with multiple calls to `Task("baz")` and can have multiple actions assigned to them with multiple calls to `Do()`.
 
-and their execution.
-
+##### Running tasks
 ```batch
 scriptcs baufile.csx
 ```
-
-Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugins) which take advantage of Bau's modular, pluggable architecture.
 
 - [Quickstart](https://github.com/bau-build/bau/wiki/Quickstart)
 - [Wiki](https://github.com/bau-build/bau/wiki)
