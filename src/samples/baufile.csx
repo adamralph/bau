@@ -21,4 +21,4 @@ Require<Bau>()
 .Task("walk_dog")
     .DependsOn("make_coffee")
     .Do(() => Console.WriteLine("Walked the dog."))
-.Execute();
+.Run();

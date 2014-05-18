@@ -146,7 +146,7 @@ Require<Bau>()
         }
     })
 
-.Execute();
+.Run();
 
 string GetTestResultsPath(string directory, string assembly, string extension)
 {
