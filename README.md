@@ -2,14 +2,47 @@
 
 The C# task runner.
 
-Write your build scripts in C# :sunglasses:.
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1253%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1253&guest=1) [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
+
+Bau is a community driven, modular, cross platform task runner built upon the [scriptcs](https://github.com/scriptcs/scriptcs) + [NuGet](https://www.nuget.org/) ecosystem.
+
+The core Bau library is packaged as a [script pack](https://github.com/scriptcs/scriptcs/wiki/Script-Packs) and provides task definition,
+
+```C#
+// baufile.csx
+Require<Bau>().Do(() => Console.WriteLine("Hello world!")).Execute();
+```
+
+dependencies between tasks
+
+```C#
+// baufile.csx
+string message;
+
+Require<Bau>()
+	.DependsOn("world")
+	.Do(() => Console.WriteLine(message))
+.Task("world")
+	.DependsOn("hello")
+	.Do(() => message += " world!")
+.Task("hello")
+	.Do(() => message = "Hello")
+.Execute();
+```
+
+and their execution.
+
+```batch
+scriptcs baufile.csx
+```
+
+Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugins) which take advantage of Bau's modular, pluggable architecture.
 
 - [Quickstart](https://github.com/bau-build/bau/wiki/Quickstart)
 - [Wiki](https://github.com/bau-build/bau/wiki)
 - [Samples](https://github.com/bau-build/bau/tree/dev/src/samples)
 - [NuGet package](https://nuget.org/packages/Bau/ "Bau on Nuget")
 - [JabbR chat room](http://jabbr.net/#/rooms/bau)
-- [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
 
 Powered by [scriptcs](https://github.com/scriptcs/scriptcs) and [Roslyn](http://msdn.microsoft.com/en-gb/roslyn).
 
