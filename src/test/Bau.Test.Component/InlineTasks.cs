@@ -16,7 +16,7 @@ namespace BauCore.Test.Component
             "Given a default task with an inline task"
                 .f(() => builder = ScriptCs.Require<Bau>().Do(() =>
                 {
-                    var task = new BauCore.Task();
+                    var task = new BauCore.BauTask();
                     task.Actions.Add(() => executed = true);
                     task.Execute();
                 }));

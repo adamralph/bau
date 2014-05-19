@@ -41,10 +41,11 @@
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="BauScriptPack.cs" />
     <Compile Include="BauExtensions.cs" />
+    <Compile Include="IBauTask.cs" />
     <Compile Include="ITaskBuilder{TTask}.cs" />
     <Compile Include="TaskBuilder{TTask}.cs" />
     <Compile Include="ITaskBuilder.cs" />
-    <Compile Include="Task.cs" />
+    <Compile Include="BauTask.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
