@@ -7,7 +7,7 @@ namespace BauGreeter
 {
     using BauCore;
 
-    public class Greeter : Task
+    public class Greeter : BauTask
     {
         public string Greeting { get; set; }
 

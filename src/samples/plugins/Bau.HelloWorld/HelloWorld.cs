@@ -3,7 +3,7 @@
 // </copyright>
 
 // Require<Bau>().Task<HelloWorld>().Run();
-public class HelloWorld : BauCore.Task
+public class HelloWorld : BauCore.BauTask
 {
     protected override void OnActionsExecuted()
     {

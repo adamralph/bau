@@ -6,7 +6,7 @@ namespace BauCore
 {
     using System;
 
-    public class TaskBuilder<TTask> : ITaskBuilder<TTask> where TTask : Task, new()
+    public class TaskBuilder<TTask> : ITaskBuilder<TTask> where TTask : BauTask, new()
     {
         private readonly ITaskBuilder builder;
 
@@ -18,7 +18,7 @@ namespace BauCore
             this.builder.Intern<TTask>(name);
         }
 
-        public Task CurrentTask
+        public BauTask CurrentTask
         {
             get { return this.builder.CurrentTask; }
         }
@@ -47,7 +47,7 @@ namespace BauCore
             this.Run();
         }
 
-        public ITaskBuilder Intern<TNewTask>(string name = Bau.DefaultTask) where TNewTask : Task, new()
+        public ITaskBuilder Intern<TNewTask>(string name = Bau.DefaultTask) where TNewTask : BauTask, new()
         {
             return this.builder.Intern<TNewTask>(name);
         }

@@ -7,7 +7,7 @@ namespace BauCore
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    public interface ITaskBuilder<out TTask> : ITaskBuilder where TTask : Task, new()
+    public interface ITaskBuilder<out TTask> : ITaskBuilder where TTask : BauTask, new()
     {
         new ITaskBuilder<TTask> DependsOn(params string[] otherTasks);
 

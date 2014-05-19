@@ -10,7 +10,7 @@ namespace BauExec
     using System.Globalization;
     using BauCore;
 
-    public class Exec : Task
+    public class Exec : BauTask
     {
         public string Command { get; set; }
 

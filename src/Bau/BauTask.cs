@@ -1,4 +1,4 @@
-﻿// <copyright file="Task.cs" company="Bau contributors">
+﻿// <copyright file="BauTask.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -8,7 +8,7 @@ namespace BauCore
     using System.Collections.Generic;
     using ScriptCs.Contracts;
 
-    public class Task : ScriptPack<Task>, IScriptPackContext
+    public class BauTask : ScriptPack<BauTask>, IScriptPackContext
     {
         private readonly List<string> dependencies = new List<string>();
         private readonly List<Action> actions = new List<Action>();
