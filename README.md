@@ -6,9 +6,15 @@ The C# task runner.
 
 Bau is a community driven, cross platform, pluggable task runner built on the [scriptcs](https://github.com/scriptcs/scriptcs) + [NuGet](https://www.nuget.org/) ecosystem.
 
-The core Bau library is packaged as a [script pack](https://github.com/scriptcs/scriptcs/wiki/Script-Packs) and provides task definition, dependencies between tasks and task running.
+The core Bau library is a [script pack](https://github.com/scriptcs/scriptcs/wiki/Script-Packs) providing task definition, dependencies between tasks and task running.
 
 Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugins), taking advantage of Bau's modular, pluggable architecture.
+
+- [Quickstart](https://github.com/bau-build/bau/wiki/Quickstart)
+- [Wiki](https://github.com/bau-build/bau/wiki)
+- [Samples](https://github.com/bau-build/bau/tree/dev/src/samples)
+- [NuGet package](https://nuget.org/packages/Bau/ "Bau on Nuget")
+- [JabbR chat room](http://jabbr.net/#/rooms/bau)
 
 ##### Task definition
 ```C#
@@ -37,12 +43,6 @@ Tasks can be defined in any order, can depend on any number of other tasks `Depe
 ```batch
 scriptcs baufile.csx
 ```
-
-- [Quickstart](https://github.com/bau-build/bau/wiki/Quickstart)
-- [Wiki](https://github.com/bau-build/bau/wiki)
-- [Samples](https://github.com/bau-build/bau/tree/dev/src/samples)
-- [NuGet package](https://nuget.org/packages/Bau/ "Bau on Nuget")
-- [JabbR chat room](http://jabbr.net/#/rooms/bau)
 
 Powered by [scriptcs](https://github.com/scriptcs/scriptcs) and [Roslyn](http://msdn.microsoft.com/en-gb/roslyn).
 
