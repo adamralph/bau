@@ -16,8 +16,8 @@ namespace BauCore
         public const string DefaultTask = "default";
 
         private readonly List<string> topLevelTasks = new List<string>();
-        private readonly Dictionary<string, BauTask> tasks = new Dictionary<string, BauTask>();
-        private BauTask currentTask;
+        private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
+        private IBauTask currentTask;
 
         public Bau(params string[] topLevelTasks)
         {
@@ -28,7 +28,7 @@ namespace BauCore
             }
         }
 
-        public BauTask CurrentTask
+        public IBauTask CurrentTask
         {
             get { return this.currentTask; }
         }
@@ -104,7 +104,7 @@ namespace BauCore
             this.Run();
         }
 
-        public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : BauTask, new()
+        public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : class, IBauTask, new()
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -113,7 +113,7 @@ namespace BauCore
                 throw new ArgumentException(message, "name");
             }
 
-            BauTask task;
+            IBauTask task;
             if (!this.tasks.TryGetValue(name, out task))
             {
                 this.tasks.Add(name, task = new TTask());
@@ -141,7 +141,7 @@ namespace BauCore
             this.GetTask(task).Invoked = false;
         }
 
-        private static void Execute(string task, BauTask taskRef)
+        private static void Execute(string task, IBauTask taskRef)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -169,7 +169,7 @@ namespace BauCore
             }
         }
 
-        private BauTask GetTask(string task)
+        private IBauTask GetTask(string task)
         {
             try
             {

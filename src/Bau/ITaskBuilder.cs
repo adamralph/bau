@@ -9,10 +9,10 @@ namespace BauCore
 
     public interface ITaskBuilder
     {
-        BauTask CurrentTask { get; }
+        IBauTask CurrentTask { get; }
 
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Fluent API.")]
-        ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : BauTask, new();
+        ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : class, IBauTask, new();
 
         ITaskBuilder DependsOn(params string[] otherTasks);
 
