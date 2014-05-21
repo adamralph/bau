@@ -13,7 +13,7 @@ namespace BauCore
 
     public class Bau : IScriptPackContext, ITaskBuilder
     {
-        public const string DefaultTask = "default";
+        private const string DefaultTask = "default";
 
         private readonly List<string> topLevelTasks = new List<string>();
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
@@ -24,7 +24,7 @@ namespace BauCore
             this.topLevelTasks.AddRange(topLevelTasks);
             if (this.topLevelTasks.Count == 0)
             {
-                this.topLevelTasks.Add(Bau.DefaultTask);
+                this.topLevelTasks.Add(DefaultTask);
             }
         }
 
@@ -104,8 +104,9 @@ namespace BauCore
             this.Run();
         }
 
-        public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : class, IBauTask, new()
+        public ITaskBuilder Intern<TTask>(string name = null) where TTask : class, IBauTask, new()
         {
+            name = name ?? DefaultTask;
             if (string.IsNullOrWhiteSpace(name))
             {
                 BauConsole.WriteInvalidTaskName(name);

@@ -10,7 +10,7 @@ namespace BauCore
     {
         private readonly ITaskBuilder builder;
 
-        public TaskBuilder(ITaskBuilder builder, string name = Bau.DefaultTask)
+        public TaskBuilder(ITaskBuilder builder, string name = null)
         {
             Guard.AgainstNullArgument("builder", builder);
 
@@ -47,7 +47,7 @@ namespace BauCore
             this.Run();
         }
 
-        public ITaskBuilder Intern<TNewTask>(string name = Bau.DefaultTask) where TNewTask : class, IBauTask, new()
+        public ITaskBuilder Intern<TNewTask>(string name = null) where TNewTask : class, IBauTask, new()
         {
             return this.builder.Intern<TNewTask>(name);
         }
