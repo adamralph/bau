@@ -6,14 +6,14 @@ namespace BauCore
 {
     public static class BauExtensions
     {
-        public static ITaskBuilder Task(this ITaskBuilder builder, string name = Bau.DefaultTask)
+        public static ITaskBuilder Task(this ITaskBuilder builder, string name = null)
         {
             Guard.AgainstNullArgument("builder", builder);
 
             return builder.Intern<BauTask>(name);
         }
 
-        public static ITaskBuilder<TTask> Task<TTask>(this ITaskBuilder builder, string name = Bau.DefaultTask) where TTask : BauTask, new()
+        public static ITaskBuilder<TTask> Task<TTask>(this ITaskBuilder builder, string name = null) where TTask : BauTask, new()
         {
             Guard.AgainstNullArgument("builder", builder);
 
