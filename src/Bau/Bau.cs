@@ -13,22 +13,22 @@ namespace BauCore
 
     public class Bau : IScriptPackContext, ITaskBuilder
     {
-        public const string DefaultTask = "default";
+        private const string DefaultTask = "default";
 
         private readonly List<string> topLevelTasks = new List<string>();
-        private readonly Dictionary<string, Task> tasks = new Dictionary<string, Task>();
-        private Task currentTask;
+        private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
+        private IBauTask currentTask;
 
         public Bau(params string[] topLevelTasks)
         {
             this.topLevelTasks.AddRange(topLevelTasks);
             if (this.topLevelTasks.Count == 0)
             {
-                this.topLevelTasks.Add(Bau.DefaultTask);
+                this.topLevelTasks.Add(DefaultTask);
             }
         }
 
-        public Task CurrentTask
+        public IBauTask CurrentTask
         {
             get { return this.currentTask; }
         }
@@ -104,8 +104,9 @@ namespace BauCore
             this.Run();
         }
 
-        public ITaskBuilder Intern<TTask>(string name = Bau.DefaultTask) where TTask : Task, new()
+        public ITaskBuilder Intern<TTask>(string name = null) where TTask : class, IBauTask, new()
         {
+            name = name ?? DefaultTask;
             if (string.IsNullOrWhiteSpace(name))
             {
                 BauConsole.WriteInvalidTaskName(name);
@@ -113,7 +114,7 @@ namespace BauCore
                 throw new ArgumentException(message, "name");
             }
 
-            Task task;
+            IBauTask task;
             if (!this.tasks.TryGetValue(name, out task))
             {
                 this.tasks.Add(name, task = new TTask());
@@ -141,7 +142,7 @@ namespace BauCore
             this.GetTask(task).Invoked = false;
         }
 
-        private static void Execute(string task, Task taskRef)
+        private static void Execute(string task, IBauTask taskRef)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -165,11 +166,11 @@ namespace BauCore
         {
             if (this.currentTask == null)
             {
-                this.Intern<Task>();
+                this.Intern<BauTask>();
             }
         }
 
-        private Task GetTask(string task)
+        private IBauTask GetTask(string task)
         {
             try
             {

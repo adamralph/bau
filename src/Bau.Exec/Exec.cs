@@ -8,9 +8,10 @@ namespace BauExec
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
     using BauCore;
 
-    public class Exec : Task
+    public class Exec : BauTask
     {
         public string Command { get; set; }
 
@@ -48,46 +49,33 @@ namespace BauExec
                 throw new InvalidOperationException("The command is invalid.");
             }
 
-            using (var process = new Process())
+            var info = new ProcessStartInfo
             {
-                process.StartInfo.FileName = this.Command;
-                if (this.Args != null)
-                {
-                    process.StartInfo.Arguments = string.Join(" ", this.Args);
-                }
+                FileName = this.Command,
+                Arguments = this.Args == null
+                    ? null
+                    : string.Join(" ", this.Args.Where(arg => !string.IsNullOrWhiteSpace(arg))),
 
-                if (this.WorkingDirectory != null)
-                {
-                    process.StartInfo.WorkingDirectory = this.WorkingDirectory;
-                }
+                WorkingDirectory = this.WorkingDirectory,
+                UseShellExecute = false,
+            };
 
-                var argString = string.IsNullOrEmpty(process.StartInfo.Arguments)
-                        ? string.Empty
-                        : " " + string.Join(" ", process.StartInfo.Arguments);
+            var argString = string.IsNullOrEmpty(info.Arguments)
+                ? string.Empty
+                : " " + string.Join(" ", info.Arguments);
 
-                var workingDirectoryString = process.StartInfo.WorkingDirectory == null
-                        ? string.Empty
-                        : string.Format(CultureInfo.InvariantCulture, " with working directory '{0}'", process.StartInfo.WorkingDirectory);
+            var workingDirectoryString = string.IsNullOrEmpty(info.WorkingDirectory)
+                ? string.Empty
+                : string.Format(CultureInfo.InvariantCulture, " with working directory '{0}'", info.WorkingDirectory);
 
-                Console.WriteLine("Executing '{0}{1}'{2}...", process.StartInfo.FileName, argString, workingDirectoryString);
-
-                process.StartInfo.UseShellExecute = false;
-                process.Start();
-                process.WaitForExit();
-                if (process.ExitCode != 0)
-                {
-                    var message = string.Format(
-                        CultureInfo.InvariantCulture, "The command exited with code {0}.", process.ExitCode.ToString(CultureInfo.InvariantCulture));
-
-                    throw new InvalidOperationException(message);
-                }
-            }
+            Console.WriteLine("Executing '{0}{1}'{2}...", info.FileName, argString, workingDirectoryString);
+            info.Run();
         }
     }
 
     public static class Plugin
     {
-        public static ITaskBuilder<Exec> Exec(this ITaskBuilder builder, string name = Bau.DefaultTask)
+        public static ITaskBuilder<Exec> Exec(this ITaskBuilder builder, string name = null)
         {
             return new TaskBuilder<Exec>(builder, name);
         }

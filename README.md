@@ -2,14 +2,47 @@
 
 The C# task runner.
 
-Write your build scripts in C# :sunglasses:.
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1253%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1253&guest=1) [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
+
+Bau is a community driven, cross platform, pluggable task runner built on the [scriptcs](https://github.com/scriptcs/scriptcs) + [NuGet](https://www.nuget.org/) ecosystem.
+
+The core Bau library is a [script pack](https://github.com/scriptcs/scriptcs/wiki/Script-Packs) providing task definition, dependencies between tasks and task running.
+
+Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugins), taking advantage of Bau's modular, pluggable architecture.
 
 - [Quickstart](https://github.com/bau-build/bau/wiki/Quickstart)
 - [Wiki](https://github.com/bau-build/bau/wiki)
 - [Samples](https://github.com/bau-build/bau/tree/dev/src/samples)
 - [NuGet package](https://nuget.org/packages/Bau/ "Bau on Nuget")
 - [JabbR chat room](http://jabbr.net/#/rooms/bau)
-- [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
+
+##### Task definition
+```C#
+// baufile.csx
+Require<Bau>().Do(() => Console.WriteLine("Hello world!")).Run();
+```
+
+##### Dependencies between tasks
+```C#
+// baufile.csx
+string message;
+
+Require<Bau>()
+	.DependsOn("world")
+	.Do(() => Console.WriteLine(message))
+.Task("world")
+	.DependsOn("hello")
+	.Do(() => message += " world!")
+.Task("hello")
+	.Do(() => message = "Hello")
+.Run();
+```
+Tasks can be defined in any order, can depend on any number of other tasks `DependsOn("foo", "bar")`, can be referenced multiple times with multiple calls to `Task("baz")` and can have multiple actions assigned to them with multiple calls to `Do()`.
+
+##### Running tasks
+```batch
+scriptcs baufile.csx
+```
 
 Powered by [scriptcs](https://github.com/scriptcs/scriptcs) and [Roslyn](http://msdn.microsoft.com/en-gb/roslyn).
 

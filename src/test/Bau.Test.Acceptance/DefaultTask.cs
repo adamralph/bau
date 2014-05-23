@@ -25,12 +25,12 @@ namespace Bau.Test.Acceptance
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
-                        @"Require<Bau>().Do(() => File.Create(@""" + tempFile + @""").Dispose()).Execute();");
+                        @"Require<Bau>().Do(() => File.Create(@""" + tempFile + @""").Dispose()).Run();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then the task is executed"
                 .f(() => File.Exists(tempFile).Should().BeTrue());
@@ -43,8 +43,8 @@ namespace Bau.Test.Acceptance
         }
 
         [Scenario]
-        [Example("NoTask", @"Require<Bau>().Execute();")]
-        [Example("SomeOtherTask", @"Require<Bau>().Task(""foo"").Do(() => { }).Execute();")]
+        [Example("NoTask", @"Require<Bau>().Run();")]
+        [Example("SomeOtherTask", @"Require<Bau>().Task(""foo"").Do(() => { }).Run();")]
         public static void DefaultTaskDoesNotExist(string tag, string code, Baufile baufile, Exception ex)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
@@ -53,7 +53,7 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
 
             "When I execute the baufile"
-                .f(() => ex = Record.Exception(() => baufile.Execute()));
+                .f(() => ex = Record.Exception(() => baufile.Run()));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());

@@ -34,4 +34,4 @@ Require<Bau>()
     .Run(xunitCommand)
     .With(test, "/html", test + ".TestResults.html", "/xml", test + ".TestResults.xml"))
 
-.Execute();
+.Run();

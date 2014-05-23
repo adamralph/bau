@@ -2,8 +2,8 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-// Require<Bau>().Task<HelloWorld>().Execute();
-public class HelloWorld : BauCore.Task
+// Require<Bau>().Task<HelloWorld>().Run();
+public class HelloWorld : BauCore.BauTask
 {
     protected override void OnActionsExecuted()
     {

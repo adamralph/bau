@@ -63,10 +63,10 @@ bau.Task(""default"")
             "And the tasks are executed"
                 .f(() => baufile.WriteLine(
 @"
-bau.Execute();"));
+bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => baufile.Execute());
+                .f(() => baufile.Run());
 
             "Then four tasks are executed"
                 .f(() =>

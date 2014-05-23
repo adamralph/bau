@@ -27,16 +27,16 @@ namespace Bau.Test.Acceptance
 @"Require<Bau>()
 .Do(() =>
 {
-    var task = new BauCore.Task();
+    var task = new BauTask();
     task.Actions.Add(() => File.Create(@""" + tempFile + @""").Dispose());
     task.Execute();
 })
-.Execute();");
+.Run();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Execute());
+                .f(() => output = baufile.Run());
 
             "Then the task is executed"
                 .f(() => File.Exists(tempFile).Should().BeTrue());

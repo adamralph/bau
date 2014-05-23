@@ -6,11 +6,11 @@ namespace BauCore
 {
     using System;
 
-    public class TaskBuilder<TTask> : ITaskBuilder<TTask> where TTask : Task, new()
+    public class TaskBuilder<TTask> : ITaskBuilder<TTask> where TTask : class, IBauTask, new()
     {
         private readonly ITaskBuilder builder;
 
-        public TaskBuilder(ITaskBuilder builder, string name = Bau.DefaultTask)
+        public TaskBuilder(ITaskBuilder builder, string name = null)
         {
             Guard.AgainstNullArgument("builder", builder);
 
@@ -18,7 +18,7 @@ namespace BauCore
             this.builder.Intern<TTask>(name);
         }
 
-        public Task CurrentTask
+        public IBauTask CurrentTask
         {
             get { return this.builder.CurrentTask; }
         }
@@ -47,7 +47,7 @@ namespace BauCore
             this.Run();
         }
 
-        public ITaskBuilder Intern<TNewTask>(string name = Bau.DefaultTask) where TNewTask : Task, new()
+        public ITaskBuilder Intern<TNewTask>(string name = null) where TNewTask : class, IBauTask, new()
         {
             return this.builder.Intern<TNewTask>(name);
         }
