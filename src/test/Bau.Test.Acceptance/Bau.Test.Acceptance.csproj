@@ -31,7 +31,6 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\Bau.Test.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
   <ItemGroup>
     <None Include="packages.config" />
