@@ -17,7 +17,6 @@ if (string.IsNullOrWhiteSpace(nugetVerbosity))
 
 // solution specific variables
 var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
-var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
 var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "src/Bau.sln";
@@ -45,18 +44,28 @@ Require<Bau>()
         }
     })
 
-.Exec("clean").DependsOn("logs").Do(exec => exec
-    .Run(msBuildCommand)
-    .With(
-        solution,
-        "/target:Clean",
-        "/property:Configuration=Release",
-        "/maxcpucount",
-        "/nodeReuse:false",
-        "/fileLogger",
-        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=" + msBuildFileVerbosity + ";LogFile=" + logs + "/clean.log",
-        "/verbosity:minimal",
-        "/nologo"))
+.MSBuild("clean").DependsOn("logs").Do(msb =>
+    {
+        msb.MSBuildVersion = "net45";
+        msb.Solution = solution;
+        msb.Targets = new[] { "Clean", };
+        msb.Properties = new { Configuration = "Release" };
+        msb.MaxCpuCount = -1;
+        msb.NodeReuse = false;
+        msb.Verbosity = Verbosity.Minimal;
+        msb.NoLogo = true;
+        msb.FileLoggers.Add(
+            new FileLogger
+            {
+                FileLoggerParameters = new FileLoggerParameters
+                {
+                    PerformanceSummary = true,
+                    Summary = true,
+                    Verbosity = Verbosity.Minimal,
+                    LogFile = logs + "/clean.log",
+                }
+            });
+    })
 
 .Task("clobber").DependsOn("clean").Do(() =>
     {
@@ -70,18 +79,28 @@ Require<Bau>()
     .Run(nugetCommand)
     .With("restore", solution))
 
-.Exec("build").DependsOn("clean", "restore", "logs").Do(exec => exec
-    .Run(msBuildCommand)
-    .With(
-        solution,
-        "/target:Build",
-        "/property:Configuration=Release",
-        "/maxcpucount",
-        "/nodeReuse:false",
-        "/fileLogger",
-        "/fileloggerparameters:PerformanceSummary;Summary;Verbosity=" + msBuildFileVerbosity + ";LogFile=" + logs + "/build.log",
-        "/verbosity:minimal",
-        "/nologo"))
+.MSBuild("build").DependsOn("clean", "restore", "logs").Do(msb =>
+    {
+        msb.MSBuildVersion = "net45";
+        msb.Solution = solution;
+        msb.Targets = new[] { "Build", };
+        msb.Properties = new { Configuration = "Release" };
+        msb.MaxCpuCount = -1;
+        msb.NodeReuse = false;
+        msb.Verbosity = Verbosity.Minimal;
+        msb.NoLogo = true;
+        msb.FileLoggers.Add(
+            new FileLogger
+            {
+                FileLoggerParameters = new FileLoggerParameters
+                {
+                    PerformanceSummary = true,
+                    Summary = true,
+                    Verbosity = Verbosity.Minimal,
+                    LogFile = logs + "/build.log",
+                }
+            });
+    })
 
 .Task("tests").Do(() =>
     {
