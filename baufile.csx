@@ -1,19 +1,8 @@
 // parameters
 var ci = Environment.GetEnvironmentVariable("CI");
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
-var msBuildFileVerbosity = Environment.GetEnvironmentVariable("MSBUILD_FILE_VERBOSITY");
-var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY");
-
-// parameter defaults
-if (string.IsNullOrWhiteSpace(msBuildFileVerbosity))
-{
-    msBuildFileVerbosity = "normal";
-};
-
-if (string.IsNullOrWhiteSpace(nugetVerbosity))
-{
-    nugetVerbosity = "quiet";
-};
+var msBuildFileVerbosity = (Verbosity)Enum.Parse(typeof(Verbosity), Environment.GetEnvironmentVariable("MSBUILD_FILE_VERBOSITY") ?? "normal", true);
+var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY") ?? "quiet";
 
 // solution specific variables
 var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
@@ -52,7 +41,7 @@ Require<Bau>()
         msb.Properties = new { Configuration = "Release" };
         msb.MaxCpuCount = -1;
         msb.NodeReuse = false;
-        msb.Verbosity = Verbosity.Minimal;
+        msb.Verbosity = msBuildFileVerbosity;
         msb.NoLogo = true;
         msb.FileLoggers.Add(
             new FileLogger
@@ -87,7 +76,7 @@ Require<Bau>()
         msb.Properties = new { Configuration = "Release" };
         msb.MaxCpuCount = -1;
         msb.NodeReuse = false;
-        msb.Verbosity = Verbosity.Minimal;
+        msb.Verbosity = msBuildFileVerbosity;
         msb.NoLogo = true;
         msb.FileLoggers.Add(
             new FileLogger
