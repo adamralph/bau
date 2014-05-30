@@ -3,9 +3,13 @@ obj
 
 *.suo
 *.user
+*.userprefs
 
 artifacts
 packages
 node_modules
 
 *.sln.ide
+
+/scriptcs
+/*.nupkg
