@@ -1,0 +1,21 @@
+language: c
+
+before_install:
+  - sudo bash -c "echo deb http://badgerports.org precise main >> /etc/apt/sources.list"
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq mono-devel
+
+install:
+  - mozroots --import --sync
+  - wget "https://github.com/bau-build/bau-blob/raw/master/scriptcs-0.10.0-alpha.140530.nupkg"
+  - unzip ./scriptcs-0.10.0-alpha.140530.nupkg -d scriptcs
+  - mono ./scriptcs/tools/scriptcs/scriptcs.exe -install
+
+script:
+  - mono ./scriptcs/tools/scriptcs/scriptcs.exe mono.csx
+
+notifications:
+  email:
+    - baubuildch@gmail.com
+    - adam@adamralph.com
