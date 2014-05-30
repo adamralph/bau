@@ -2,7 +2,7 @@
 
 The C# task runner.
 
-[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1253%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1253&guest=1) [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1253%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1253&guest=1) [![Build Status](https://travis-ci.org/bau-build/bau.png?branch=dev)](https://travis-ci.org/bau-build/bau) [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
 
 Bau is a community driven, cross platform, pluggable task runner built on the [scriptcs](https://github.com/scriptcs/scriptcs) + [NuGet](https://www.nuget.org/) ecosystem.
 
