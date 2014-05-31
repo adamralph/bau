@@ -17,19 +17,16 @@ namespace BauCore
 
             using (new LineWriter(ConsoleColor.Gray))
             {
-                using (new ConsoleColorizer(ConsoleColor.Black, ConsoleColor.White))
+                using (new ConsoleColorizer(ConsoleColor.White))
                 {
-                    Console.Write(" BAU ");
+                    Console.Write("Bau");
                 }
 
-                using (new ConsoleColorizer(ConsoleColor.Gray))
-                {
-                    Console.Write(" {0} ", version.InformationalVersion);
-                }
+                Console.Write(" {0}", version.InformationalVersion);
 
                 using (new ConsoleColorizer(ConsoleColor.DarkGray))
                 {
-                    Console.Write("Copyright (c) Bau contributors (baubuildch@gmail.com)");
+                    Console.Write(" Copyright (c) Bau contributors (baubuildch@gmail.com)");
                 }
             }
         }
@@ -163,7 +160,6 @@ namespace BauCore
         private class ConsoleColorizer : IDisposable
         {
             private readonly ConsoleColor? originalForegroundColor;
-            private readonly ConsoleColor? originalBackgroundColor;
 
             public ConsoleColorizer(ConsoleColor foregroundColor)
             {
@@ -171,23 +167,11 @@ namespace BauCore
                 Console.ForegroundColor = foregroundColor;
             }
 
-            public ConsoleColorizer(ConsoleColor foregroundColor, ConsoleColor backgroundColour)
-                : this(foregroundColor)
-            {
-                this.originalBackgroundColor = Console.BackgroundColor;
-                Console.BackgroundColor = backgroundColour;
-            }
-
             public virtual void Dispose()
             {
                 if (this.originalForegroundColor.HasValue)
                 {
                     Console.ForegroundColor = this.originalForegroundColor.Value;
-                }
-
-                if (this.originalBackgroundColor.HasValue)
-                {
-                    Console.BackgroundColor = this.originalBackgroundColor.Value;
                 }
             }
         }
