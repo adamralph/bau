@@ -1,7 +1,7 @@
 // parameters
 var ci = Environment.GetEnvironmentVariable("CI");
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
-var msBuildFileVerbosity = (Verbosity)Enum.Parse(typeof(Verbosity), Environment.GetEnvironmentVariable("MSBUILD_FILE_VERBOSITY") ?? "normal", true);
+var msBuildFileVerbosity = (Verbosity)Enum.Parse(typeof(Verbosity), Environment.GetEnvironmentVariable("MSBUILD_FILE_VERBOSITY") ?? "minimal", true);
 var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY") ?? "quiet";
 
 // solution specific variables
