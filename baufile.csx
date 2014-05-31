@@ -6,7 +6,7 @@ var nugetVerbosity = Environment.GetEnvironmentVariable("NUGET_VERBOSITY") ?? "q
 
 // solution specific variables
 var version = File.ReadAllText("src/CommonAssemblyInfo.cs").Split(new[] { "AssemblyInformationalVersion(\"" }, 2, StringSplitOptions.None).ElementAt(1).Split(new[] { '"' }).First();
-var nugetCommand = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
+var nugetCommand = "packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe";
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "src/Bau.sln";
 var output = "artifacts/output";
