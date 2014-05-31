@@ -7,13 +7,14 @@ before_install:
   - sudo apt-get install -qq mono-devel
 
 install:
-  - mozroots --import --sync
   - wget "https://github.com/bau-build/bau-blob/raw/master/scriptcs-0.10.0-alpha.140530.nupkg"
   - unzip ./scriptcs-0.10.0-alpha.140530.nupkg -d scriptcs
+  - mozroots --import --sync
   - mono ./scriptcs/tools/scriptcs/scriptcs.exe -install
+  - mono ./packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe restore src/Bau.sln
 
 script:
-  - mono ./scriptcs/tools/scriptcs/scriptcs.exe mono.csx
+  - mono ./scriptcs/tools/scriptcs/scriptcs.exe ./mono.csx
 
 notifications:
   email:
