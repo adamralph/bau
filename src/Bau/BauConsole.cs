@@ -7,9 +7,12 @@ namespace BauCore
     using System;
     using System.Linq;
     using System.Reflection;
+    using ScriptCs.Contracts;
 
     internal static class BauConsole
     {
+        private static readonly Type monoRuntime = Type.GetType("Mono.Runtime");
+
         public static void WriteHeader()
         {
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
@@ -28,6 +31,45 @@ namespace BauCore
                 {
                     Console.Write(" Copyright (c) Bau contributors (baubuildch@gmail.com)");
                 }
+            }
+        }
+
+        public static void WriteEnvironment()
+        {
+            var scriptCsVersion = (AssemblyInformationalVersionAttribute)typeof(IScriptHost).Assembly
+                .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
+
+            using (new LineWriter(ConsoleColor.Gray))
+            {
+                Console.Write("scriptcs " + scriptCsVersion.InformationalVersion);
+                Console.Write(";CLR {0}", Environment.Version);
+
+                if (monoRuntime != null)
+                {
+                    Console.Write(";Mono");
+
+                    var getDisplayName = monoRuntime.GetMethod(
+                        "GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+
+                    if (getDisplayName != null)
+                    {
+                        var displayNameObject = getDisplayName.Invoke(null, null);
+                        if (displayNameObject != null)
+                        {
+                            var displayName = displayNameObject.ToString();
+                            if (!string.IsNullOrWhiteSpace(displayName))
+                            {
+                                Console.Write(" " + displayName);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.Write(";.NET");
+                }
+
+                Console.Write(";" + Environment.OSVersion.VersionString);
             }
         }
 

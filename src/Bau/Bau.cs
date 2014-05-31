@@ -91,6 +91,7 @@ namespace BauCore
         public void Run()
         {
             BauConsole.WriteHeader();
+            BauConsole.WriteEnvironment();
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
