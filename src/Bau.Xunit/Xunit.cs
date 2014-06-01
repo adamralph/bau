@@ -139,10 +139,11 @@ namespace BauXunit
             }
 
             var options = this.CreateOptions();
+            var isMono = Type.GetType("Mono.Runtime") != null;
 
             foreach (var assembly in assemblyArray)
             {
-                var info = this.CreateStartInfo(assembly, options);
+                var info = this.CreateStartInfo(assembly, options, isMono);
 
                 if (assemblyArray.Length > 1)
                 {
@@ -201,7 +202,7 @@ namespace BauXunit
             return args;
         }
 
-        protected ProcessStartInfo CreateStartInfo(string assembly, IEnumerable<string> options)
+        protected ProcessStartInfo CreateStartInfo(string assembly, IEnumerable<string> options, bool isMono)
         {
             var assemblyOptions = new List<string>();
 
@@ -220,10 +221,13 @@ namespace BauXunit
                 assemblyOptions.Add("/nunit " + string.Format(CultureInfo.InvariantCulture, this.NunitFormat, assembly));
             }
 
+            var fileName = isMono ? "mono" : this.Exe;
+            var arguments = isMono ? new[] { this.Exe, assembly } : new[] { assembly };
+
             return new ProcessStartInfo
             {
-                FileName = this.Exe,
-                Arguments = string.Join(" ", new[] { assembly }.Concat(options).Concat(assemblyOptions)),
+                FileName = fileName,
+                Arguments = string.Join(" ", arguments.Concat(options).Concat(assemblyOptions)),
                 WorkingDirectory = this.WorkingDirectory,
                 UseShellExecute = false,
             };

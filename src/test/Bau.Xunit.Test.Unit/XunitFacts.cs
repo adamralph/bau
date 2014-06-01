@@ -14,6 +14,33 @@ namespace BauMSBuild.Test.Unit
     public static class XunitFacts
     {
         [Fact]
+        public static void SetsExe()
+        {
+            // arrange
+            var task = (Derived)new Derived().UseExe("Foo.exe");
+
+            // act
+            var info = task.CreateStartInfo();
+
+            // assert
+            info.FileName.Should().Be(task.Exe);
+        }
+
+        [Fact]
+        public static void UsesMono()
+        {
+            // arrange
+            var task = (Derived)new Derived().UseExe("Foo.exe");
+
+            // act
+            var info = task.CreateStartInfo("foo.dll", true);
+
+            // assert
+            info.FileName.Should().Be("mono");
+            info.Arguments.Should().Be("Foo.exe foo.dll");
+        }
+
+        [Fact]
         public static void SetsWorkingDirectory()
         {
             // arrange
@@ -220,12 +247,17 @@ namespace BauMSBuild.Test.Unit
 
             public ProcessStartInfo CreateStartInfo(string assembly)
             {
-                return base.CreateStartInfo(assembly, this.CreateOptions());
+                return base.CreateStartInfo(assembly, this.CreateOptions(), false);
             }
 
             public ProcessStartInfo CreateStartInfo()
             {
-                return base.CreateStartInfo(this.Assemblies.FirstOrDefault(), this.CreateOptions());
+                return base.CreateStartInfo(this.Assemblies.FirstOrDefault(), this.CreateOptions(), false);
+            }
+
+            public ProcessStartInfo CreateStartInfo(string assembly, bool isMono)
+            {
+                return base.CreateStartInfo(assembly, this.CreateOptions(), isMono);
             }
         }
     }
