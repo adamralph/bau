@@ -117,7 +117,7 @@ namespace BauCore
             IBauTask task;
             if (!this.tasks.TryGetValue(name, out task))
             {
-                this.tasks.Add(name, task = new TTask());
+                this.tasks.Add(name, task = new TTask { Name = name });
             }
 
             var typedTask = task as TTask;

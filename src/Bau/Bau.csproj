@@ -41,6 +41,7 @@
     </Compile>
     <Compile Include="BauConsole.cs" />
     <Compile Include="Bau.cs" />
+    <Compile Include="BauTaskExtensions.cs" />
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="BauScriptPack.cs" />
     <Compile Include="BauExtensions.cs" />

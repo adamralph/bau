@@ -48,11 +48,11 @@ namespace BauCore
             }
         }
 
-        public static void WriteTasksAlreadyExists(string name, string type)
+        public static void WriteTasksAlreadyExists(string task, string type)
         {
             using (new LineWriter(ConsoleColor.Red))
             {
-                WriteTask(name);
+                WriteTask(task);
                 Console.Write(" already exists with type '");
                 using (new ConsoleColorizer(ConsoleColor.DarkMagenta))
                 {
@@ -108,15 +108,27 @@ namespace BauCore
             }
         }
 
+        public static void WriteTaskMessage(string task, string message, ConsoleColor color)
+        {
+            using (new TaskWriter(task, color))
+            {
+                Console.Write(message);
+            }
+        }
+
         private static void WriteTask(string task)
         {
             Console.Write("'");
+            WriteTaskName(task);
+            Console.Write("'");
+        }
+
+        private static void WriteTaskName(string task)
+        {
             using (new ConsoleColorizer(ConsoleColor.DarkCyan))
             {
                 Console.Write(task);
             }
-
-            Console.Write("'");
         }
 
         private static void WriteMilliseconds(double milliseconds)
@@ -127,21 +139,24 @@ namespace BauCore
             }
         }
 
-        private sealed class LineWriter : ConsoleColorizer
+        private sealed class TaskWriter : LineWriter
+        {
+            public TaskWriter(string task, ConsoleColor foregroundColor)
+                : base(foregroundColor)
+            {
+                using (new ConsoleColorizer(ConsoleColor.Gray))
+                {
+                    Console.Write("[");
+                    BauConsole.WriteTaskName(task);
+                    Console.Write("] ");
+                }
+            }
+        }
+
+        private class LineWriter : ConsoleColorizer
         {
             public LineWriter(ConsoleColor foregroundColor)
                 : base(foregroundColor)
-            {
-                WriteBau();
-            }
-
-            public override void Dispose()
-            {
-                Console.WriteLine();
-                base.Dispose();
-            }
-
-            private static void WriteBau()
             {
                 using (new ConsoleColorizer(ConsoleColor.Gray))
                 {
@@ -153,6 +168,12 @@ namespace BauCore
 
                     Console.Write("] ");
                 }
+            }
+
+            public override void Dispose()
+            {
+                Console.WriteLine();
+                base.Dispose();
             }
         }
 

@@ -9,6 +9,8 @@ namespace BauCore
 
     public interface IBauTask
     {
+        string Name { get; set; }
+
         IList<string> Dependencies { get; }
 
         IList<Action> Actions { get; }
