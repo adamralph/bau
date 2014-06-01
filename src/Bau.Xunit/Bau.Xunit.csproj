@@ -7,11 +7,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60E63D1D-71D9-4139-BD9A-E3509D940BE8}</ProjectGuid>
+    <ProjectGuid>{F930CAF5-EA54-4730-8F4C-7D3C8B9F84F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BauExec</RootNamespace>
-    <AssemblyName>Bau.Exec</AssemblyName>
+    <RootNamespace>BauXunit</RootNamespace>
+    <AssemblyName>Bau.Xunit</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,11 +39,11 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Exec.cs" />
+    <Compile Include="Xunit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Bau.Exec.nuspec" />
+    <None Include="Bau.Xunit.nuspec" />
     <None Include="packages.config" />
     <None Include="Settings.StyleCop" />
   </ItemGroup>

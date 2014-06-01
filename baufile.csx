@@ -12,10 +12,10 @@ var solution = "src/Bau.sln";
 var output = "artifacts/output";
 var tests = "artifacts/tests";
 var logs = "artifacts/logs";
-var unit = "src/test/Bau.Test.Unit/bin/Release/Bau.Test.Unit.dll";
+var units = new[] { "src/test/Bau.Test.Unit/bin/Release/Bau.Test.Unit.dll", "src/test/Bau.Xunit.Test.Unit/bin/Release/Bau.Xunit.Test.Unit.dll", };
 var component = "src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 var acceptance = "src/test/Bau.Test.Acceptance/bin/Release/Bau.Test.Acceptance.dll";
-var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", };
+var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", "src/Bau.Xunit/Bau.Xunit", };
 
 // solution agnostic tasks
 Require<Bau>()
@@ -100,9 +100,16 @@ Require<Bau>()
         }
     })
 
-.Exec("unit").DependsOn("build", "tests").Do(exec => exec
-    .Run(xunitCommand)
-    .With(unit, "/html", GetTestResultsPath(tests, unit, "html"), "/xml", GetTestResultsPath(tests, unit, "xml")))
+.Task("unit").DependsOn("build", "tests").Do(() =>
+    {
+        foreach (var unit in units)
+        {
+            new Exec { Name = "unit " + unit }
+                .Run(xunitCommand)
+                .With(unit, "/html", GetTestResultsPath(tests, unit, "html"), "/xml", GetTestResultsPath(tests, unit, "xml"))
+                .Execute();
+        }
+    })
 
 .Exec("component").DependsOn("build", "tests").Do(exec => exec
     .Run(xunitCommand)

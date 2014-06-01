@@ -9,6 +9,10 @@
       <Word>baufile</Word>
       <Word>reenable</Word>
       <Word>reenabling</Word>
+      <Word>xunit</Word>
+      <Word>nunit</Word>
+      <Word>unsilence</Word>
+      <Word>unsilences</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate=""/>
