@@ -8,7 +8,7 @@
     <authors>Adam Ralph, Bau contributors</authors>
     <description>A Bau task plugin for running xUnit.net tests.
 
-Require&lt;Bau&gt;().Xunit().Do(xunit => xunit.Run("Tests.dll")).Run();</description>
+Require&lt;Bau&gt;().Xunit().Do(xunit =&gt; xunit.UseExe("xunit.console.clr4.exe").RunAssemblies("Tests.dll")).Run();</description>
     <projectUrl>https://github.com/bau-build/bau/tree/dev/src/Bau.Xunit</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png</iconUrl>
     <licenseUrl>https://github.com/bau-build/bau/blob/dev/license.txt</licenseUrl>
