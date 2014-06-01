@@ -13,7 +13,8 @@ namespace BauCore
             return builder.Intern<BauTask>(name);
         }
 
-        public static ITaskBuilder<TTask> Task<TTask>(this ITaskBuilder builder, string name = null) where TTask : BauTask, new()
+        public static ITaskBuilder<TTask> Task<TTask>(this ITaskBuilder builder, string name = null)
+            where TTask : class, IBauTask, new()
         {
             Guard.AgainstNullArgument("builder", builder);
 
