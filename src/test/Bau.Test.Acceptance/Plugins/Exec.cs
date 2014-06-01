@@ -15,7 +15,7 @@ namespace Bau.Test.Acceptance.Plugins
     public static class Exec
     {
         [Scenario]
-        public static void ExecutingACommand(Baufile baufile)
+        public static void ExecutingACommand(Baufile baufile, string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
@@ -32,10 +32,14 @@ namespace Bau.Test.Acceptance.Plugins
 .Run();"));
 
             "When I execute the baufile"
-                .f(() => baufile.Run());
+                .f(() => output = baufile.Run());
 
             "Then the task succeeds"
                 .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
+
+            "And I the command details are logged at debug level"
+                .f(() => output.Should().MatchEquivalentOf(
+                    @"*[default] *DEBUG: *'..\Bau.Test.Acceptance.CreateFile.exe foo.txt' * 'Bau.Test.Acceptance.Plugins.Exec.ExecutingACommand'*"));
         }
 
         [Scenario]
