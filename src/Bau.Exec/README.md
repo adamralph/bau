@@ -1,6 +1,6 @@
 # ![Bau](https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png).Exec
 
-> Execute arbitrary commands
+> A Bau plugin for executing arbitrary commands
 
 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1253%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1253&guest=1) [![Gitter chat](https://badges.gitter.im/bau-build/bau.png)](https://gitter.im/bau-build/bau)
 
