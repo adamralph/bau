@@ -68,7 +68,14 @@ namespace BauExec
                 ? string.Empty
                 : string.Format(CultureInfo.InvariantCulture, " with working directory '{0}'", info.WorkingDirectory);
 
-            Console.WriteLine("Executing '{0}{1}'{2}...", info.FileName, argString, workingDirectoryString);
+            var message = string.Format(
+                CultureInfo.InvariantCulture,
+                "Executing '{0}{1}'{2}...",
+                info.FileName,
+                argString,
+                workingDirectoryString);
+
+            this.LogDebug(message);
             info.Run();
         }
     }

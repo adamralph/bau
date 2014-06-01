@@ -13,6 +13,8 @@ namespace BauCore
         private readonly List<string> dependencies = new List<string>();
         private readonly List<Action> actions = new List<Action>();
 
+        public string Name { get; set; }
+
         public IList<string> Dependencies
         {
             get { return this.dependencies; }
