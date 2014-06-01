@@ -133,10 +133,12 @@ Require<Bau>()
             foreach (var pack in packs)
             {
                 File.WriteAllText(pack + ".nuspec", File.ReadAllText(pack + ".nuspec").Replace("0.0.0", version + versionSuffix));
-                new Exec()
+
+                var project = pack + ".csproj";
+                new Exec { Name = "pack " + project }
                     .Run(nugetCommand)
                     .With(
-                        "pack", pack + ".csproj",
+                        "pack", project,
                         "-OutputDirectory", output,
                         "-Properties", "Configuration=Release",
                         "-IncludeReferencedProjects",
