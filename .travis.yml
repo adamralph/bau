@@ -5,12 +5,14 @@ before_install:
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
   - sudo apt-get update -qq
   - sudo apt-get install -qq mono-devel
+  - mozroots --import --sync
 
 install:
   - wget "https://github.com/bau-build/bau-blob/raw/master/scriptcs-0.10.0-alpha.140530.nupkg"
   - unzip ./scriptcs-0.10.0-alpha.140530.nupkg -d scriptcs
-  - mozroots --import --sync
   - mono ./scriptcs/tools/scriptcs/scriptcs.exe -install
+  - mv ./packages/Bau.XUnit.0.1.0-beta03/Bau.XUnit.0.1.0-beta03.nupkg ./packages/Bau.XUnit.0.1.0-beta03/Bau.Xunit.0.1.0-beta03.nupkg
+  - mv ./packages/Bau.XUnit.0.1.0-beta03 ./packages/Bau.Xunit.0.1.0-beta03
   - mono ./packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe restore src/Bau.sln
 
 script:
