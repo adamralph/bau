@@ -28,4 +28,4 @@ fi
 mono ./packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe restore src/Bau.sln
   
 # script
-mono ./scriptcs/tools/scriptcs/scriptcs.exe ./mono.csx
+mono ./scriptcs/tools/scriptcs/scriptcs.exe ./mono.csx -- $@
