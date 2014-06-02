@@ -15,13 +15,13 @@ var path = require('path');
 var exec = require('child_process').exec;
 
 var msBuildCommand = path.join(process.env.WINDIR, "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
-var nugetCommand = 'packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe';
+var nugetCommand = 'packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe';
 var xunitCommand = 'packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
 var solution = '../src/Bau.sln';
 var test = '../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll';
 
 gulp.task('clean', function(cb) {
-  exec(msBuildCommand + ' ' + solution + ' /target:Clean /property:Configuration=Release /verbosity:minimal', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
+  exec(msBuildCommand + ' ' + solution + ' /target:Clean /property:Configuration=Release /verbosity:minimal /nologo', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
 });
 
 gulp.task('restore', function(cb) {
@@ -29,7 +29,7 @@ gulp.task('restore', function(cb) {
 });
 
 gulp.task('build', ['clean', 'restore'], function(cb) {
-  exec(msBuildCommand + ' ' + solution + ' /target:Build /property:Configuration=Release /verbosity:minimal', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
+  exec(msBuildCommand + ' ' + solution + ' /target:Build /property:Configuration=Release /verbosity:minimal /nologo', function (err, stdout, stderr) { output(err, stdout, stderr, cb); });
 });
 
 gulp.task('test', ['build'], function(cb) {

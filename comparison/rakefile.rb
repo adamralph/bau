@@ -11,7 +11,7 @@
 require 'albacore'
 
 xunit_command = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe"
-nuget_command = "packages/NuGet.CommandLine.2.8.1/tools/NuGet.exe";
+nuget_command = "packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe";
 solution = "../src/Bau.sln"
 test = "../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 
@@ -22,6 +22,7 @@ msbuild :clean do |msb|
   msb.targets = [:Clean]
   msb.properties = { :configuration => :Release }
   msb.verbosity = "minimal"
+  msb.parameters = "/nologo"
 end
 
 exec :restore do |cmd|
@@ -34,6 +35,7 @@ msbuild :build => [:clean, :restore] do |msb|
   msb.targets = [:Build]
   msb.properties = { :configuration => :Release }
   msb.verbosity = "minimal"
+  msb.parameters = "/nologo"
 end
 
 xunit :test => [:build] do |xunit|
