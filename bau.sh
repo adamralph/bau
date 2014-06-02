@@ -19,10 +19,10 @@ if [ ! -d ./scriptcs ]
 fi
 
 mono ./scriptcs/tools/scriptcs/scriptcs.exe -install
-if [ -d ./packages/Bau.XUnit.0.1.0-beta03 ]
+if [ -d ./packages/Bau.XUnit.0.1.0-beta04 ]
   then
-    mv ./packages/Bau.XUnit.0.1.0-beta03/Bau.XUnit.0.1.0-beta03.nupkg ./packages/Bau.XUnit.0.1.0-beta03/Bau.Xunit.0.1.0-beta03.nupkg
-    mv ./packages/Bau.XUnit.0.1.0-beta03 ./packages/Bau.Xunit.0.1.0-beta03
+    mv ./packages/Bau.XUnit.0.1.0-beta04/Bau.XUnit.0.1.0-beta04.nupkg ./packages/Bau.XUnit.0.1.0-beta04/Bau.Xunit.0.1.0-beta04.nupkg
+    mv ./packages/Bau.XUnit.0.1.0-beta04 ./packages/Bau.Xunit.0.1.0-beta04
 fi
 
 mono ./packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe restore src/Bau.sln

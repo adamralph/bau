@@ -19,16 +19,14 @@ Require<Bau>()
 .Task("tests").Do(() => CreateDirectory("artifacts/tests"))
 
 .Xunit("unit").DependsOn("build", "tests").Do(xunit => xunit
-    .UseExe("./packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe")
-    .RunAssemblies("./src/test/Bau.Test.Unit/bin/Release/Bau.Test.Unit.dll", "./src/test/Bau.Xunit.Test.Unit/bin/Release/Bau.Xunit.Test.Unit.dll")
-    .OutputHtml("{0}.TestResults.html")
-    .OutputXml("{0}.TestResults.xml"))
+    .Use("./packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe")
+    .Run("./src/test/Bau.Test.Unit/bin/Release/Bau.Test.Unit.dll", "./src/test/Bau.Xunit.Test.Unit/bin/Release/Bau.Xunit.Test.Unit.dll")
+    .Html().Xml())
 
 .Xunit("component").DependsOn("build", "tests").Do(xunit => xunit
-    .UseExe("./packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe")
-    .RunAssemblies("./src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll")
-    .OutputHtml("{0}.TestResults.html")
-    .OutputXml("{0}.TestResults.xml"))
+    .Use("./packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe")
+    .Run("./src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll")
+    .Html().Xml())
 
 .Run();
 
