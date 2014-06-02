@@ -8,7 +8,6 @@
 // 3. execute baufile:  scriptcs baufile.csx
 
 
-var msBuildCommand = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "Microsoft.NET/Framework/v4.0.30319/MSBuild.exe");
 var nugetCommand = "packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe";
 var xunitCommand = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe";
 var solution = "../src/Bau.sln";
@@ -29,8 +28,7 @@ Require<Bau>()
 })
 
 .Exec("restore").Do(exec => exec
-    .Run(nugetCommand)
-    .With("restore", solution))
+    .Run(nugetCommand).With("restore", solution))
 
 .MSBuild("build").DependsOn("clean", "restore").Do(msbuild =>
 {
@@ -43,9 +41,6 @@ Require<Bau>()
 })
 
 .Xunit("test").DependsOn("build").Do(xunit => xunit
-    .UseExe(xunitCommand)
-    .RunAssemblies(test)
-    .OutputHtml("{0}.TestResults.html")
-    .OutputXml("{0}.TestResults.xml"))
+    .Use(xunitCommand).Run(test).Html().Xml())
 
 .Run();

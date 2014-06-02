@@ -53,8 +53,7 @@ bau
 .Task("clobber").DependsOn("clean").Do(() => DeleteDirectory(output))
 
 .Exec("restore").Do(exec => exec
-    .Run(nugetCommand)
-    .With("restore", solution))
+    .Run(nugetCommand).With("restore", solution))
 
 .MSBuild("build").DependsOn("clean", "restore", "logs").Do(msb =>
     {
@@ -82,22 +81,13 @@ bau
 .Task("tests").Do(() => CreateDirectory(tests))
 
 .Xunit("unit").DependsOn("build", "tests").Do(xunit => xunit
-    .UseExe(xunitCommand)
-    .RunAssemblies(units)
-    .OutputHtml("{0}.TestResults.html")
-    .OutputXml("{0}.TestResults.xml"))
+    .Use(xunitCommand).Run(units).Html().Xml())
 
 .Xunit("component").DependsOn("build", "tests").Do(xunit => xunit
-    .UseExe(xunitCommand)
-    .RunAssemblies(component)
-    .OutputHtml("{0}.TestResults.html")
-    .OutputXml("{0}.TestResults.xml"))
+    .Use(xunitCommand).Run(component).Html().Xml())
 
 .Xunit("accept").DependsOn("build", "tests").Do(xunit => xunit
-    .UseExe(xunitCommand)
-    .RunAssemblies(acceptance)
-    .OutputHtml("{0}.TestResults.html")
-    .OutputXml("{0}.TestResults.xml"))
+    .Use(xunitCommand).Run(acceptance).Html().Xml())
 
 .Task("output").Do(() => CreateDirectory(output))
 
