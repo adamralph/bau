@@ -19,11 +19,11 @@ namespace BauXunit
 
         public bool Silent { get; set; }
 
-        public bool TeamCity { get; set; }
+        public bool ForceTeamCity { get; set; }
 
         public bool Wait { get; set; }
 
-        public bool NoShadow { get; set; }
+        public bool NoShadowCopy { get; set; }
 
         public string XmlFormat { get; set; }
 
@@ -35,13 +35,13 @@ namespace BauXunit
 
         public string WorkingDirectory { get; set; }
 
-        public Xunit UseExe(string exe)
+        public Xunit Use(string exe)
         {
             this.Exe = exe;
             return this;
         }
 
-        public Xunit RunAssemblies(params string[] assemblies)
+        public Xunit Run(params string[] assemblies)
         {
             this.Assemblies = assemblies;
             return this;
@@ -59,9 +59,9 @@ namespace BauXunit
             return this;
         }
 
-        public Xunit ForceTeamCity()
+        public Xunit TeamCity()
         {
-            this.TeamCity = true;
+            this.ForceTeamCity = true;
             return this;
         }
 
@@ -77,34 +77,49 @@ namespace BauXunit
             return this;
         }
 
-        public Xunit DoNotShadowCopy()
+        public Xunit NoShadow()
         {
-            this.NoShadow = true;
+            this.NoShadowCopy = true;
             return this;
         }
 
-        public Xunit ShadowCopy()
+        public Xunit Shadow()
         {
-            this.NoShadow = false;
+            this.NoShadowCopy = false;
             return this;
         }
 
-        public Xunit OutputXml(string format)
+        public Xunit Xml(string format)
         {
             this.XmlFormat = format;
             return this;
         }
 
-        public Xunit OutputHtml(string format)
+        public Xunit Html(string format)
         {
             this.HtmlFormat = format;
             return this;
         }
 
-        public Xunit OutputNunitXml(string format)
+        public Xunit Nunit(string format)
         {
             this.NunitFormat = format;
             return this;
+        }
+
+        public Xunit Xml()
+        {
+            return this.Xml("{0}.TestResults.xml");
+        }
+
+        public Xunit Html()
+        {
+            return this.Html("{0}.TestResults.html");
+        }
+
+        public Xunit Nunit()
+        {
+            return this.Nunit("{0}.TestResults.NUnit.xml");
         }
 
         public Xunit With(string args)
@@ -179,7 +194,7 @@ namespace BauXunit
                 args.Add("/silent");
             }
 
-            if (this.TeamCity)
+            if (this.ForceTeamCity)
             {
                 args.Add("/teamcity");
             }
@@ -189,7 +204,7 @@ namespace BauXunit
                 args.Add("/wait");
             }
 
-            if (this.NoShadow)
+            if (this.NoShadowCopy)
             {
                 args.Add("/noshadow");
             }
