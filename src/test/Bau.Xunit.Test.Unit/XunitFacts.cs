@@ -6,7 +6,6 @@ namespace BauMSBuild.Test.Unit
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Linq;
     using FluentAssertions;
     using Xunit;
@@ -14,10 +13,10 @@ namespace BauMSBuild.Test.Unit
     public static class XunitFacts
     {
         [Fact]
-        public static void SetsExe()
+        public static void UsesExe()
         {
             // arrange
-            var task = (Derived)new Derived().UseExe("Foo.exe");
+            var task = (Derived)new Derived().Use("Foo.exe");
 
             // act
             var info = task.CreateStartInfo();
@@ -30,7 +29,7 @@ namespace BauMSBuild.Test.Unit
         public static void UsesMono()
         {
             // arrange
-            var task = (Derived)new Derived().UseExe("Foo.exe");
+            var task = (Derived)new Derived().Use("Foo.exe");
 
             // act
             var info = task.CreateStartInfo("foo.dll", true);
@@ -67,7 +66,7 @@ namespace BauMSBuild.Test.Unit
         }
 
         [Fact]
-        public static void SetsAssembly()
+        public static void RunsAssemblies()
         {
             // arrange
             var task = new Derived();
@@ -112,7 +111,7 @@ namespace BauMSBuild.Test.Unit
         public static void ForcesTeamCity()
         {
             // arrange
-            var task = (Derived)new Derived().ForceTeamCity();
+            var task = (Derived)new Derived().TeamCity();
             var option = "/teamcity";
 
             // act
@@ -155,7 +154,7 @@ namespace BauMSBuild.Test.Unit
         public static void DoesNotShadowCopy()
         {
             // arrange
-            var task = (Derived)new Derived().DoNotShadowCopy();
+            var task = (Derived)new Derived().NoShadow();
             var option = "/noshadow";
 
             // act
@@ -170,7 +169,7 @@ namespace BauMSBuild.Test.Unit
         public static void ShadowCopies()
         {
             // arrange
-            var task = (Derived)new Derived().ShadowCopy();
+            var task = (Derived)new Derived().Shadow();
 
             // act
             var options = task.CreateOptions().ToArray();
@@ -183,7 +182,7 @@ namespace BauMSBuild.Test.Unit
         public static void OutputsXml()
         {
             // arrange
-            var task = (Derived)new Derived().OutputXml("{0}.xml");
+            var task = (Derived)new Derived().Xml("{0}.xml");
 
             // act
             var info = task.CreateStartInfo("foo.dll");
@@ -196,7 +195,7 @@ namespace BauMSBuild.Test.Unit
         public static void OutputsHtml()
         {
             // arrange
-            var task = (Derived)new Derived().OutputHtml("{0}.html");
+            var task = (Derived)new Derived().Html("{0}.html");
 
             // act
             var info = task.CreateStartInfo("foo.dll");
@@ -206,16 +205,55 @@ namespace BauMSBuild.Test.Unit
         }
 
         [Fact]
-        public static void OutputsNunitXml()
+        public static void OutputsNunit()
         {
             // arrange
-            var task = (Derived)new Derived().OutputNunitXml("{0}.nunit.xml");
+            var task = (Derived)new Derived().Nunit("{0}.nunit.xml");
 
             // act
             var info = task.CreateStartInfo("foo.dll");
 
             // assert
             info.Arguments.Should().Be("foo.dll /nunit foo.dll.nunit.xml");
+        }
+
+        [Fact]
+        public static void OutputsDefaultNamedXml()
+        {
+            // arrange
+            var task = (Derived)new Derived().Xml();
+
+            // act
+            var info = task.CreateStartInfo("foo.dll");
+
+            // assert
+            info.Arguments.Should().Be("foo.dll /xml foo.dll.TestResults.xml");
+        }
+
+        [Fact]
+        public static void OutputsDefaultNamedHtml()
+        {
+            // arrange
+            var task = (Derived)new Derived().Html();
+
+            // act
+            var info = task.CreateStartInfo("foo.dll");
+
+            // assert
+            info.Arguments.Should().Be("foo.dll /html foo.dll.TestResults.html");
+        }
+
+        [Fact]
+        public static void OutputsDefaultNamedNunit()
+        {
+            // arrange
+            var task = (Derived)new Derived().Nunit();
+
+            // act
+            var info = task.CreateStartInfo("foo.dll");
+
+            // assert
+            info.Arguments.Should().Be("foo.dll /nunit foo.dll.TestResults.NUnit.xml");
         }
 
         [Fact]
@@ -237,7 +275,7 @@ namespace BauMSBuild.Test.Unit
         {
             public Derived()
             {
-                this.RunAssemblies("1.dll", "2.dll");
+                this.Run("1.dll", "2.dll");
             }
 
             public new IEnumerable<string> CreateOptions()
