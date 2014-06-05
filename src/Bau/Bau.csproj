@@ -39,6 +39,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Log.cs" />
     <Compile Include="LogLevel.cs" />
     <Compile Include="BauConsole.cs" />
     <Compile Include="Bau.cs" />

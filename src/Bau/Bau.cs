@@ -25,7 +25,7 @@ namespace BauCore
             Guard.AgainstNullArgument("topLevelTasks", topLevelTasks);
 
             this.logLevel = logLevel;
-            BauTaskExtensions.LogLevel = logLevel;
+            Log.LogLevel = logLevel;
             this.topLevelTasks.AddRange(topLevelTasks);
             if (this.topLevelTasks.Count == 0)
             {
@@ -50,7 +50,7 @@ namespace BauCore
             {
                 if (string.IsNullOrWhiteSpace(task))
                 {
-                    BauConsole.WriteInvalidTaskName(task);
+                    Log.ErrorInvalidTaskName(task);
                     var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
                     throw new ArgumentException(message, "otherTasks");
                 }
@@ -100,7 +100,7 @@ namespace BauCore
 
         public void Run()
         {
-            BauConsole.WriteHeader();
+            Log.InfoHeader();
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
@@ -110,7 +110,7 @@ namespace BauCore
         [Obsolete("Use Run() instead.")]
         public void Execute()
         {
-            BauConsole.WriteExecuteDeprecated();
+            Log.WarnExecuteDeprecated();
             this.Run();
         }
 
@@ -119,7 +119,7 @@ namespace BauCore
             name = name ?? DefaultTask;
             if (string.IsNullOrWhiteSpace(name))
             {
-                BauConsole.WriteInvalidTaskName(name);
+                Log.ErrorInvalidTaskName(name);
                 var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", name);
                 throw new ArgumentException(message, "name");
             }
@@ -133,7 +133,7 @@ namespace BauCore
             var typedTask = task as TTask;
             if (typedTask == null)
             {
-                BauConsole.WriteTasksAlreadyExists(name, task.GetType().Name);
+                Log.ErrorTasksAlreadyExists(name, task.GetType().Name);
                 var message = string.Format(
                     CultureInfo.InvariantCulture,
                     "'{0}' task already exists with type '{1}'.",
@@ -156,7 +156,7 @@ namespace BauCore
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            BauConsole.WriteTaskStarting(task);
+            Log.InfoTaskStarting(task);
 
             try
             {
@@ -164,12 +164,12 @@ namespace BauCore
             }
             catch (Exception ex)
             {
-                BauConsole.WriteTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
+                Log.ErrorTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
                 var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
                 throw new InvalidOperationException(message, ex);
             }
 
-            BauConsole.WriteTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
+            Log.InfoTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
         }
 
         private void EnsureCurrentTask()
@@ -188,7 +188,7 @@ namespace BauCore
             }
             catch (KeyNotFoundException ex)
             {
-                BauConsole.WriteTaskNotFound(task);
+                Log.ErrorTaskNotFound(task);
                 var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task not found.", task);
                 throw new InvalidOperationException(message, ex);
             }

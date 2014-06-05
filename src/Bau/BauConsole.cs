@@ -10,12 +10,12 @@ namespace BauCore
 
     internal static class BauConsole
     {
-        public static void WriteHeader()
+        public static void WriteHeader(string prefix, ConsoleColor color)
         {
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
 
-            using (new LineWriter(ConsoleColor.Gray))
+            using (new LineWriter(prefix, color))
             {
                 using (new ConsoleColorizer(ConsoleColor.White))
                 {
@@ -31,26 +31,26 @@ namespace BauCore
             }
         }
 
-        public static void WriteExecuteDeprecated()
+        public static void WriteExecuteDeprecated(string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Yellow))
+            using (new LineWriter(prefix, color))
             {
                 Console.Write("Bau.Execute() (with no parameters) will be removed shortly. Use Bau.Run() instead.");
             }
         }
 
-        public static void WriteInvalidTaskName(string task)
+        public static void WriteInvalidTaskName(string task, string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Red))
+            using (new LineWriter(prefix, color))
             {
                 Console.Write("Invalid task name ");
                 WriteTask(task);
             }
         }
 
-        public static void WriteTasksAlreadyExists(string task, string type)
+        public static void WriteTasksAlreadyExists(string task, string type, string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Red))
+            using (new LineWriter(prefix, color))
             {
                 WriteTask(task);
                 Console.Write(" already exists with type '");
@@ -63,18 +63,18 @@ namespace BauCore
             }
         }
 
-        public static void WriteTaskNotFound(string task)
+        public static void WriteTaskNotFound(string task, string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Red))
+            using (new LineWriter(prefix, color))
             {
                 WriteTask(task);
                 Console.Write(" task not found");
             }
         }
 
-        public static void WriteTaskStarting(string task)
+        public static void WriteTaskStarting(string task, string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Gray))
+            using (new LineWriter(prefix, color))
             {
                 Console.Write("Starting ");
                 WriteTask(task);
@@ -82,9 +82,9 @@ namespace BauCore
             }
         }
 
-        public static void WriteTaskFinished(string task, double milliseconds)
+        public static void WriteTaskFinished(string task, double milliseconds, string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Gray))
+            using (new LineWriter(prefix, color))
             {
                 Console.Write("Finished ");
                 WriteTask(task);
@@ -93,9 +93,9 @@ namespace BauCore
             }
         }
 
-        public static void WriteTaskFailed(string task, double milliseconds, string exceptionMessage)
+        public static void WriteTaskFailed(string task, double milliseconds, string exceptionMessage, string prefix, ConsoleColor color)
         {
-            using (new LineWriter(ConsoleColor.Gray))
+            using (new LineWriter(prefix, color))
             {
                 WriteTask(task);
                 Console.Write(" failed after ");
@@ -108,9 +108,9 @@ namespace BauCore
             }
         }
 
-        public static void WriteTaskMessage(string task, string message, ConsoleColor color)
+        public static void WriteTaskMessage(string task, string message, string prefix, ConsoleColor color)
         {
-            using (new TaskWriter(task, color))
+            using (new TaskWriter(task, prefix, color))
             {
                 Console.Write(message);
             }
@@ -141,8 +141,8 @@ namespace BauCore
 
         private sealed class TaskWriter : LineWriter
         {
-            public TaskWriter(string task, ConsoleColor foregroundColor)
-                : base(foregroundColor)
+            public TaskWriter(string task, string prefix, ConsoleColor foregroundColor)
+                : base(prefix, foregroundColor)
             {
                 using (new ConsoleColorizer(ConsoleColor.Gray))
                 {
@@ -155,7 +155,7 @@ namespace BauCore
 
         private class LineWriter : ConsoleColorizer
         {
-            public LineWriter(ConsoleColor foregroundColor)
+            public LineWriter(string prefix, ConsoleColor foregroundColor)
                 : base(foregroundColor)
             {
                 using (new ConsoleColorizer(ConsoleColor.Gray))
@@ -168,6 +168,8 @@ namespace BauCore
 
                     Console.Write("] ");
                 }
+
+                Console.Write(prefix);
             }
 
             public override void Dispose()
