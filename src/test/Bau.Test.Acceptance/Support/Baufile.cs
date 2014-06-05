@@ -83,15 +83,15 @@ namespace Bau.Test.Acceptance.Support
             return this;
         }
 
-        public string Run(params string[] tasks)
+        public string Run(params string[] arguments)
         {
-            Guard.AgainstNullArgument("tasks", tasks);
+            Guard.AgainstNullArgument("tasks", arguments);
 
             var args = new List<string> { this.name, "-debug" };
-            if (tasks.Length > 0)
+            if (arguments.Length > 0)
             {
                 args.Add("--");
-                args.AddRange(tasks);
+                args.AddRange(arguments);
             }
 
             var info = new ProcessStartInfo

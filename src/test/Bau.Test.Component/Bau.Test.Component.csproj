@@ -43,6 +43,7 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BauScriptPackFacts.cs" />
     <Compile Include="InlineTasks.cs" />
     <Compile Include="SpecificTasks.cs" />
     <Compile Include="Support\ScriptCs.cs" />
@@ -51,6 +52,10 @@
     <Compile Include="DefaultTask.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\..\packages\FakeItEasy.1.21.0\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\packages\FluentAssertions.3.0.107\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>

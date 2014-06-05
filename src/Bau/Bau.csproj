@@ -39,6 +39,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="LogLevel.cs" />
     <Compile Include="BauConsole.cs" />
     <Compile Include="Bau.cs" />
     <Compile Include="BauTaskExtensions.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="BauExtensions.cs" />
     <Compile Include="IBauTask.cs" />
     <Compile Include="ITaskBuilder{TTask}.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="ProcessStartInfoExtensions.cs" />
     <Compile Include="TaskBuilder{TTask}.cs" />
     <Compile Include="ITaskBuilder.cs" />

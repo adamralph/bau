@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogLevelSwitch.cs" />
     <Compile Include="LogLevels.cs" />
     <Compile Include="SpecificTasks.cs" />
     <Compile Include="Plugins\Exec.cs" />

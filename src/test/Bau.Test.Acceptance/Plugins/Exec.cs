@@ -31,8 +31,8 @@ namespace Bau.Test.Acceptance.Plugins
 })
 .Run();"));
 
-            "When I execute the baufile"
-                .f(() => output = baufile.Run());
+            "When I execute the baufile with the debug option"
+                .f(() => output = baufile.Run("-debug"));
 
             "Then the task succeeds"
                 .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
