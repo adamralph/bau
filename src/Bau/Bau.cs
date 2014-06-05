@@ -15,12 +15,17 @@ namespace BauCore
     {
         private const string DefaultTask = "default";
 
+        private readonly LogLevel logLevel;
         private readonly List<string> topLevelTasks = new List<string>();
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
         private IBauTask currentTask;
 
-        public Bau(params string[] topLevelTasks)
+        public Bau(LogLevel logLevel, IEnumerable<string> topLevelTasks)
         {
+            Guard.AgainstNullArgument("topLevelTasks", topLevelTasks);
+
+            this.logLevel = logLevel;
+            BauTaskExtensions.LogLevel = logLevel;
             this.topLevelTasks.AddRange(topLevelTasks);
             if (this.topLevelTasks.Count == 0)
             {
@@ -31,6 +36,11 @@ namespace BauCore
         public IBauTask CurrentTask
         {
             get { return this.currentTask; }
+        }
+
+        public LogLevel LogLevel
+        {
+            get { return this.logLevel; }
         }
 
         public ITaskBuilder DependsOn(params string[] otherTasks)
