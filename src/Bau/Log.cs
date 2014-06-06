@@ -6,131 +6,125 @@ namespace BauCore
 {
     using System;
 
-    internal static class Log
+    public static class Log
     {
+        private static readonly ColorText prefix = new ColorText(
+            new ColorToken("[", ConsoleColor.Gray),
+            new ColorToken("Bau", ConsoleColor.DarkGreen),
+            new ColorToken("] ", ConsoleColor.Gray));
+
         public static LogLevel LogLevel { get; set; }
 
-        public static void Fatal(IBauTask task, string message)
+        public static ConsoleColor TaskColor
+        {
+            get { return ConsoleColor.DarkCyan; }
+        }
+
+        public static void Fatal(IBauTask task, ColorText message)
         {
             Guard.AgainstNullArgument("task", task);
 
             if (IsEnabled(LogLevel.Fatal))
             {
-                BauConsole.WriteTaskMessage(task.Name, message, "FATAL: ", ConsoleColor.Red);
+                ColorConsole.WriteLine(GetPrefix(task).Concat("FATAL: ").Concat(message).Coalesce(ConsoleColor.Red));
             }
         }
 
-        public static void Error(IBauTask task, string message)
+        public static void Error(IBauTask task, ColorText message)
         {
             Guard.AgainstNullArgument("task", task);
 
             if (IsEnabled(LogLevel.Error))
             {
-                BauConsole.WriteTaskMessage(task.Name, message, "ERROR: ", ConsoleColor.DarkRed);
+                ColorConsole.WriteLine(GetPrefix(task).Concat("ERROR: ").Concat(message).Coalesce(ConsoleColor.DarkRed));
             }
         }
 
-        public static void Warn(IBauTask task, string message)
+        public static void Warn(IBauTask task, ColorText message)
         {
             Guard.AgainstNullArgument("task", task);
 
             if (IsEnabled(LogLevel.Warn))
             {
-                BauConsole.WriteTaskMessage(task.Name, message, "WARN: ", ConsoleColor.DarkYellow);
+                ColorConsole.WriteLine(GetPrefix(task).Concat("WARN: ").Concat(message).Coalesce(ConsoleColor.DarkYellow));
             }
         }
 
-        public static void Info(IBauTask task, string message)
+        public static void Info(IBauTask task, ColorText message)
         {
             Guard.AgainstNullArgument("task", task);
 
             if (IsEnabled(LogLevel.Info))
             {
-                BauConsole.WriteTaskMessage(task.Name, message, null, ConsoleColor.Gray);
+                ColorConsole.WriteLine(GetPrefix(task).Concat(message).Coalesce(ConsoleColor.Gray));
             }
         }
 
-        public static void Debug(IBauTask task, string message)
+        public static void Debug(IBauTask task, ColorText message)
         {
             Guard.AgainstNullArgument("task", task);
 
             if (IsEnabled(LogLevel.Debug))
             {
-                BauConsole.WriteTaskMessage(task.Name, message, "DEBUG: ", ConsoleColor.DarkGray);
+                ColorConsole.WriteLine(GetPrefix(task).Concat("DEBUG: ").Concat(message).Coalesce(ConsoleColor.DarkGray));
             }
         }
 
-        public static void Trace(IBauTask task, string message)
+        public static void Trace(IBauTask task, ColorText message)
         {
             Guard.AgainstNullArgument("task", task);
 
             if (IsEnabled(LogLevel.Trace))
             {
-                BauConsole.WriteTaskMessage(task.Name, message, "TRACE: ", ConsoleColor.DarkMagenta);
+                ColorConsole.WriteLine(GetPrefix(task).Concat("TRACE: ").Concat(message).Coalesce(ConsoleColor.DarkMagenta));
             }
         }
 
-        internal static void InfoHeader()
+        public static void Fatal(ColorText message)
         {
-            if (IsEnabled(LogLevel.Info))
+            if (IsEnabled(LogLevel.Fatal))
             {
-                BauConsole.WriteHeader(null,ConsoleColor.Gray);
+                ColorConsole.WriteLine(prefix.Concat("FATAL: ").Concat(message).Coalesce(ConsoleColor.Red));
             }
         }
 
-        internal static void WarnExecuteDeprecated()
+        public static void Error(ColorText message)
+        {
+            if (IsEnabled(LogLevel.Error))
+            {
+                ColorConsole.WriteLine(prefix.Concat("ERROR: ").Concat(message).Coalesce(ConsoleColor.DarkRed));
+            }
+        }
+
+        public static void Warn(ColorText message)
         {
             if (IsEnabled(LogLevel.Warn))
             {
-                BauConsole.WriteExecuteDeprecated("WARN: ", ConsoleColor.DarkYellow);
+                ColorConsole.WriteLine(prefix.Concat("WARN: ").Concat(message).Coalesce(ConsoleColor.DarkYellow));
             }
         }
 
-        internal static void ErrorInvalidTaskName(string task)
-        {
-            if (IsEnabled(LogLevel.Error))
-            {
-                BauConsole.WriteInvalidTaskName(task, "ERROR: ", ConsoleColor.DarkRed);
-            }
-        }
-
-        internal static void ErrorTasksAlreadyExists(string name, string type)
-        {
-            if (IsEnabled(LogLevel.Error))
-            {
-                BauConsole.WriteTasksAlreadyExists(name, type, "ERROR: ", ConsoleColor.DarkRed);
-            }
-        }
-
-        internal static void InfoTaskStarting(string task)
+        public static void Info(ColorText message)
         {
             if (IsEnabled(LogLevel.Info))
             {
-                BauConsole.WriteTaskStarting(task, null, ConsoleColor.Gray);
+                ColorConsole.WriteLine(prefix.Concat(message).Coalesce(ConsoleColor.Gray));
             }
         }
 
-        internal static void InfoTaskFinished(string task, double milliseconds)
+        public static void Debug(ColorText message)
         {
-            if (IsEnabled(LogLevel.Info))
+            if (IsEnabled(LogLevel.Debug))
             {
-                BauConsole.WriteTaskFinished(task, milliseconds, null, ConsoleColor.Gray);
+                ColorConsole.WriteLine(prefix.Concat("DEBUG: ").Concat(message).Coalesce(ConsoleColor.DarkGray));
             }
         }
 
-        internal static void ErrorTaskNotFound(string task)
+        public static void Trace(ColorText message)
         {
-            if (IsEnabled(LogLevel.Error))
+            if (IsEnabled(LogLevel.Trace))
             {
-                BauConsole.WriteTaskNotFound(task, "ERROR: ", ConsoleColor.DarkRed);
-            }
-        }
-
-        internal static void ErrorTaskFailed(string task, double milliseconds, string exceptionMessage)
-        {
-            if (IsEnabled(LogLevel.Error))
-            {
-                BauConsole.WriteTaskFailed(task, milliseconds, exceptionMessage, "ERROR: ", ConsoleColor.DarkRed);
+                ColorConsole.WriteLine(prefix.Concat("TRACE: ").Concat(message).Coalesce(ConsoleColor.DarkMagenta));
             }
         }
 
@@ -174,6 +168,18 @@ namespace BauCore
                 default:
                     return false;
             }
+        }
+
+        private static ColorText GetPrefix(IBauTask task)
+        {
+            Guard.AgainstNullArgument("task", task);
+
+            var taskPrefix = new ColorText(
+                new ColorToken("[", ConsoleColor.Gray),
+                new ColorToken(task.Name, Log.TaskColor),
+                new ColorToken("] ", ConsoleColor.Gray));
+
+            return prefix.Concat(taskPrefix);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace BauCore.Test.Component
             sut.Initialize(session);
 
             // assert
-            sut.Context.LogLevel.Should().Be(logLevel);
+            Log.LogLevel.Should().Be(logLevel);
         }
     }
 }

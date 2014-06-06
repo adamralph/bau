@@ -7,15 +7,14 @@ namespace BauCore
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using ScriptCs.Contracts;
 
     public class Bau : IScriptPackContext, ITaskBuilder
     {
         private const string DefaultTask = "default";
 
-        private readonly LogLevel logLevel;
         private readonly List<string> topLevelTasks = new List<string>();
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
         private IBauTask currentTask;
@@ -24,7 +23,6 @@ namespace BauCore
         {
             Guard.AgainstNullArgument("topLevelTasks", topLevelTasks);
 
-            this.logLevel = logLevel;
             Log.LogLevel = logLevel;
             this.topLevelTasks.AddRange(topLevelTasks);
             if (this.topLevelTasks.Count == 0)
@@ -38,11 +36,6 @@ namespace BauCore
             get { return this.currentTask; }
         }
 
-        public LogLevel LogLevel
-        {
-            get { return this.logLevel; }
-        }
-
         public ITaskBuilder DependsOn(params string[] otherTasks)
         {
             this.EnsureCurrentTask();
@@ -50,9 +43,11 @@ namespace BauCore
             {
                 if (string.IsNullOrWhiteSpace(task))
                 {
-                    Log.ErrorInvalidTaskName(task);
-                    var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", task);
-                    throw new ArgumentException(message, "otherTasks");
+                    var message = new ColorText(
+                        "Invalid task name '", new ColorToken(task, Log.TaskColor), "'.");
+
+                    Log.Error(message);
+                    throw new ArgumentException(message.ToString(), "otherTasks");
                 }
 
                 this.currentTask.Dependencies.Add(task);
@@ -100,7 +95,14 @@ namespace BauCore
 
         public void Run()
         {
-            Log.InfoHeader();
+            var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
+                .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
+
+            Log.Info(new ColorText(
+                new ColorToken("Bau", ConsoleColor.White),
+                new ColorToken(" " + version.InformationalVersion, ConsoleColor.Gray),
+                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray)));
+
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
@@ -110,7 +112,12 @@ namespace BauCore
         [Obsolete("Use Run() instead.")]
         public void Execute()
         {
-            Log.WarnExecuteDeprecated();
+            Log.Warn(new ColorText(
+                new ColorToken("Bau.Execute() ", ConsoleColor.DarkGreen),
+                "(with no parameters) will be removed shortly. Use ",
+                new ColorToken("Bau.Run() ", ConsoleColor.DarkGreen),
+                "instead."));
+
             this.Run();
         }
 
@@ -119,9 +126,13 @@ namespace BauCore
             name = name ?? DefaultTask;
             if (string.IsNullOrWhiteSpace(name))
             {
-                Log.ErrorInvalidTaskName(name);
-                var message = string.Format(CultureInfo.InvariantCulture, "Invalid task name '{0}'.", name);
-                throw new ArgumentException(message, "name");
+                var message = new ColorText(
+                    "Invalid task name '",
+                    new ColorToken(name, Log.TaskColor),
+                    "'.");
+
+                Log.Error(message);
+                throw new ArgumentException(message.ToString(), "name");
             }
 
             IBauTask task;
@@ -133,14 +144,15 @@ namespace BauCore
             var typedTask = task as TTask;
             if (typedTask == null)
             {
-                Log.ErrorTasksAlreadyExists(name, task.GetType().Name);
-                var message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "'{0}' task already exists with type '{1}'.",
-                    name,
-                    task.GetType().Name);
+                var message = new ColorText(
+                    "'",
+                    new ColorToken(name, Log.TaskColor),
+                    "' task already exists with type '",
+                    new ColorToken(task.GetType().Name, ConsoleColor.DarkGreen),
+                    "'.");
 
-                throw new InvalidOperationException(message);
+                Log.Error(message);
+                throw new InvalidOperationException(message.ToString());
             }
 
             this.currentTask = typedTask;
@@ -156,7 +168,7 @@ namespace BauCore
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Log.InfoTaskStarting(task);
+            Log.Info(new ColorText("Starting '", new ColorToken(task, Log.TaskColor), "'..."));
 
             try
             {
@@ -164,12 +176,22 @@ namespace BauCore
             }
             catch (Exception ex)
             {
-                Log.ErrorTaskFailed(task, stopwatch.Elapsed.TotalMilliseconds, ex.Message);
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task failed. {1}", task, ex.Message);
-                throw new InvalidOperationException(message, ex);
+                var message = new ColorText(
+                    "'",
+                    new ColorToken(task, Log.TaskColor),
+                    "' task failed. ",
+                    new ColorToken(ex.Message, ConsoleColor.DarkRed),
+                    "'.");
+
+                Log.Error(message);
+                throw new InvalidOperationException(message.ToString());
             }
 
-            Log.InfoTaskFinished(task, stopwatch.Elapsed.TotalMilliseconds);
+            Log.Info(new ColorText(
+                "Finished '",
+                new ColorToken(task, Log.TaskColor),
+                "' after ",
+                new ColorToken(stopwatch.Elapsed.TotalMilliseconds.ToStringFromMilliseconds(), ConsoleColor.DarkYellow)));
         }
 
         private void EnsureCurrentTask()
@@ -188,9 +210,13 @@ namespace BauCore
             }
             catch (KeyNotFoundException ex)
             {
-                Log.ErrorTaskNotFound(task);
-                var message = string.Format(CultureInfo.InvariantCulture, "'{0}' task not found.", task);
-                throw new InvalidOperationException(message, ex);
+                var message = new ColorText(
+                    "'",
+                    new ColorToken(task, Log.TaskColor),
+                    "' task not found.");
+
+                Log.Error(message);
+                throw new InvalidOperationException(message.ToString(), ex);
             }
         }
     }

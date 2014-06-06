@@ -4,7 +4,6 @@
 
 namespace BauCore
 {
-    using System.Collections.Generic;
     using ScriptCs.Contracts;
 
     public class BauScriptPack : ScriptPack<Bau>
@@ -14,12 +13,8 @@ namespace BauCore
             Guard.AgainstNullArgument("session", session);
 
             session.ImportNamespace(this.GetType().Namespace);
-
-            IList<string> tasks;
-            LogLevel logLevel;
-            Parser.Parse(session.ScriptArgs, out tasks, out logLevel);
-
-            this.Context = new Bau(logLevel, tasks);
+            var arguments = Arguments.Parse(session.ScriptArgs);
+            this.Context = new Bau(arguments.LogLevel, arguments.Tasks);
         }
     }
 }
