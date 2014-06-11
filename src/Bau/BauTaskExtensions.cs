@@ -8,81 +8,34 @@ namespace BauCore
 
     public static class BauTaskExtensions
     {
-        public static LogLevel LogLevel { get; set; }
-
         public static void LogFatal(this IBauTask task, string message)
         {
-            Guard.AgainstNullArgument("task", task);
-
-            if (LogLevel != LogLevel.Off)
-            {
-                BauConsole.WriteTaskMessage(task.Name, "FATAL: " + message, ConsoleColor.Red);
-            }
+            Log.Fatal(task, message);
         }
 
         public static void LogError(this IBauTask task, string message)
         {
-            Guard.AgainstNullArgument("task", task);
-
-            if (LogLevel != LogLevel.Off &&
-                LogLevel != LogLevel.Fatal)
-            {
-                BauConsole.WriteTaskMessage(task.Name, "ERROR: " + message, ConsoleColor.DarkRed);
-            }
+            Log.Error(task, message);
         }
 
         public static void LogWarn(this IBauTask task, string message)
         {
-            Guard.AgainstNullArgument("task", task);
-
-            if (LogLevel != LogLevel.Off &&
-                LogLevel != LogLevel.Fatal &&
-                LogLevel != LogLevel.Error)
-            {
-                BauConsole.WriteTaskMessage(task.Name, "WARN: " + message, ConsoleColor.DarkYellow);
-            }
+            Log.Warn(task, message);
         }
 
         public static void LogInfo(this IBauTask task, string message)
         {
-            Guard.AgainstNullArgument("task", task);
-
-            if (LogLevel != LogLevel.Off &&
-                LogLevel != LogLevel.Fatal &&
-                LogLevel != LogLevel.Error &&
-                LogLevel != LogLevel.Warn)
-            {
-                BauConsole.WriteTaskMessage(task.Name, message, ConsoleColor.Gray);
-            }
+            Log.Info(task, message);
         }
 
         public static void LogDebug(this IBauTask task, string message)
         {
-            Guard.AgainstNullArgument("task", task);
-
-            if (LogLevel != LogLevel.Off &&
-                LogLevel != LogLevel.Fatal &&
-                LogLevel != LogLevel.Error &&
-                LogLevel != LogLevel.Warn &&
-                LogLevel != LogLevel.Info)
-            {
-                BauConsole.WriteTaskMessage(task.Name, "DEBUG: " + message, ConsoleColor.DarkGray);
-            }
+            Log.Debug(task, message);
         }
 
         public static void LogTrace(this IBauTask task, string message)
         {
-            Guard.AgainstNullArgument("task", task);
-
-            if (LogLevel != LogLevel.Off &&
-                LogLevel != LogLevel.Fatal &&
-                LogLevel != LogLevel.Error &&
-                LogLevel != LogLevel.Warn &&
-                LogLevel != LogLevel.Info &&
-                LogLevel != LogLevel.Debug)
-            {
-                BauConsole.WriteTaskMessage(task.Name, "TRACE: " + message, ConsoleColor.DarkMagenta);
-            }
+            Log.Trace(task, message);
         }
     }
 }

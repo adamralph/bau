@@ -1,4 +1,4 @@
-// <copyright file="Parser.cs" company="Bau contributors">
+// <copyright file="Arguments.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -9,25 +9,29 @@ namespace BauCore
     using System.Globalization;
     using System.Linq;
 
-    public static class Parser
+    public class Arguments
     {
-        public static void Parse(IEnumerable<string> args, out IList<string> tasks, out LogLevel logLevel)
+        public LogLevel LogLevel { get; set; }
+
+        public string[] Tasks { get; set; }
+
+        public static Arguments Parse(IEnumerable<string> args)
         {
-            logLevel = LogLevel.Info;
-            tasks = new List<string>();
+            Guard.AgainstNullArgument("args", args);
 
-            if (args == null)
-            {
-                return;
-            }
-
+            var logLevel = LogLevel.Info;
+            var tasks = new List<string>();
             foreach (var option in Parse(args, tasks))
             {
                 switch (option.Key.ToUpperInvariant())
                 {
                     case "LOGLEVEL":
                         var logLevels = option.Value;
-                        logLevel = logLevels.Any() ? MapLogLevel(logLevels.First()) : LogLevel.Info;
+                        if (logLevels.Any())
+                        {
+                            logLevel = MapLogLevel(logLevels.First());
+                        }
+
                         break;
 
                     default:
@@ -37,9 +41,15 @@ namespace BauCore
                         throw new ArgumentException(message, "args");
                 }
             }
+
+            return new Arguments
+            {
+                LogLevel = logLevel,
+                Tasks = tasks.ToArray(),
+            };
         }
 
-        private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, ICollection<string> tasks)
+        private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, IList<string> tasks)
         {
             var options = new Dictionary<string, List<string>>(StringComparer.Create(CultureInfo.InvariantCulture, true));
             string currentName = null;

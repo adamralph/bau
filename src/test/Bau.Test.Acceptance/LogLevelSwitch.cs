@@ -14,14 +14,23 @@ namespace Bau.Test.Acceptance
     public static class LogLevelSwitch
     {
         [Scenario]
-        [Example(null, null, "info")]
-        [Example("-loglevel", "trace", "trace")]
-        [Example("-l", "trace", "trace")]
-        [Example("-trace", null, "trace")]
-        [Example("-t", null, "trace")]
-        [Example("-l", "o", null)]
+        [Example(null, null, "info", true, true)]
+        [Example("-loglevel", "trace", "trace", true, true)]
+        [Example("-l", "trace", "trace", true, true)]
+        [Example("-trace", null, "trace", true, true)]
+        [Example("-t", null, "trace", true, true)]
+        [Example("-q", null, "warn", false, true)]
+        [Example("-l", "o", null, false, false)]
         public static void LoggingAtAllLevels(
-            string arg0, string arg1, string expectedLevel, string delimiter0, string delimiter1, Baufile baufile, string output)
+            string arg0,
+            string arg1,
+            string expectedLevel,
+            bool taskMessageExpected,
+            bool warnMessageExpected,
+            string delimiter0,
+            string delimiter1,
+            Baufile baufile,
+            string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
@@ -30,7 +39,7 @@ namespace Bau.Test.Acceptance
                 {
                     delimiter0 = Guid.NewGuid().ToString();
                     delimiter1 = Guid.NewGuid().ToString();
-                    baufile = Baufile.Create(scenario).WriteLine(   
+                    baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<Bau>();
 
 bau.Do(() =>
@@ -43,7 +52,7 @@ bau.Do(() =>
     bau.CurrentTask.LogTrace(""" + delimiter0 + @"trace" + delimiter1 + @""");
 });
 
-bau.Run();");
+bau.Execute();");
                 });
 
             "When I execute the baufile with arguments '{0}' and '{1}'"
@@ -63,6 +72,12 @@ bau.Run();");
                         .Select(x => x.Split(new[] { delimiter1 }, StringSplitOptions.RemoveEmptyEntries).First());
 
                     actualLevels.Should().Equal(expectedLevels);
+
+                    output.Contains("Starting 'default'").Should().Be(taskMessageExpected);
+                    output.Contains("Finished 'default'").Should().Be(taskMessageExpected);
+                    output
+                        .Contains("WARN: Bau.Execute() (with no parameters) will be removed shortly. Use Bau.Run() instead.")
+                        .Should().Be(warnMessageExpected);
                 });
         }
     }
