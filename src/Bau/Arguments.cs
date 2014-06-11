@@ -15,8 +15,10 @@ namespace BauCore
 
         public string[] Tasks { get; set; }
 
-        public static Arguments Parse(params string[] args)
+        public static Arguments Parse(IEnumerable<string> args)
         {
+            Guard.AgainstNullArgument("args", args);
+
             var logLevel = LogLevel.Info;
             var tasks = new List<string>();
             foreach (var option in Parse(args, tasks))
