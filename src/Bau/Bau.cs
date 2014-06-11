@@ -71,11 +71,13 @@ namespace BauCore
         {
             var taskRef = this.GetTask(task);
 
-            ////var trace = this.alreadyInvoked ? null : " (first time)";
-            ////log.TraceFormat(CultureInfo.InvariantCulture, "Invoking '{0}'{1}.", this.Name, trace);
+            var suffix = taskRef.Invoked ? null : " (first time)";
+            Log.Trace(new ColorText("Invoking '", new ColorToken(task, Log.TaskColor), "'", suffix, "."));
             if (taskRef.Invoked)
             {
-                ////log.TraceFormat(CultureInfo.InvariantCulture, "Already invoked '{0}'. Ignoring invocation.", this.Name);
+                Log.Trace(new ColorText(
+                    "Already invoked '", new ColorToken(task, Log.TaskColor), "'. Ignoring invocation."));
+
                 return;
             }
 
@@ -101,7 +103,8 @@ namespace BauCore
             Log.Info(new ColorText(
                 new ColorToken("Bau", ConsoleColor.White),
                 new ColorToken(" " + version.InformationalVersion, ConsoleColor.Gray),
-                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray)));
+                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray),
+                "."));
 
             foreach (var task in this.topLevelTasks)
             {
@@ -180,8 +183,7 @@ namespace BauCore
                     "'",
                     new ColorToken(task, Log.TaskColor),
                     "' task failed. ",
-                    new ColorToken(ex.Message, ConsoleColor.DarkRed),
-                    "'.");
+                    new ColorToken(ex.Message, ConsoleColor.DarkRed));
 
                 Log.Error(message);
                 throw new InvalidOperationException(message.ToString());
@@ -191,7 +193,8 @@ namespace BauCore
                 "Finished '",
                 new ColorToken(task, Log.TaskColor),
                 "' after ",
-                new ColorToken(stopwatch.Elapsed.TotalMilliseconds.ToStringFromMilliseconds(), ConsoleColor.DarkYellow)));
+                new ColorToken(stopwatch.Elapsed.TotalMilliseconds.ToStringFromMilliseconds(), ConsoleColor.DarkYellow),
+                "."));
         }
 
         private void EnsureCurrentTask()
