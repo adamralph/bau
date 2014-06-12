@@ -15,7 +15,7 @@ namespace BauCore
 
             session.ImportNamespace(this.GetType().Namespace);
             var arguments = Arguments.Parse(session.ScriptArgs ?? Enumerable.Empty<string>());
-            this.Context = new Bau(arguments.LogLevel, arguments.Tasks);
+            this.Context = new Bau(arguments);
         }
     }
 }

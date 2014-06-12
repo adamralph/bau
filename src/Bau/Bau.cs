@@ -16,19 +16,23 @@ namespace BauCore
         private const string DefaultTask = "default";
 
         private readonly List<string> topLevelTasks = new List<string>();
+        private readonly bool help;
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
         private IBauTask currentTask;
 
-        public Bau(LogLevel logLevel, IEnumerable<string> topLevelTasks)
+        public Bau(Arguments arguments)
         {
-            Guard.AgainstNullArgument("topLevelTasks", topLevelTasks);
+            Guard.AgainstNullArgument("arguments", arguments);
+            Guard.AgainstNullArgumentProperty("arguments", "Tasks", arguments.Tasks);
 
-            Log.LogLevel = logLevel;
-            this.topLevelTasks.AddRange(topLevelTasks);
+            this.topLevelTasks.AddRange(arguments.Tasks);
             if (this.topLevelTasks.Count == 0)
             {
                 this.topLevelTasks.Add(DefaultTask);
             }
+
+            Log.LogLevel = arguments.LogLevel;
+            this.help = arguments.Help;
         }
 
         public IBauTask CurrentTask
@@ -100,12 +104,18 @@ namespace BauCore
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
 
-            Log.Info(new ColorText(
+            var header = new ColorText(
                 new ColorToken("Bau", ConsoleColor.White),
                 new ColorToken(" " + version.InformationalVersion, ConsoleColor.Gray),
-                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray),
-                "."));
+                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray));
 
+            if (this.help)
+            {
+                Arguments.ShowUsage(header);
+                return;
+            }
+
+            Log.Info(header);
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
