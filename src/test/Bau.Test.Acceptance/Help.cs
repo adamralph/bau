@@ -34,7 +34,7 @@ namespace Bau.Test.Acceptance
 Usage: scriptcs <baufile.csx> -- [tasks] [options]
 
 Options:
-  -l|-loglevel a|all|t|trace|d|debug|i*|info|w|warn|e|error|o|off
+  -l|-loglevel a|all|t|trace|d|debug|i*|info|w|warn|e|error|f|fatal|o|off
                Set the logging level.
   -t           Alias for -loglevel trace.
   -d           Alias for -loglevel debug.
