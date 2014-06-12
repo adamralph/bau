@@ -16,19 +16,23 @@ namespace BauCore
         private const string DefaultTask = "default";
 
         private readonly List<string> topLevelTasks = new List<string>();
+        private readonly bool help;
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
         private IBauTask currentTask;
 
-        public Bau(LogLevel logLevel, IEnumerable<string> topLevelTasks)
+        public Bau(Arguments arguments)
         {
-            Guard.AgainstNullArgument("topLevelTasks", topLevelTasks);
+            Guard.AgainstNullArgument("arguments", arguments);
+            Guard.AgainstNullArgumentProperty("arguments", "Tasks", arguments.Tasks);
 
-            Log.LogLevel = logLevel;
-            this.topLevelTasks.AddRange(topLevelTasks);
+            this.topLevelTasks.AddRange(arguments.Tasks);
             if (this.topLevelTasks.Count == 0)
             {
                 this.topLevelTasks.Add(DefaultTask);
             }
+
+            Log.LogLevel = arguments.LogLevel;
+            this.help = arguments.Help;
         }
 
         public IBauTask CurrentTask
@@ -97,6 +101,12 @@ namespace BauCore
 
         public void Run()
         {
+            if (this.help)
+            {
+                Arguments.ShowUsage();
+                return;
+            }
+
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
 
