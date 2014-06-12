@@ -23,19 +23,21 @@ namespace BauCore
             ColorConsole.WriteLine(null);
             ShowUsage();
         }
-        
+
         public static void ShowUsage()
         {
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("Usage: ", ConsoleColor.White),
                 new ColorToken("scriptcs ", ConsoleColor.DarkGreen),
                 new ColorToken("<", ConsoleColor.Gray),
-                new ColorToken("baufile.csx", ConsoleColor.DarkCyan),
+                new ColorToken("filename", ConsoleColor.DarkCyan),
                 new ColorToken("> ", ConsoleColor.Gray),
                 new ColorToken("-- ", ConsoleColor.DarkGreen),
                 new ColorToken("[", ConsoleColor.Gray),
                 new ColorToken("tasks", ConsoleColor.DarkCyan),
-                new ColorToken("] ", ConsoleColor.Gray),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("default", ConsoleColor.DarkGreen),
+                new ColorToken("*] ", ConsoleColor.Gray),
                 new ColorToken("[", ConsoleColor.Gray),
                 new ColorToken("options", ConsoleColor.DarkCyan),
                 new ColorToken("]", ConsoleColor.Gray)));
@@ -47,6 +49,13 @@ namespace BauCore
                 new ColorToken("  -l", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("-loglevel ", ConsoleColor.DarkGreen),
+                new ColorToken("<", ConsoleColor.Gray),
+                new ColorToken("level", ConsoleColor.DarkCyan),
+                new ColorToken(">", ConsoleColor.Gray),
+                new ColorToken("  Log at the specified level", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("                        (", ConsoleColor.Gray),
                 new ColorToken("a", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("all", ConsoleColor.DarkGreen),
@@ -60,7 +69,7 @@ namespace BauCore
                 new ColorToken("debug", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("i", ConsoleColor.DarkGreen),
-                new ColorToken("*", ConsoleColor.White),
+                new ColorToken("*", ConsoleColor.Gray),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("info", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
@@ -78,35 +87,35 @@ namespace BauCore
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("o", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
-                new ColorToken("off", ConsoleColor.DarkGreen)));
-            ColorConsole.WriteLine(new ColorToken("               Set the logging level.", ConsoleColor.Gray));
+                new ColorToken("off", ConsoleColor.DarkGreen),
+                new ColorToken(").", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  -t           ", ConsoleColor.DarkGreen),
+                new ColorToken("  -t                    ", ConsoleColor.DarkGreen),
                 new ColorToken("Alias for ", ConsoleColor.Gray),
                 new ColorToken("-loglevel trace", ConsoleColor.DarkGreen),
                 new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  -d           ", ConsoleColor.DarkGreen),
+                new ColorToken("  -d                    ", ConsoleColor.DarkGreen),
                 new ColorToken("Alias for ", ConsoleColor.Gray),
                 new ColorToken("-loglevel debug", ConsoleColor.DarkGreen),
                 new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  -q           ", ConsoleColor.DarkGreen),
+                new ColorToken("  -q                    ", ConsoleColor.DarkGreen),
                 new ColorToken("Alias for ", ConsoleColor.Gray),
                 new ColorToken("-loglevel warn", ConsoleColor.DarkGreen),
                 new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  -qq          ", ConsoleColor.DarkGreen),
+                new ColorToken("  -qq                   ", ConsoleColor.DarkGreen),
                 new ColorToken("Alias for ", ConsoleColor.Gray),
                 new ColorToken("-loglevel error", ConsoleColor.DarkGreen),
                 new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  -s           ", ConsoleColor.DarkGreen),
+                new ColorToken("  -s                    ", ConsoleColor.DarkGreen),
                 new ColorToken("Alias for ", ConsoleColor.Gray),
                 new ColorToken("-loglevel off", ConsoleColor.DarkGreen),
                 new ColorToken(".", ConsoleColor.Gray)));
@@ -117,22 +126,41 @@ namespace BauCore
                 new ColorToken("-h", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("-help", ConsoleColor.DarkGreen),
-                new ColorToken("  Show help.", ConsoleColor.Gray)));
+                new ColorToken("           Show help.", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(null);
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  One and two character option aliases are ", ConsoleColor.DarkYellow),
-                new ColorToken("case-sensitive", ConsoleColor.Yellow),
-                new ColorToken(".", ConsoleColor.DarkYellow)));
+                new ColorToken("  One and two character option aliases are ", ConsoleColor.Gray),
+                new ColorToken("case-sensitive", ConsoleColor.White),
+                new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(null);
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("Examples: ", ConsoleColor.White),
-                new ColorToken("scriptcs baufile.csx", ConsoleColor.DarkGreen)));
+                new ColorToken("Examples:", ConsoleColor.White)));
+
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("          scriptcs baufile.csx -- task1 task2", ConsoleColor.DarkGreen)));
+                new ColorToken("  scriptcs baufile.csx                ", ConsoleColor.DarkGreen),
+                new ColorToken("Run the '", ConsoleColor.Gray),
+                new ColorToken("default", ConsoleColor.DarkCyan),
+                new ColorToken("' task.", ConsoleColor.Gray)));
+
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("          scriptcs baufile.csx -- -d", ConsoleColor.DarkGreen)));
+                new ColorToken("  scriptcs baufile.csx -- build test  ", ConsoleColor.DarkGreen),
+                new ColorToken("Run the '", ConsoleColor.Gray),
+                new ColorToken("build", ConsoleColor.DarkCyan),
+                new ColorToken("' and '", ConsoleColor.Gray),
+                new ColorToken("test", ConsoleColor.DarkCyan),
+                new ColorToken("' tasks.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  scriptcs baufile.csx -- -l d        ", ConsoleColor.DarkGreen),
+                new ColorToken("Run the '", ConsoleColor.Gray),
+                new ColorToken("default", ConsoleColor.DarkCyan),
+                new ColorToken("' task and log at debug level.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("* Default value.", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(null);
         }
