@@ -30,24 +30,28 @@ namespace Bau.Test.Acceptance
                 .f(() =>
                 {
                     var help =
-@"
-Usage: scriptcs <baufile.csx> -- [tasks] [options]
+@"Copyright (c) Bau contributors (baubuildch@gmail.com)
+
+Usage: scriptcs <filename> -- [tasks|default*] [options]
 
 Options:
-  -l|-loglevel a|all|t|trace|d|debug|i*|info|w|warn|e|error|f|fatal|o|off
-               Set the logging level.
-  -t           Alias for -loglevel trace.
-  -d           Alias for -loglevel debug.
-  -q           Alias for -loglevel warn.
-  -qq          Alias for -loglevel error.
-  -s           Alias for -loglevel off.
-  -?|-h|-help  Show help.
+  -l|-loglevel <level>  Log at the specified level
+                        (a|all|t|trace|d|debug|i*|info|w|warn|e|error|f|fatal|o|off).
+  -t                    Alias for -loglevel trace.
+  -d                    Alias for -loglevel debug.
+  -q                    Alias for -loglevel warn.
+  -qq                   Alias for -loglevel error.
+  -s                    Alias for -loglevel off.
+  -?|-h|-help           Show help.
 
   One and two character option aliases are case-sensitive.
 
-Examples: scriptcs baufile.csx
-          scriptcs baufile.csx -- task1 task2
-          scriptcs baufile.csx -- -d
+Examples:
+  scriptcs baufile.csx                Run the 'default' task.
+  scriptcs baufile.csx -- build test  Run the 'build' and 'test' tasks.
+  scriptcs baufile.csx -- -l d        Run the 'default' task and log at debug level.
+
+* Default value.
 
 ";
 
