@@ -101,21 +101,21 @@ namespace BauCore
 
         public void Run()
         {
-            if (this.help)
-            {
-                Arguments.ShowUsage();
-                return;
-            }
-
             var version = (AssemblyInformationalVersionAttribute)Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute)).Single();
 
-            Log.Info(new ColorText(
+            var header = new ColorText(
                 new ColorToken("Bau", ConsoleColor.White),
                 new ColorToken(" " + version.InformationalVersion, ConsoleColor.Gray),
-                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray),
-                "."));
+                new ColorToken(" Copyright (c) Bau contributors (baubuildch@gmail.com)", ConsoleColor.DarkGray));
 
+            if (this.help)
+            {
+                Arguments.ShowUsage(header);
+                return;
+            }
+
+            Log.Info(header);
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);

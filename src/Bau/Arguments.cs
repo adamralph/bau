@@ -17,6 +17,13 @@ namespace BauCore
 
         public bool Help { get; set; }
 
+        public static void ShowUsage(ColorText header)
+        {
+            ColorConsole.WriteLine(header);
+            ColorConsole.WriteLine(null);
+            ShowUsage();
+        }
+        
         public static void ShowUsage()
         {
             ColorConsole.WriteLine(new ColorText(
