@@ -234,16 +234,6 @@ namespace BauCore
                 case "?":
                     impliedValue = "OFF";
                     return "HELP";
-            }
-
-            switch (optionName.ToUpperInvariant())
-            {
-                case "TRACE":
-                    impliedValue = "TRACE";
-                    return "LOGLEVEL";
-                case "DEBUG":
-                    impliedValue = "DEBUG";
-                    return "LOGLEVEL";
                 default:
                     return optionName;
             }
@@ -267,22 +257,15 @@ namespace BauCore
                     return LogLevel.Info;
                 case "W":
                 case "WARN":
-                case "Q":
-                case "QUIET":
                     return LogLevel.Warn;
                 case "E":
                 case "ERROR":
-                case "QQ":
                     return LogLevel.Error;
                 case "F":
                 case "FATAL":
                     return LogLevel.Fatal;
                 case "O":
                 case "OFF":
-                case "N":
-                case "NONE":
-                case "S":
-                case "SILENT":
                     return LogLevel.Off;
                 default:
                     ShowUsage();
