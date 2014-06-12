@@ -32,7 +32,7 @@ namespace Bau.Test.Acceptance.Plugins
 .Run();"));
 
             "When I execute the baufile with the debug option"
-                .f(() => output = baufile.Run("-debug"));
+                .f(() => output = baufile.Run("-d"));
 
             "Then the task succeeds"
                 .f(() => File.Exists(Path.Combine(Baufile.Directory, scenario, "foo.txt")).Should().BeTrue());
