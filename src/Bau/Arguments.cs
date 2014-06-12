@@ -72,6 +72,10 @@ namespace BauCore
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("error", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("f", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("fatal", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("o", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("off", ConsoleColor.DarkGreen)));
