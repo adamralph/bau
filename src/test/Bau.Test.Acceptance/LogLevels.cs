@@ -35,7 +35,7 @@ bau.Do(() =>
 bau.Run();"));
 
             "When I execute the baufile"
-                .f(() => output = baufile.Run("-trace"));
+                .f(() => output = baufile.Run("-t"));
 
             "Then the fatal message should be logged"
                 .f(() => output.Should().MatchEquivalentOf("*[default] *FATAL: fatal*"));
