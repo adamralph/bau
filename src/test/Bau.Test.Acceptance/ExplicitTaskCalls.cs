@@ -11,7 +11,6 @@ namespace Bau.Test.Acceptance
     using Bau.Test.Acceptance.Support;
     using FluentAssertions;
     using Xbehave;
-    using Xunit;
 
     public static class ExplicitTaskCalls
     {
@@ -20,9 +19,12 @@ namespace Bau.Test.Acceptance
         public static void ExplicitTaskExecution(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
-            tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
-            "Given an ExplicitTaskExecution baufile"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+
+            "Given an explicit task execution baufile"
+                .f(() =>
+                {
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
 @"var executed = new List<string>();
 var bau = Require<Bau>();
 bau.Task(""non-default"")
@@ -37,7 +39,10 @@ bau.Task(""non-default"")
         file.Write(string.Join(Environment.NewLine, executed));
     };
 })
-.Run();"));
+.Run();");
+                })
+                .Teardown(() => File.Delete(tempFile));
+
             "When I execute the baufile"
                 .f(() => output = baufile.Run());
 
@@ -66,11 +71,13 @@ bau.Task(""non-default"")
         public static void ExplicitTaskInvocation(Baufile baufile, string tempFile, string[] executedTasks, string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
-            tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
 
-            "Given an ExplicitTaskInvocation baufile"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(
-                @"var executed = new List<string>();
+            "Given an explicit task invocation baufile"
+                .f(() =>
+                {
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
+@"var executed = new List<string>();
 var bau = Require<Bau>();
 bau.Task(""parent"")
 .DependsOn(""child"")
@@ -80,14 +87,17 @@ bau.Task(""parent"")
 .Task(""default"")
 .Do(() =>
 {
-	bau.Invoke(""parent"");
-	executed.Add(""default"");
-	using(var file = File.CreateText(@""" + tempFile + @"""))
-	{
-		file.Write(string.Join(Environment.NewLine, executed));
-	};
+    bau.Invoke(""parent"");
+    executed.Add(""default"");
+    using(var file = File.CreateText(@""" + tempFile + @"""))
+    {
+        file.Write(string.Join(Environment.NewLine, executed));
+    };
 })
-.Run();"));
+.Run();");
+                })
+                .Teardown(() => File.Delete(tempFile));
+
             "When I execute the baufile"
                 .f(() => output = baufile.Run());
 

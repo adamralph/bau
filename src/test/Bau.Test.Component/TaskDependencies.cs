@@ -15,10 +15,10 @@ namespace BauCore.Test.Component
     {
         // happy path
         [Scenario]
-        public static void SingleDependency(ITaskBuilder builder, List<string> executedTasks)
+        public static void SingleDependency(ITaskBuilder builder, IList<string> executedTasks)
         {
             "Given a non-default task"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default")
                         .Do(() => (executedTasks = new List<string>()).Add("non-default")));
 
@@ -41,10 +41,10 @@ namespace BauCore.Test.Component
         }
 
         [Scenario]
-        public static void MultipleDependencies(ITaskBuilder builder, List<string> executedTasks)
+        public static void MultipleDependencies(ITaskBuilder builder, IList<string> executedTasks)
         {
             "Given a non-default task"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default1")
                         .Do(() => (executedTasks = new List<string>()).Add("non-default1")));
 
@@ -75,10 +75,10 @@ namespace BauCore.Test.Component
         }
 
         [Scenario]
-        public static void NestedDependencies(ITaskBuilder builder, List<string> executedTasks)
+        public static void NestedDependencies(ITaskBuilder builder, IList<string> executedTasks)
         {
             "Given a non-default task"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default1")
                         .Do(() => (executedTasks = new List<string>()).Add("non-default1")));
 
@@ -109,10 +109,10 @@ namespace BauCore.Test.Component
         }
 
         [Scenario]
-        public static void RepeatedDependency(ITaskBuilder builder, List<string> executedTasks)
+        public static void RepeatedDependency(ITaskBuilder builder, IList<string> executedTasks)
         {
             "Given a non-default task"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default1")
                         .Do(() => (executedTasks = new List<string>()).Add("non-default1")));
 
@@ -143,10 +143,10 @@ namespace BauCore.Test.Component
         }
 
         [Scenario]
-        public static void CircularDependency(ITaskBuilder builder, List<string> executedTasks)
+        public static void CircularDependency(ITaskBuilder builder, IList<string> executedTasks)
         {
             "Given a non-default task which depends on the default task"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default").DependsOn("default")
                         .Do(() => (executedTasks = new List<string>()).Add("non-default")));
 
@@ -173,7 +173,7 @@ namespace BauCore.Test.Component
         public static void NonexistentDependency(ITaskBuilder builder, Exception ex)
         {
             "Given a default task with a non-existent dependency"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("default").DependsOn("non-existent")
                         .Do(() =>
                         {
@@ -193,11 +193,11 @@ namespace BauCore.Test.Component
         public static void DependencyFails(ITaskBuilder builder, bool defaultExecuted, Exception ex)
         {
             "And a non-default task which fails"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default").DependsOn("default")
                         .Do(() =>
                         {
-                            throw new Exception();
+                            throw new InvalidOperationException();
                         }));
 
             "And a default task which depends on the non-default task"

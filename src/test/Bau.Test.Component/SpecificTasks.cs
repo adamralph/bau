@@ -16,7 +16,7 @@ namespace BauCore.Test.Component
         public static void SingleTask(ITaskBuilder builder, bool executed)
         {
             "Given a non-default task is specified"
-                .f(() => builder = ScriptCs.Require<Bau>(new[] { "non-default" }));
+                .f(() => builder = ScriptHost.Require<Bau>(new[] { "non-default" }));
 
             "And a non-default task"
                 .f(() => builder.Task("non-default").Do(() => executed = true));
@@ -29,10 +29,10 @@ namespace BauCore.Test.Component
         }
 
         [Scenario]
-        public static void MultipleTasks(string[] args, ITaskBuilder builder, bool executed1, bool executed2)
+        public static void MultipleTasks(ITaskBuilder builder, bool executed1, bool executed2)
         {
             "Given arguments containing 2 non-default tasks"
-                .f(() => builder = ScriptCs.Require<Bau>(new[] { "non-default1", "non-default2" }));
+                .f(() => builder = ScriptHost.Require<Bau>(new[] { "non-default1", "non-default2" }));
 
             "And a non-default task"
                 .f(() => builder.Task("non-default1").Do(() => executed1 = true));
@@ -54,7 +54,7 @@ namespace BauCore.Test.Component
         public static void NoTasksExist(ITaskBuilder builder, Exception ex)
         {
             "Given a non-existent task is specified"
-                .f(() => builder = ScriptCs.Require<Bau>(new[] { "non-existent" }));
+                .f(() => builder = ScriptHost.Require<Bau>(new[] { "non-existent" }));
 
             "And no tasks"
                 .f(() => { });
@@ -73,7 +73,7 @@ namespace BauCore.Test.Component
         public static void AnotherTaskExists(ITaskBuilder builder, Exception ex)
         {
             "Given a non-existent task is specified"
-                .f(() => builder = ScriptCs.Require<Bau>(new[] { "non-existent" }));
+                .f(() => builder = ScriptHost.Require<Bau>(new[] { "non-existent" }));
 
             "And another task exists"
                 .f(() => builder.Task("foo").Do(() => { }));

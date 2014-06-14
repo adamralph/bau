@@ -46,8 +46,8 @@
     <Compile Include="BauScriptPackFacts.cs" />
     <Compile Include="InlineTasks.cs" />
     <Compile Include="SpecificTasks.cs" />
-    <Compile Include="Support\ScriptCs.cs" />
-    <Compile Include="RenablingTasks.cs" />
+    <Compile Include="Support\ScriptHost.cs" />
+    <Compile Include="ReenablingTasks.cs" />
     <Compile Include="TaskDependencies.cs" />
     <Compile Include="DefaultTask.cs" />
   </ItemGroup>

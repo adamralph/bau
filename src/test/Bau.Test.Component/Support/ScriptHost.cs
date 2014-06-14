@@ -1,4 +1,4 @@
-﻿// <copyright file="ScriptCs.cs" company="Bau contributors">
+﻿// <copyright file="ScriptHost.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -6,7 +6,7 @@ namespace BauCore.Test.Component.Support
 {
     using global::ScriptCs.Contracts;
 
-    public static class ScriptCs
+    public static class ScriptHost
     {
         public static T Require<T>(params string[] scriptArgs) where T : Bau
         {
@@ -15,7 +15,7 @@ namespace BauCore.Test.Component.Support
             return (T)scriptPack.Context;
         }
 
-        public class ScriptPackSession : IScriptPackSession
+        private class ScriptPackSession : IScriptPackSession
         {
             private readonly string[] scriptArgs;
 
