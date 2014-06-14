@@ -53,6 +53,7 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelloWorld.cs" />
   </ItemGroup>
   <ItemGroup>
