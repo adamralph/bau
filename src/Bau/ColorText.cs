@@ -7,7 +7,7 @@ namespace BauCore
     using System;
     using System.Linq;
 
-    public struct ColorText
+    public struct ColorText : IEquatable<ColorText>
     {
         private readonly ColorToken[] tokens;
 
@@ -24,6 +24,16 @@ namespace BauCore
         public static implicit operator ColorText(ColorToken text)
         {
             return new ColorText(text);
+        }
+
+        public static bool operator ==(ColorText left, ColorText right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ColorText left, ColorText right)
+        {
+            return !left.Equals(right);
         }
 
         public ColorToken[] ToTokenArray()
@@ -44,6 +54,24 @@ namespace BauCore
         public override string ToString()
         {
             return string.Concat(this.tokens.Select(token => token.ToString()));
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return this.tokens.Aggregate(17, (hashCode, token) => (hashCode * 23) + token.GetHashCode());
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ColorText && this.Equals((ColorText)obj);
+        }
+
+        public bool Equals(ColorText other)
+        {
+            return this.tokens.SequenceEqual(other.tokens);
         }
     }
 }
