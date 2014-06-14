@@ -6,16 +6,30 @@ namespace BauCore
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
 
     public class Arguments
     {
-        public string[] Tasks { get; set; }
+        private ICollection<string> tasks;
+        private LogLevel logLevel;
+        private bool help;
 
-        public LogLevel LogLevel { get; set; }
+        public ICollection<string> Tasks
+        {
+            get { return this.tasks; }
+        }
 
-        public bool Help { get; set; }
+        public LogLevel LogLevel
+        {
+            get { return this.logLevel; }
+        }
+
+        public bool Help
+        {
+            get { return this.help; }
+        }
 
         public static void ShowUsage(ColorText header)
         {
@@ -169,12 +183,9 @@ namespace BauCore
         {
             Guard.AgainstNullArgument("args", args);
 
-            var arguments = new Arguments
-            {
-                LogLevel = LogLevel.Info,
-            };
-
             var tasks = new List<string>();
+            var logLevel = LogLevel.Info;
+            var help = false;
             foreach (var option in Parse(args, tasks))
             {
                 switch (option.Key.ToUpperInvariant())
@@ -183,13 +194,13 @@ namespace BauCore
                         var logLevels = option.Value;
                         if (logLevels.Any())
                         {
-                            arguments.LogLevel = MapLogLevel(logLevels.First());
+                            logLevel = MapLogLevel(logLevels.First());
                         }
 
                         break;
 
                     case "HELP":
-                        arguments.Help = true;
+                        help = true;
                         break;
 
                     default:
@@ -201,8 +212,12 @@ namespace BauCore
                 }
             }
 
-            arguments.Tasks = tasks.ToArray();
-            return arguments;
+            return new Arguments
+            {
+                tasks = new ReadOnlyCollection<string>(tasks),
+                logLevel = logLevel,
+                help = help,
+            };
         }
 
         private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, IList<string> tasks)

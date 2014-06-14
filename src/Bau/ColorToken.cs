@@ -6,7 +6,7 @@ namespace BauCore
 {
     using System;
 
-    public struct ColorToken
+    public struct ColorToken : IEquatable<ColorToken>
     {
         private readonly string text;
         private readonly ConsoleColor? color;
@@ -37,14 +37,41 @@ namespace BauCore
             return new ColorToken(text);
         }
 
-        public ColorToken Coalesce(ConsoleColor color)
+        public static bool operator ==(ColorToken left, ColorToken right)
         {
-            return new ColorToken(this.text, this.color ?? color);
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ColorToken left, ColorToken right)
+        {
+            return !left.Equals(right);
+        }
+
+        public ColorToken Coalesce(ConsoleColor defaultColor)
+        {
+            return new ColorToken(this.text, this.color ?? defaultColor);
         }
 
         public override string ToString()
         {
             return this.text;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.text == null ? 0 : this.text.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ColorToken && this.Equals((ColorToken)obj);
+        }
+
+        public bool Equals(ColorToken other)
+        {
+            return
+                this.text == other.text &&
+                this.color == other.color;
         }
     }
 }

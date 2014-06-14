@@ -18,7 +18,7 @@ namespace Bau.Test.Acceptance
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given a LoggingAtAllLevels baufile"
+            "Given a logging at all levels baufile"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"var bau = Require<Bau>();
 
@@ -77,7 +77,7 @@ bau.Run();"));
         [Example("-l", "trace", "trace", true, true)]
         [Example("-loglevel", "trace", "trace", true, true)]
         [Example("-LOGlevel", "trace", "trace", true, true)]
-        public static void SpecifiyingLogLevel(
+        public static void SpecifyingLogLevel(
             string arg0,
             string arg1,
             string expectedLevel,
@@ -90,7 +90,7 @@ bau.Run();"));
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given a LoggingAtAllLevels baufile"
+            "Given a logging at all levels baufile"
                 .f(() =>
                 {
                     delimiter0 = Guid.NewGuid().ToString();

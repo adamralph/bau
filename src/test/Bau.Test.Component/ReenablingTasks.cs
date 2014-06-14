@@ -1,4 +1,4 @@
-﻿// <copyright file="RenablingTasks.cs" company="Bau contributors">
+﻿// <copyright file="ReenablingTasks.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -9,13 +9,13 @@ namespace BauCore.Test.Component
     using FluentAssertions;
     using Xbehave;
 
-    public static class RenablingTasks
+    public static class ReenablingTasks
     {
         [Scenario]
-        public static void ReenablingATask(ITaskBuilder builder, List<string> executedTasks)
+        public static void ReenablingATask(ITaskBuilder builder, IList<string> executedTasks)
         {
             "Given a non-default task which depends on and reenables another non-default task"
-                .f(c => builder = ScriptCs.Require<Bau>()
+                .f(c => builder = ScriptHost.Require<Bau>()
                     .Task("non-default").DependsOn("other-non-default")
                         .Do(() =>
                         {

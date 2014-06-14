@@ -16,7 +16,7 @@ namespace BauCore.Test.Component
         public static void DefaultTaskExists(ITaskBuilder builder, bool executed)
         {
             "Given a default task"
-                .f(() => builder = ScriptCs.Require<Bau>().Do(() => executed = true));
+                .f(() => builder = ScriptHost.Require<Bau>().Do(() => executed = true));
 
             "When I run the builder"
                 .f(() => builder.Run());
@@ -29,7 +29,7 @@ namespace BauCore.Test.Component
         public static void NoTasksExist(ITaskBuilder builder, Exception ex)
         {
             "Given no tasks"
-                .f(() => builder = ScriptCs.Require<Bau>());
+                .f(() => builder = ScriptHost.Require<Bau>());
 
             "When I run the builder"
                 .f(() => ex = Record.Exception(() => builder.Run()));
@@ -42,10 +42,10 @@ namespace BauCore.Test.Component
         }
 
         [Scenario]
-        public static void ANonDefaultTaskExists(ITaskBuilder builder, Exception ex)
+        public static void NonDefaultTaskExists(ITaskBuilder builder, Exception ex)
         {
             "Given no tasks"
-                .f(() => builder = ScriptCs.Require<Bau>().Task("foo").Do(() => { }));
+                .f(() => builder = ScriptHost.Require<Bau>().Task("foo").Do(() => { }));
 
             "When I run the builder"
                 .f(() => ex = Record.Exception(() => builder.Run()));
