@@ -2,7 +2,7 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace BauCore
+namespace ColoredConsole
 {
     using System;
     using System.Linq;

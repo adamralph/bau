@@ -4,6 +4,7 @@
 
 namespace BauCore
 {
+    using ColoredConsole;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -34,7 +35,7 @@ namespace BauCore
         public static void ShowUsage(ColorText header)
         {
             ColorConsole.WriteLine(header);
-            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine();
             ShowUsage();
         }
 
@@ -56,7 +57,7 @@ namespace BauCore
                 new ColorToken("options", ConsoleColor.DarkCyan),
                 new ColorToken("]", ConsoleColor.Gray)));
 
-            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine();
             ColorConsole.WriteLine(new ColorToken("Options:", ConsoleColor.White));
 
             ColorConsole.WriteLine(new ColorText(
@@ -142,13 +143,13 @@ namespace BauCore
                 new ColorToken("-help", ConsoleColor.DarkGreen),
                 new ColorToken("           Show help.", ConsoleColor.Gray)));
 
-            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine();
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  One and two character option aliases are ", ConsoleColor.Gray),
                 new ColorToken("case-sensitive", ConsoleColor.White),
                 new ColorToken(".", ConsoleColor.Gray)));
 
-            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine();
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("Examples:", ConsoleColor.White)));
 
@@ -172,11 +173,11 @@ namespace BauCore
                 new ColorToken("default", ConsoleColor.DarkCyan),
                 new ColorToken("' task and log at debug level.", ConsoleColor.Gray)));
 
-            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine();
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("* Default value.", ConsoleColor.Gray)));
 
-            ColorConsole.WriteLine(null);
+            ColorConsole.WriteLine();
         }
 
         public static Arguments Parse(IEnumerable<string> args)

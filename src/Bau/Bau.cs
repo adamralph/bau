@@ -10,6 +10,7 @@ namespace BauCore
     using System.Linq;
     using System.Reflection;
     using ScriptCs.Contracts;
+    using ColoredConsole;
 
     public class Bau : IScriptPackContext, ITaskBuilder
     {
