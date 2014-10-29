@@ -4,8 +4,6 @@
 
 namespace BauCore
 {
-    using System;
-
     public static class BauTaskExtensions
     {
         public static void LogFatal(this IBauTask task, string message)
