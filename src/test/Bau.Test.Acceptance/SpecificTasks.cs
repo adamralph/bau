@@ -37,6 +37,9 @@ namespace Bau.Test.Acceptance
 
             "And I am informed that the task was started"
                 .f(() => output.Should().ContainEquivalentOf("starting 'non-default'"));
+
+            "And I am informed that the task was finished after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("finished 'non-default' after "));
         }
 
         [Scenario]
@@ -86,6 +89,12 @@ bau.Run();"));
 
             "And I am informed that the second task was started"
                 .f(() => output.Should().ContainEquivalentOf("starting 'non-default2'"));
+
+            "And I am informed that the first task was finished after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("finished 'non-default1' after "));
+
+            "And I am informed that the second task was finished after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("finished 'non-default2' after "));
         }
 
         [Scenario]
