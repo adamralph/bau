@@ -23,7 +23,6 @@ namespace BauCore
         public Bau(Arguments arguments)
         {
             Guard.AgainstNullArgument("arguments", arguments);
-            Guard.AgainstNullArgumentProperty("arguments", "Tasks", arguments.Tasks);
 
             this.topLevelTasks.AddRange(arguments.Tasks);
             if (this.topLevelTasks.Count == 0)

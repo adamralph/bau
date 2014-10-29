@@ -12,11 +12,23 @@ namespace BauCore
 
     public class Arguments
     {
-        private ICollection<string> tasks;
-        private LogLevel logLevel;
-        private bool help;
+        private readonly ReadOnlyCollection<string> tasks;
+        private readonly LogLevel logLevel;
+        private readonly bool help;
 
-        public ICollection<string> Tasks
+        public Arguments(
+            IEnumerable<string> tasks,
+            LogLevel logLevel,
+            bool help)
+        {
+            Guard.AgainstNullArgument("tasks", tasks);
+
+            this.tasks = new ReadOnlyCollection<string>(tasks.ToList());
+            this.logLevel = logLevel;
+            this.help = help;
+        }
+
+        public IEnumerable<string> Tasks
         {
             get { return this.tasks; }
         }
@@ -204,7 +216,6 @@ namespace BauCore
                         break;
 
                     default:
-                        ShowUsage();
                         var message = string.Format(
                             CultureInfo.InvariantCulture, "The option '{0}' is not recognised.", option.Key);
 
@@ -212,15 +223,10 @@ namespace BauCore
                 }
             }
 
-            return new Arguments
-            {
-                tasks = new ReadOnlyCollection<string>(tasks),
-                logLevel = logLevel,
-                help = help,
-            };
+            return new Arguments(tasks, logLevel, help);
         }
 
-        private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, IList<string> tasks)
+        private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, ICollection<string> tasks)
         {
             var options = new Dictionary<string, List<string>>(StringComparer.Create(CultureInfo.InvariantCulture, true));
             string currentName = null;
@@ -322,7 +328,6 @@ namespace BauCore
                 case "OFF":
                     return LogLevel.Off;
                 default:
-                    ShowUsage();
                     var message = string.Format(
                         CultureInfo.InvariantCulture, "The log level '{0}' is not recognised.", logLevelString);
 
