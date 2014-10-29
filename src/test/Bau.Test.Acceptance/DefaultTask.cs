@@ -35,11 +35,17 @@ namespace Bau.Test.Acceptance
             "Then the task is executed"
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
+            "And I am informed that the default task and dependencies are being run"
+                .f(() => output.Should().ContainEquivalentOf("Running 'default' and dependencies"));
+
             "And I am informed that the default task was started"
                 .f(() => output.Should().ContainEquivalentOf("starting 'default'"));
 
             "And I am informed that the default task was finished after a period of time"
                 .f(() => output.Should().ContainEquivalentOf("finished 'default' after "));
+
+            "And I am informed that the default task and dependencies were completed after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("Completed 'default' and dependencies in "));
         }
 
         [Scenario]

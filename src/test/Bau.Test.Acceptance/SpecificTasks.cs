@@ -35,11 +35,17 @@ namespace Bau.Test.Acceptance
             "Then the task is executed"
                 .f(() => File.Exists(tempFile).Should().BeTrue());
 
+            "And I am informed that the task and dependencies are being run"
+                .f(() => output.Should().ContainEquivalentOf("Running 'non-default' and dependencies"));
+
             "And I am informed that the task was started"
                 .f(() => output.Should().ContainEquivalentOf("starting 'non-default'"));
 
             "And I am informed that the task was finished after a period of time"
                 .f(() => output.Should().ContainEquivalentOf("finished 'non-default' after "));
+
+            "And I am informed that the task and dependencies were completed after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("Completed 'non-default' and dependencies in "));
         }
 
         [Scenario]
@@ -84,6 +90,9 @@ bau.Run();"));
             "And the second task is executed"
                 .f(() => File.Exists(tempFile2).Should().BeTrue());
 
+            "And I am informed that the tasks and dependencies are being run"
+                .f(() => output.Should().ContainEquivalentOf("Running 'non-default1', 'non-default2' and dependencies"));
+
             "And I am informed that the first task was started"
                 .f(() => output.Should().ContainEquivalentOf("starting 'non-default1'"));
 
@@ -95,6 +104,9 @@ bau.Run();"));
 
             "And I am informed that the second task was finished after a period of time"
                 .f(() => output.Should().ContainEquivalentOf("finished 'non-default2' after "));
+
+            "And I am informed that the tasks and dependencies were completed after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("Completed 'non-default1', 'non-default2' and dependencies in "));
         }
 
         [Scenario]
