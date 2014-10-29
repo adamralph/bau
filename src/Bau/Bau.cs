@@ -115,10 +115,24 @@ namespace BauCore
             }
 
             Log.Info(header);
+            var tasksText = this.topLevelTasks.Skip(1).Aggregate(
+                new ColorText("'", new ColorToken(this.topLevelTasks[0], Log.TaskColor), "'"),
+                (current, task) => current.Concat(new ColorText(", '", new ColorToken(task, Log.TaskColor), "'")));
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Log.Info(new ColorText("Running ").Concat(tasksText).Concat(" and dependencies..."));
             foreach (var task in this.topLevelTasks)
             {
                 this.Invoke(task);
             }
+
+            Log.Info(new ColorText("Completed ")
+                .Concat(tasksText)
+                .Concat(new ColorText(
+                    " and dependencies in ",
+                    new ColorToken(stopwatch.Elapsed.TotalMilliseconds.ToStringFromMilliseconds(), ConsoleColor.DarkYellow),
+                    ".")));
         }
 
         [Obsolete("Use Run() instead.")]
