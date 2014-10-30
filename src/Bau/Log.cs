@@ -4,6 +4,7 @@
 
 namespace BauCore
 {
+    using ColoredConsole;
     using System;
 
     public static class Log

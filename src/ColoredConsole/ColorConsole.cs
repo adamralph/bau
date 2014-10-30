@@ -2,7 +2,7 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
-namespace BauCore
+namespace ColoredConsole
 {
     using System;
 
@@ -37,6 +37,18 @@ namespace BauCore
 
                 Console.WriteLine();
             }
+        }
+
+        public static void WriteLine(params ColorToken[] tokens)
+        {
+            if (tokens == null) return;
+
+            WriteLine(new ColorText(tokens));
+        }
+
+        public static void WriteLine()
+        {
+            Console.WriteLine();
         }
     }
 }
