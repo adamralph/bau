@@ -11,7 +11,7 @@
 require 'albacore'
 
 xunit_command = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe"
-nuget_command = "packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe";
+nuget_command = "packages/NuGet.CommandLine.2.8.3/tools/NuGet.exe";
 solution = "../src/Bau.sln"
 test = "../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 

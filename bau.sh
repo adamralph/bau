@@ -13,19 +13,19 @@ set -x
 # install
 if [ ! -d ./scriptcs ]
   then
-    rm -f ./scriptcs-0.10.0-alpha.140530.nupkg
-    wget "https://github.com/bau-build/bau-blob/raw/master/scriptcs-0.10.0-alpha.140530.nupkg"
-    unzip ./scriptcs-0.10.0-alpha.140530.nupkg -d scriptcs
+    rm -f ./ScriptCs.0.10.2.nupkg
+    wget "http://chocolateypackages.s3.amazonaws.com/ScriptCs.0.10.2.nupkg"
+    unzip ./ScriptCs.0.10.2.nupkg -d scriptcs
 fi
 
 mono ./scriptcs/tools/scriptcs/scriptcs.exe -install
-if [ -d ./packages/Bau.XUnit.0.1.0-beta06 ]
+if [ -d ./packages/Bau.XUnit.0.1.0-beta07 ]
   then
-    mv ./packages/Bau.XUnit.0.1.0-beta06/Bau.XUnit.0.1.0-beta06.nupkg ./packages/Bau.XUnit.0.1.0-beta06/Bau.Xunit.0.1.0-beta06.nupkg
-    mv ./packages/Bau.XUnit.0.1.0-beta06 ./packages/Bau.Xunit.0.1.0-beta06
+    mv ./packages/Bau.XUnit.0.1.0-beta07/Bau.XUnit.0.1.0-beta07.nupkg ./packages/Bau.XUnit.0.1.0-beta07/Bau.Xunit.0.1.0-beta07.nupkg
+    mv ./packages/Bau.XUnit.0.1.0-beta07 ./packages/Bau.Xunit.0.1.0-beta07
 fi
 
-mono ./packages/NuGet.CommandLine.2.8.2/tools/NuGet.exe restore src/Bau.sln
+mono ./packages/NuGet.CommandLine.2.8.3/tools/NuGet.exe restore src/Bau.sln
   
 # script
 mono ./scriptcs/tools/scriptcs/scriptcs.exe ./mono.csx -- $@
