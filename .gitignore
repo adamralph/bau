@@ -6,8 +6,9 @@ obj
 *.userprefs
 
 artifacts
-packages
 node_modules
+packages
+scriptcs_packages
 
 *.sln.ide
 

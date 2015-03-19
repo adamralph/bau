@@ -14,7 +14,7 @@ You can also build with Visual Studio 2012 or later but you'll have to run the t
 
 1. Ensure you have .NET framework 4.5 installed.
 
-1. Ensure you have [scriptcs](http://chocolatey.org/packages/ScriptCs) installed.
+1. Ensure you have [scriptcs 0.13.3 or later](http://chocolatey.org/packages/ScriptCs) installed.
 
 ### Building
 
