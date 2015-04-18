@@ -8,17 +8,9 @@ You can also build with Visual Studio 2012 or later but you'll have to run the t
 
 ## Prerequisites
 
-### Windows
-
-1. .NET framework 4.5 or later.
-
-### Mac/Linux
-
-1. [Mono](http://www.mono-project.com/download/) 3.0 or later. (On Linux, only mono-devel is required.)
-
-### All platforms
-
-1. [scriptcs](https://github.com/scriptcs/scriptcs/wiki/Installation) 0.13.3 or later.
+* (Windows) .NET framework 4.5 or later.
+* (Mac/Linux) [Mono](http://www.mono-project.com/download/) 3.0 or later. (On Linux, only mono-devel is required.)
+* (All platforms) [scriptcs](https://github.com/scriptcs/scriptcs/wiki/Installation) 0.13.3 or later.
 
 ### Building
 
