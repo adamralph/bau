@@ -24,8 +24,8 @@ This executes the default build tasks. After the build has completed, the build 
 
 To run the acceptance test task (and all dependencies), execute:
 
-`build.cmd accept` / `build.sh accept`
+`build.cmd accept` (Windows only)
 
 To run *all* tasks, execute:
 
-`build.cmd all` / `build.sh all`
+`build.cmd all` (Windows only)
