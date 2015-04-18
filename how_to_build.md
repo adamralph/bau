@@ -6,48 +6,34 @@ These instructions are *only* for building with Bau, including compilation, test
 
 You can also build with Visual Studio 2012 or later but you'll have to run the tests yourself and packaging will not take place.
 
-*Don't be put off by the prerequisites!* It only takes a few minutes to set them up and only needs to be done once. If you haven't used Bau before then you're in for a real treat!
+## Prerequisites
 
-## Windows
+### Windows
 
-### Prerequisites
+1. .NET framework 4.5 or later.
 
-1. Ensure you have .NET framework 4.5 installed.
+### Mac/Linux
 
-1. Ensure you have [scriptcs 0.13.3 or later](http://chocolatey.org/packages/ScriptCs) installed.
+1. [Mono](http://www.mono-project.com/download/) 3.0 or later. (On Linux, only mono-devel is required.)
+
+### All platforms
+
+1. [scriptcs](https://github.com/scriptcs/scriptcs/wiki/Installation) 0.13.3 or later.
 
 ### Building
 
 Using a command prompt, navigate to your clone root folder and execute:
 
-`bau.bat`
+`build.cmd` (Windows)
+
+`build.sh` (Mac/Linux) 
 
 This executes the default build tasks. After the build has completed, the build artifacts will be located in `artifacts`.
 
-To run the acceptance tests (and all dependencies), execute:
+To run the acceptance test task (and all dependencies), execute:
 
-`bau.bat accept`
+`build.cmd accept` / `build.sh accept`
 
 To run *all* tasks, execute:
 
-`bau.bat all`
-
-## Linux
-
-### Prerequisites
-
-1. Ensure you have Mono development tools 3.0 or later installed.
-
-	`sudo apt-get install mono-devel`
-
-1. Ensure your mono instance has root SSL certificates
-
-	`mozroots --import --sync`
-
-### Building
-
-Using a terminal, navigate to your clone root folder and execute:
-
-`bash bau.sh`
-
-This executes the default build tasks. After the build has completed, the build artifacts will be located in `artifacts`.
+`build.cmd all` / `build.sh all`
