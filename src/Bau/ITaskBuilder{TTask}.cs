@@ -11,6 +11,8 @@ namespace BauCore
     {
         new ITaskBuilder<TTask> DependsOn(params string[] otherTasks);
 
+        new ITaskBuilder<TTask> Desc(string description);
+
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do", Justification = "By design.")]
         ITaskBuilder<TTask> Do(Action<TTask> action);
     }

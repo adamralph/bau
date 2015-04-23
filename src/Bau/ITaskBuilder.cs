@@ -16,6 +16,8 @@ namespace BauCore
 
         ITaskBuilder DependsOn(params string[] otherTasks);
 
+        ITaskBuilder Desc(string description);
+
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do", Justification = "By design.")]
         ITaskBuilder Do(Action action);
 

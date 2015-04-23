@@ -29,6 +29,12 @@ namespace BauCore
             return this;
         }
 
+        public ITaskBuilder<TTask> Desc(string description)
+        {
+            this.builder.Desc(description);
+            return this;
+        }
+
         public ITaskBuilder<TTask> Do(Action<TTask> action)
         {
             var task = (TTask)this.builder.CurrentTask;
@@ -55,6 +61,11 @@ namespace BauCore
         ITaskBuilder ITaskBuilder.DependsOn(params string[] otherTasks)
         {
             return this.builder.DependsOn(otherTasks);
+        }
+
+        ITaskBuilder ITaskBuilder.Desc(string description)
+        {
+            return this.builder.Desc(description);
         }
 
         public ITaskBuilder Do(Action action)

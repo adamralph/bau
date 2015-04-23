@@ -20,6 +20,8 @@ namespace BauCore
             get { return this.dependencies; }
         }
 
+        public string Description { get; set; }
+
         public IList<Action> Actions
         {
             get { return this.actions; }

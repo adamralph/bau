@@ -59,6 +59,13 @@ namespace BauCore
             return this;
         }
 
+        public ITaskBuilder Desc(string description)
+        {
+            this.EnsureCurrentTask();
+            this.currentTask.Description = description;
+            return this;
+        }
+
         public ITaskBuilder Do(Action action)
         {
             this.EnsureCurrentTask();
