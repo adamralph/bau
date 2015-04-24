@@ -72,6 +72,22 @@ namespace BauCore
             ColorConsole.WriteLine(new ColorToken("Options:", ConsoleColor.White));
 
             ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -T                    ", ConsoleColor.DarkGreen),
+                new ColorToken("Display all tasks which have a description.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -A                    ", ConsoleColor.DarkGreen),
+                new ColorToken("Display all tasks.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -P                    ", ConsoleColor.DarkGreen),
+                new ColorToken("Display all tasks and their prerequisites.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -J                    ", ConsoleColor.DarkGreen),
+                new ColorToken("List tasks in a JSON format.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  -l", ConsoleColor.DarkGreen),
                 new ColorToken("|", ConsoleColor.Gray),
                 new ColorToken("-loglevel ", ConsoleColor.DarkGreen),

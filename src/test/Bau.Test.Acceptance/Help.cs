@@ -16,7 +16,7 @@ namespace Bau.Test.Acceptance
         [Example("-h")]
         [Example("-help")]
         [Example("-Help")]
-        public static void SpecifyingLogLevel(string arg, Baufile baufile, string output)
+        public static void HelpAndUsageDump(string arg, Baufile baufile, string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
@@ -35,6 +35,10 @@ namespace Bau.Test.Acceptance
 Usage: scriptcs <filename> -- [tasks|default*] [options]
 
 Options:
+  -T                    Display all tasks which have a description.
+  -A                    Display all tasks.
+  -P                    Display all tasks and their prerequisites.
+  -J                    List tasks in a JSON format.
   -l|-loglevel <level>  Log at the specified level
                         (a|all|t|trace|d|debug|i*|info|w|warn|e|error|f|fatal|o|off).
   -t                    Alias for -loglevel trace.
