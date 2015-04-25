@@ -14,17 +14,20 @@ namespace BauCore
     {
         private readonly ReadOnlyCollection<string> tasks;
         private readonly LogLevel logLevel;
+        private readonly TaskListWriter taskListWriter;
         private readonly bool help;
 
         public Arguments(
             IEnumerable<string> tasks,
             LogLevel logLevel,
+            TaskListWriter taskListWriter,
             bool help)
         {
             Guard.AgainstNullArgument("tasks", tasks);
 
             this.tasks = new ReadOnlyCollection<string>(tasks.ToList());
             this.logLevel = logLevel;
+            this.taskListWriter = taskListWriter;
             this.help = help;
         }
 
@@ -36,6 +39,11 @@ namespace BauCore
         public LogLevel LogLevel
         {
             get { return this.logLevel; }
+        }
+
+        public TaskListWriter TaskListWriter
+        {
+            get { return this.taskListWriter; }
         }
 
         public bool Help
@@ -214,6 +222,7 @@ namespace BauCore
             var tasks = new List<string>();
             var logLevel = LogLevel.Info;
             var help = false;
+            var taskListWriter = default(TaskListWriter);
             foreach (var option in Parse(args, tasks))
             {
                 switch (option.Key.ToUpperInvariant())
@@ -223,6 +232,15 @@ namespace BauCore
                         if (logLevels.Any())
                         {
                             logLevel = MapLogLevel(logLevels.First());
+                        }
+
+                        break;
+
+                    case "TASKLIST":
+                        var taskListingKinds = option.Value;
+                        if (taskListingKinds.Any())
+                        {
+                            taskListWriter = CreateTaskListWriter(taskListingKinds.First());
                         }
 
                         break;
@@ -239,7 +257,7 @@ namespace BauCore
                 }
             }
 
-            return new Arguments(tasks, logLevel, help);
+            return new Arguments(tasks, logLevel, taskListWriter, help);
         }
 
         private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, ICollection<string> tasks)
@@ -310,6 +328,12 @@ namespace BauCore
                 case "?":
                     impliedValue = "OFF";
                     return "HELP";
+                case "T":
+                case "A":
+                case "P":
+                case "J":
+                    impliedValue = optionName;
+                    return "TASKLIST";
                 default:
                     return optionName;
             }
@@ -348,6 +372,38 @@ namespace BauCore
                         CultureInfo.InvariantCulture, "The log level '{0}' is not recognised.", logLevelString);
 
                     throw new ArgumentException(message, "logLevelString");
+            }
+        }
+
+        private static TaskListWriter CreateTaskListWriter(string writerType)
+        {
+            switch (writerType.ToUpperInvariant())
+            {
+                case "T":
+                    return new TaskListWriter
+                    {
+                        RequireDescription = true,
+                        ShowDescription = true
+                    };
+                case "A":
+                    return new TaskListWriter();
+                case "P":
+                    return new TaskListWriter
+                    {
+                        ShowPrerequisites = true
+                    };
+                case "J":
+                    return new TaskListWriter
+                    {
+                        FormatAsJson = true,
+                        ShowDescription = true,
+                        ShowPrerequisites = true
+                    };
+                default:
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture, "The task writer type '{0}' is not recognised.", writerType);
+
+                    throw new ArgumentException(message, writerType);
             }
         }
     }

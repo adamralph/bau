@@ -45,6 +45,7 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentsFacts.cs" />
     <Compile Include="DoubleExtensionsTheories.cs" />
     <Compile Include="BauScriptPackFacts.cs" />
   </ItemGroup>

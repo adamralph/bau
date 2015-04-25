@@ -1,7 +1,6 @@
-﻿// <copyright file="TaskFullListing.cs" company="Bau contributors">
+﻿// <copyright file="TaskListingDescriptive.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
-
 
 namespace Bau.Test.Acceptance
 {

@@ -1,4 +1,4 @@
-﻿// <copyright file="TaskFullListing.cs" company="Bau contributors">
+﻿// <copyright file="TaskListingFull.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 

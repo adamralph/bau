@@ -16,6 +16,7 @@ namespace BauCore
         private const string DefaultTask = "default";
 
         private readonly List<string> topLevelTasks = new List<string>();
+        private readonly TaskListWriter taskListWriter;
         private readonly bool help;
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
         private IBauTask currentTask;
@@ -31,6 +32,7 @@ namespace BauCore
             }
 
             Log.LogLevel = arguments.LogLevel;
+            this.taskListWriter = arguments.TaskListWriter;
             this.help = arguments.Help;
         }
 
@@ -118,6 +120,12 @@ namespace BauCore
             if (this.help)
             {
                 Arguments.ShowUsage(header);
+                return;
+            }
+
+            if (this.taskListWriter != null)
+            {
+                throw new NotImplementedException();
                 return;
             }
 
