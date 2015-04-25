@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{4928A491-6E0E-4948-A9DD-F24A4A0AAC08}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,6 +22,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{28FDEE5B-453E-4977-A640-C8670DDC7258}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Test.Acceptance", "test\Bau.Test.Acceptance\Bau.Test.Acceptance.csproj", "{EC69CA5E-7E64-43B5-A46C-FA12C56D31BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{60E63D1D-71D9-4139-BD9A-E3509D940BE8} = {60E63D1D-71D9-4139-BD9A-E3509D940BE8}
+		{3302EC96-F250-49D0-B094-E960355D3799} = {3302EC96-F250-49D0-B094-E960355D3799}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bau.Test.Acceptance.CreateFile", "test\Bau.Test.Acceptance.CreateFile\Bau.Test.Acceptance.CreateFile.csproj", "{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}"
 EndProject

@@ -2,8 +2,8 @@ sudo: false
 language: csharp
 
 install:
-  - wget "http://chocolatey.org/api/v2/package/ScriptCs/0.13.3" -O ScriptCs.0.13.3.nupkg
-  - unzip ./ScriptCs.0.13.3.nupkg -d scriptcs
+  - wget "http://chocolatey.org/api/v2/package/ScriptCs/0.14.1" -O ScriptCs.0.14.1.nupkg
+  - unzip ./ScriptCs.0.14.1.nupkg -d scriptcs
   - mono ./scriptcs/tools/scriptcs.exe -install
   - mono ./scriptcs_packages/NuGet.CommandLine.2.8.3/tools/NuGet.exe restore src/Bau.sln
 

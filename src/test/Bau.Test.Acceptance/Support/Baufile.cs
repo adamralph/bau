@@ -25,7 +25,7 @@ namespace Bau.Test.Acceptance.Support
         static Baufile()
         {
             FileSystem.EnsureDirectoryCreated(directory);
-            var bin = Path.Combine(directory, "bin");
+            var bin = Path.Combine(directory, "scriptcs_bin");
             FileSystem.EnsureDirectoryCreated(bin);
 
             var assemblyDirectories = new[]
@@ -96,7 +96,7 @@ namespace Bau.Test.Acceptance.Support
 
             var info = new ProcessStartInfo
             {
-                FileName = "scriptcs",
+                FileName = Environment.GetEnvironmentVariable("SCRIPTCS_PATH") ?? "scriptcs",
                 Arguments = string.Join(" ", args),
                 WorkingDirectory = directory,
                 UseShellExecute = false,
