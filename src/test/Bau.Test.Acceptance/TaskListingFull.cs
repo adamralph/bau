@@ -13,7 +13,7 @@ namespace Bau.Test.Acceptance
     using Xbehave;
     using Xunit;
 
-    public static class TaskFullListing
+    public static class TaskListingFull
     {
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
@@ -37,7 +37,7 @@ namespace Bau.Test.Acceptance
 
             "Given bau is required with one task"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<Bau>()
+@"Require<Bau>()
 .Task(""some-task"");"));
 
             "When I execute the baufile for a listing"
@@ -54,7 +54,7 @@ namespace Bau.Test.Acceptance
 
             "Given bau is required with a described task"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<Bau>()
+@"Require<Bau>()
 .Task(""some-task"")
 .Desc(""Some long description."");"));
 
@@ -72,7 +72,7 @@ namespace Bau.Test.Acceptance
 
             "Given bau is required with a couple tasks"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<Bau>()
+@"Require<Bau>()
 .Task(""task1"")
 .Task(""task2"");"));
 
@@ -84,13 +84,31 @@ namespace Bau.Test.Acceptance
         }
 
         [Scenario]
+        public static void OneTaskWithAndOneWithoutDescription(Baufile baufile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given bau is required with two tasks where one has a description"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"Require<Bau>()
+.Task(""some-task1"").Desc(""Some description."")
+.Task(""some-task2"");"));
+
+            "When I execute the baufile for a listing"
+                .f(() => output = baufile.Run("-A"));
+
+            "Then the output should end both tasks"
+                .f(() => output.Should().EndWith("some-task1" + Environment.NewLine + "some-task2"));
+        }
+
+        [Scenario]
         public static void TaskWithSpaceInTheName(Baufile baufile, string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required with a task named with whitespace"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"var bau = Require<Bau>()
+@"Require<Bau>()
 .Task(""some task"");"));
 
             "When I execute the baufile for a listing"

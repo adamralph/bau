@@ -81,7 +81,8 @@
     <Compile Include="DefaultTask.cs" />
     <Compile Include="Support\Baufile.cs" />
     <Compile Include="Support\MethodBaseExtensions.cs" />
-    <Compile Include="TaskFullListing.cs" />
+    <Compile Include="TaskListingDescriptive.cs" />
+    <Compile Include="TaskListingFull.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bau.Test.Acceptance.CreateFile\Bau.Test.Acceptance.CreateFile.csproj">
