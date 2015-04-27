@@ -69,11 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Bau.Xunit\Bau.Xunit.csproj">
-      <Project>{f930caf5-ea54-4730-8f4c-7d3c8b9f84f0}</Project>
+      <Project>{F930CAF5-EA54-4730-8F4C-7D3C8B9F84F0}</Project>
       <Name>Bau.Xunit</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Bau\Bau.csproj">
-      <Project>{3302ec96-f250-49d0-b094-e960355d3799}</Project>
+      <Project>{3302EC96-F250-49D0-B094-E960355D3799}</Project>
       <Name>Bau</Name>
     </ProjectReference>
   </ItemGroup>
