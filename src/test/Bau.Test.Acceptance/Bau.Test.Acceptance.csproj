@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bau.Test.Acceptance.CreateFile\Bau.Test.Acceptance.CreateFile.csproj">
-      <Project>{82db9e13-3bcd-408e-b8a0-eb4d92e2ae63}</Project>
+      <Project>{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}</Project>
       <Name>Bau.Test.Acceptance.CreateFile</Name>
     </ProjectReference>
   </ItemGroup>

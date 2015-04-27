@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Bau\Bau.csproj">
-      <Project>{3302ec96-f250-49d0-b094-e960355d3799}</Project>
+      <Project>{3302EC96-F250-49D0-B094-E960355D3799}</Project>
       <Name>Bau</Name>
     </ProjectReference>
   </ItemGroup>
