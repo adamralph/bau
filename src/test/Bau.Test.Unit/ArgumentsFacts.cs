@@ -5,9 +5,7 @@
 namespace BauCore.Test.Unit
 {
     using BauCore;
-    using FakeItEasy;
     using FluentAssertions;
-    using ScriptCs.Contracts;
     using Xunit;
 
     public static class ArgumentsFacts

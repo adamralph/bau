@@ -125,7 +125,11 @@ namespace BauCore
 
             if (this.taskListWriter != null)
             {
-                throw new NotImplementedException();
+                foreach (var listingLine in this.taskListWriter.CreateTaskListingLines(this.tasks.Values))
+                {
+                    ColorConsole.WriteLine(listingLine);
+                }
+
                 return;
             }
 

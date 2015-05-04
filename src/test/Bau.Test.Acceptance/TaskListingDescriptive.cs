@@ -27,7 +27,8 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should be empty"
-                .f(() => output.Should().BeEmpty());
+                .f(() => output.TrimEnd().Should()
+                    .EndWith("Terminating packs"));
         }
 
         [Scenario]
@@ -44,7 +45,8 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should be empty"
-                .f(() => output.Should().BeEmpty());
+                .f(() => output.TrimEnd().Should()
+                    .EndWith("Terminating packs"));
         }
 
         [Scenario]
@@ -62,7 +64,8 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should show only one task"
-                .f(() => output.Should().EndWith("some-task1 # Some description."));
+                .f(() => output.TrimEnd().Should()
+                    .EndWith("some-task1 # Some description."));
         }
 
         [Scenario]
@@ -80,7 +83,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should show only one task"
-                .f(() => output.Should().EndWith(
+                .f(() => output.TrimEnd().Should().EndWith(
                     "some-task1 # Some description."
                     + Environment.NewLine
                     + "some-task2 # Another description."));

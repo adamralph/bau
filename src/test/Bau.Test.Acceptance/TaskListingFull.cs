@@ -5,13 +5,10 @@
 namespace Bau.Test.Acceptance
 {
     using System;
-    using System.Globalization;
-    using System.IO;
     using System.Reflection;
-    using Bau.Test.Acceptance.Support;
     using FluentAssertions;
+    using Support;
     using Xbehave;
-    using Xunit;
 
     public static class TaskListingFull
     {
@@ -27,7 +24,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should be empty"
-                .f(() => output.Should().BeEmpty());
+                .f(() => output.TrimEnd().Should().EndWith("Terminating packs"));
         }
 
         [Scenario]
@@ -44,7 +41,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end with a task name"
-                .f(() => output.Should().EndWith("some-task"));
+                .f(() => output.TrimEnd().Should().EndWith("some-task"));
         }
 
         [Scenario]
@@ -62,7 +59,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end with a task name and no description"
-                .f(() => output.Should().EndWith("some-task"));
+                .f(() => output.TrimEnd().Should().EndWith("some-task"));
         }
 
         [Scenario]
@@ -80,7 +77,8 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end both tasks"
-                .f(() => output.Should().EndWith("task1" + Environment.NewLine + "task2"));
+                .f(() => output.TrimEnd().Should()
+                    .EndWith("task1" + Environment.NewLine + "task2"));
         }
 
         [Scenario]
@@ -98,7 +96,8 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end both tasks"
-                .f(() => output.Should().EndWith("some-task1" + Environment.NewLine + "some-task2"));
+                .f(() => output.TrimEnd().Should()
+                    .EndWith("some-task1" + Environment.NewLine + "some-task2"));
         }
 
         [Scenario]
@@ -115,7 +114,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end with a quoted task name"
-                .f(() => output.Should().EndWith(@"""some task"""));
+                .f(() => output.TrimEnd().Should().EndWith(@"""some task"""));
         }
     }
 }
