@@ -13,7 +13,8 @@
 
             if (args.Length == 0)
             {
-                throw new ArgumentException("No filename provided.");
+                Console.WriteLine("No filename provided.");
+                Environment.Exit(9999);
             }
 
             Console.WriteLine("Creating file '{0}'...", args[0]);
