@@ -7,12 +7,14 @@ namespace BauCore
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     public class TaskListWriter
     {
         private const string IndentationPrefix = "    ";
         private static readonly ConsoleColor DefaultColor = ConsoleColor.White;
         private static readonly ConsoleColor DependenciesColor = ConsoleColor.Gray;
+        private static readonly Regex NameEscapeRequiredRegex = new Regex(@"[\s#]");
 
         public bool RequireDescription { get; set; }
 
@@ -27,6 +29,21 @@ namespace BauCore
             return this.FormatAsJson
                 ? this.CreateJsonTaskListingLines(tasks)
                 : this.CreatePlainTextTaskListingLines(tasks);
+        }
+
+        private static string EscapeTaskName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return "\"\"";
+            }
+
+            if (NameEscapeRequiredRegex.IsMatch(name))
+            {
+                return "\"" + name + "\"";
+            }
+
+            return name;
         }
 
         private IEnumerable<ColorText> CreatePlainTextTaskListingLines(IEnumerable<IBauTask> allTasks)
@@ -44,13 +61,13 @@ namespace BauCore
                 .Select(t => new
                 {
                     Description = t.Description,
-                    EscapedName = t.Name, // TODO: escape whitespace and possibly '#'
+                    EscapedName = EscapeTaskName(t.Name),
                     Dependencies = t.Dependencies
                 })
                 .ToList();
 
-            int escapedNamePadAmmount = this.ShowDescription
-                ? printableTasks.Where(t => t.EscapedName != null).Max(t => t.EscapedName.Length)
+            int escapedNamePadAmmount = this.ShowDescription && printableTasks.Count > 0
+                ? printableTasks.Max(t => t.EscapedName.Length)
                 : 0;
 
             foreach (var t in printableTasks)

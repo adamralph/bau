@@ -18,7 +18,7 @@ namespace Bau.Test.Acceptance
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required with no tasks"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>();"));
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>(); bau.Run();"));
 
             "When I execute the baufile for a listing"
                 .f(() => output = baufile.Run("-A"));
@@ -35,13 +35,14 @@ namespace Bau.Test.Acceptance
             "Given bau is required with one task"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
-.Task(""some-task"");"));
+.Task(""some-task"")
+.Run();"));
 
             "When I execute the baufile for a listing"
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end with a task name"
-                .f(() => output.TrimEnd().Should().EndWith("some-task"));
+                .f(() => output.Should().Contain("some-task"));
         }
 
         [Scenario]
@@ -53,13 +54,14 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task"")
-.Desc(""Some long description."");"));
+.Desc(""Some long description."")
+.Run();"));
 
             "When I execute the baufile for a listing"
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end with a task name and no description"
-                .f(() => output.TrimEnd().Should().EndWith("some-task"));
+                .f(() => output.Should().Contain("some-task"));
         }
 
         [Scenario]
@@ -71,14 +73,15 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""task1"")
-.Task(""task2"");"));
+.Task(""task2"")
+.Run();"));
 
             "When I execute the baufile for a listing"
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end both tasks"
-                .f(() => output.TrimEnd().Should()
-                    .EndWith("task1" + Environment.NewLine + "task2"));
+                .f(() => output.Should()
+                    .Contain("task1" + Environment.NewLine + "task2"));
         }
 
         [Scenario]
@@ -90,14 +93,15 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task1"").Desc(""Some description."")
-.Task(""some-task2"");"));
+.Task(""some-task2"")
+.Run();"));
 
             "When I execute the baufile for a listing"
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end both tasks"
-                .f(() => output.TrimEnd().Should()
-                    .EndWith("some-task1" + Environment.NewLine + "some-task2"));
+                .f(() => output.Should()
+                    .Contain("some-task1" + Environment.NewLine + "some-task2"));
         }
 
         [Scenario]
@@ -108,13 +112,14 @@ namespace Bau.Test.Acceptance
             "Given bau is required with a task named with whitespace"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
-.Task(""some task"");"));
+.Task(""some task"")
+.Run();"));
 
             "When I execute the baufile for a listing"
                 .f(() => output = baufile.Run("-A"));
 
             "Then the output should end with a quoted task name"
-                .f(() => output.TrimEnd().Should().EndWith(@"""some task"""));
+                .f(() => output.Should().Contain(@"""some task"""));
         }
     }
 }

@@ -21,7 +21,9 @@ namespace Bau.Test.Acceptance
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required with no tasks"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>();"));
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"Require<Bau>()
+.Run();"));
 
             "When I execute the baufile for a descriptive listing"
                 .f(() => output = baufile.Run("-T"));
@@ -39,14 +41,15 @@ namespace Bau.Test.Acceptance
             "Given bau is required with one task missing a description"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
-.Task(""some-task"");"));
+.Task(""some-task"")
+.Run();"));
 
             "When I execute the baufile for a descriptive listing"
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should be empty"
                 .f(() => output.TrimEnd().Should()
-                    .EndWith("Terminating packs"));
+                    .NotContain("some-task"));
         }
 
         [Scenario]
@@ -58,14 +61,15 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task1"").Desc(""Some description."")
-.Task(""some-task2"");"));
+.Task(""some-task2"")
+.Run();"));
 
             "When I execute the baufile for a descriptive listing"
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should show only one task"
-                .f(() => output.TrimEnd().Should()
-                    .EndWith("some-task1 # Some description."));
+                .f(() => output.Should()
+                    .Contain("some-task1 # Some description."));
         }
 
         [Scenario]
@@ -77,13 +81,14 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task1"").Desc(""Some description."")
-.Task(""some-task2"").Desc(""Another description."");"));
+.Task(""some-task2"").Desc(""Another description."")
+.Run();"));
 
             "When I execute the baufile for a descriptive listing"
                 .f(() => output = baufile.Run("-T"));
 
             "Then the output should show only one task"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
                     "some-task1 # Some description."
                     + Environment.NewLine
                     + "some-task2 # Another description."));

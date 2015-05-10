@@ -125,6 +125,37 @@ namespace BauCore.Test.Unit
                     .Should().Equal(expectedNames);
             }
 
+            [Fact]
+            public void NamesWithWhitespaceOrHashAreQuoteWrapped()
+            {
+                // arrange
+                var tasks = new[]
+                {
+                    new BauTask
+                    {
+                        Name = "some task"
+                    },
+                    new BauTask
+                    {
+                        Name = "#hashtag"
+                    }
+                };
+
+                var sut = this.CreateAllTaskListWriter();
+
+                // act
+                var actual = sut.CreateTaskListingLines(tasks);
+
+                // assert
+                actual.Should().NotBeNullOrEmpty();
+                actual.Select(line => line.ToString()).Should()
+                    .Equal(new[]
+                    {
+                        "\"#hashtag\"",
+                        "\"some task\""
+                    });
+            }
+
             private TaskListWriter CreateAllTaskListWriter()
             {
                 return new TaskListWriter(); // all defaults should be false
@@ -193,6 +224,41 @@ namespace BauCore.Test.Unit
                 actual.Should().NotBeNullOrEmpty();
                 actual.Select(line => line.ToString())
                     .Should().Equal(expectedLines);
+            }
+
+            [Fact]
+            public void SimpleSampleWithTwoTasks()
+            {
+                // arrange
+                var tasks = new[]
+                {
+                    new BauTask
+                    {
+                        Name = "some-task",
+                        Dependencies =
+                        {
+                            "some-other-task"
+                        }
+                    },
+                    new BauTask
+                    {
+                        Name = "some-other-task"
+                    }
+                };
+
+                var sut = this.CreatePrereqTaskListWriter();
+
+                // act
+                var actual = sut.CreateTaskListingLines(tasks);
+
+                // assert
+                actual.Should().NotBeNullOrEmpty();
+                actual.Select(line => line.ToString()).Should().Equal(new[]
+                {
+                    "some-other-task",
+                    "some-task",
+                    "    some-other-task"
+                });
             }
 
             private TaskListWriter CreatePrereqTaskListWriter()

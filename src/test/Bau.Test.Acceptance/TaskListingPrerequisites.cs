@@ -17,7 +17,7 @@ namespace Bau.Test.Acceptance
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
             "Given bau is required with no tasks"
-                .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>();"));
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>(); bau.Run();"));
 
             "When I execute the baufile for a prereq listing"
                 .f(() => output = baufile.Run("-P"));
@@ -34,13 +34,14 @@ namespace Bau.Test.Acceptance
             "Given bau is required with one task"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
-.Task(""some-task"");"));
+.Task(""some-task"")
+.Run();"));
 
             "When I execute the baufile for a prereq listing"
                 .f(() => output = baufile.Run("-P"));
 
             "Then the output should end with a task name"
-                .f(() => output.TrimEnd().Should().EndWith("some-task"));
+                .f(() => output.Should().Contain("some-task"));
         }
 
         [Scenario]
@@ -52,14 +53,15 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task"")
-.DependsOn(""some - other - task"")
-.Task(""some-other-task"");"));
+.DependsOn(""some-other-task"")
+.Task(""some-other-task"")
+.Run();"));
 
             "When I execute the baufile for a prereq listing"
                 .f(() => output = baufile.Run("-P"));
 
             "Then the output should end with the two tasks where one has a dep"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
 @"some-other-task
 some-task
     some-other-task"));
@@ -74,13 +76,14 @@ some-task
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task1"")
-.Task(""some-task2"");"));
+.Task(""some-task2"")
+.Run();"));
 
             "When I execute the baufile for a prereq listing"
                 .f(() => output = baufile.Run("-P"));
 
             "Then the output should end with the two tasks"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
 @"some-task1
 some-task2"));
         }
@@ -113,13 +116,14 @@ some-task2"));
 .Task(""pack"")
     .DependsOn(""build"")
     .DependsOn(""artifacts/output"")
-.Task(""restore"");"));
+.Task(""restore"")
+.Run();"));
 
             "When I execute the baufile for a prereq listing"
                 .f(() => output = baufile.Run("-P"));
 
             "Then the output should look like the sample Adam gave"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
 @"accept
     build
 artifacts
