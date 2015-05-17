@@ -83,6 +83,7 @@
     <Compile Include="Support\MethodBaseExtensions.cs" />
     <Compile Include="TaskListingDescriptive.cs" />
     <Compile Include="TaskListingFull.cs" />
+    <Compile Include="TaskListingJson.cs" />
     <Compile Include="TaskListingPrerequisites.cs" />
   </ItemGroup>
   <ItemGroup>
