@@ -275,6 +275,30 @@ namespace BauCore.Test.Unit
         public class ListTasksJson
         {
             [Fact]
+            public void EmptyTaskListStillProducesJson()
+            {
+                var tasks = new BauTask[0];
+
+                var expectedLines = new[]
+                {
+                    "{",
+                    "    \"tasks\": [",
+                    "    ]",
+                    "}"
+                };
+
+                var sut = this.CreateJsonTaskListWriter();
+
+                // act
+                var actual = sut.CreateTaskListingLines(tasks);
+
+                // assert
+                actual.Should().NotBeNullOrEmpty();
+                actual.Select(line => line.ToString())
+                    .Should().Equal(expectedLines);
+            }
+
+            [Fact]
             public void VariousTasksWithPrereqsAreListed()
             {
                 // arrange
@@ -317,7 +341,7 @@ namespace BauCore.Test.Unit
                     "{",
                     indent1 + "\"tasks\": ["
                 }
-                .Concat(tasks.SelectMany(t => new[]
+                .Concat(tasks.OrderBy(t => t.Name).SelectMany(t => new[]
                     {
                         indent2 + "{",
                         createPropertyLine("name", t.Name) + ",",
@@ -326,13 +350,16 @@ namespace BauCore.Test.Unit
                     .Concat(createPropertyArray("dependencies", t.Dependencies))
                     .Concat(new[]
                     {
-                        indent2 + "}"
+                        indent2 + "},"
                     })))
                 .Concat(new[]
                 {
                     indent1 + "]",
                     "}"
-                });
+                })
+                .ToArray();
+
+                expectedLines[expectedLines.Length - 3] = indent2 + "}";
 
                 var sut = this.CreateJsonTaskListWriter();
 
@@ -362,7 +389,7 @@ namespace BauCore.Test.Unit
                     new BauTask
                     {
                         Name = "中文维基百科",
-                        Description = "\t\"dquote\" 'squote'\r\n"
+                        Description = "\t\"dquote\" 'squote'\r\n\x01"
                     }
                 };
 
@@ -371,16 +398,16 @@ namespace BauCore.Test.Unit
                     "{",
                     "    \"tasks\": [",
                     "        {",
-                    "            \"name\": \"\u4E2D\u6587\u7EF4\u57FA\u767E\u79D1\",",
-                    "            \"description\": \"\\\t\\\"dquote\\\" 'squote'\\\r\\\n\",",
+                    "            \"name\": \"😂\",",
+                    "            \"description\": \"(╯°□°）╯︵ ┻━┻\",",
                     "            \"dependencies\": [",
+                    "                \"中文维基百科\"",
                     "            ]",
                     "        },",
                     "        {",
-                    "            \"name\": \"\uD83D\uDE02\"",
-                    "            \"description\": \"(\u256F\u00B0\u25A1\u00B0\uFF09\u256F\uFE35 \u253B\u2501\u253B\"",
+                    "            \"name\": \"中文维基百科\",",
+                    "            \"description\": \"\\t\\\"dquote\\\" 'squote'\\r\\n\\u0001\",",
                     "            \"dependencies\": [",
-                    "                \"\u4E2D\u6587\u7EF4\u57FA\u767E\u79D1\"",
                     "            ]",
                     "        }",
                     "    ]",

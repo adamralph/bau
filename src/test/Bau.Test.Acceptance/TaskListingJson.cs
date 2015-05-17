@@ -23,7 +23,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-J"));
 
             "Then the output should be an empty task array"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
 @"{
     ""tasks"": [
     ]
@@ -45,7 +45,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-J"));
 
             "Then the output should contain information for that task"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
 @"{
     ""tasks"": [
         {
@@ -77,7 +77,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-J"));
 
             "Then the output should have the two tasks described correctly"
-                .f(() => output.TrimEnd().Should().EndWith(
+                .f(() => output.Should().Contain(
 @"{
     ""tasks"": [
         {
