@@ -11,6 +11,8 @@ namespace Bau.Test.Acceptance
 
     public static class TaskListingPrerequisites
     {
+        private static readonly string CliOption = "-P";
+
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
         {
@@ -20,9 +22,9 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>(); bau.Run();"));
 
             "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run("-P"));
+                .f(() => output = baufile.Run(CliOption));
 
-            "Then the output should be empty"
+            "Then the output should end normally"
                 .f(() => output.TrimEnd().Should().EndWith("Terminating packs"));
         }
 
@@ -38,7 +40,7 @@ namespace Bau.Test.Acceptance
 .Run();"));
 
             "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run("-P"));
+                .f(() => output = baufile.Run(CliOption));
 
             "Then the output should end with a task name"
                 .f(() => output.Should().Contain("some-task"));
@@ -49,7 +51,7 @@ namespace Bau.Test.Acceptance
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given bau is required with two tasks dependant upon eachother"
+            "Given bau is required with two tasks with a relationship"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task"")
@@ -58,9 +60,9 @@ namespace Bau.Test.Acceptance
 .Run();"));
 
             "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run("-P"));
+                .f(() => output = baufile.Run(CliOption));
 
-            "Then the output should end with the two tasks where one has a dep"
+            "Then the output should contain the two tasks where one has a dep"
                 .f(() => output.Should().Contain(
 @"some-other-task
 some-task
@@ -80,12 +82,37 @@ some-task
 .Run();"));
 
             "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run("-P"));
+                .f(() => output = baufile.Run(CliOption));
 
-            "Then the output should end with the two tasks"
+            "Then the output should show the two tasks"
                 .f(() => output.Should().Contain(
 @"some-task1
 some-task2"));
+        }
+
+        [Scenario]
+        public static void TasksWithDescriptions(Baufile baufile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given bau is required with two tasks with a relationship and descriptions"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"Require<Bau>()
+.Task(""some-task"")
+.Desc(""Some description."")
+.DependsOn(""some-other-task"")
+.Task(""some-other-task"")
+.Desc(""Some other description."")
+.Run();"));
+
+            "When I execute the baufile for a prereq listing"
+                .f(() => output = baufile.Run(CliOption));
+
+            "Then the output should contain the two described tasks where one has a dep"
+                .f(() => output.Should().Contain(
+@"some-other-task # Some other description.
+some-task       # Some description.
+    some-other-task"));
         }
 
         [Scenario]
@@ -120,7 +147,7 @@ some-task2"));
 .Run();"));
 
             "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run("-P"));
+                .f(() => output = baufile.Run(CliOption));
 
             "Then the output should look like the sample Adam gave"
                 .f(() => output.Should().Contain(

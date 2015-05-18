@@ -11,6 +11,8 @@ namespace Bau.Test.Acceptance
 
     public static class TaskListingJson
     {
+        private static readonly string CliOption = "-J";
+
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
         {
@@ -20,7 +22,7 @@ namespace Bau.Test.Acceptance
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>(); bau.Run();"));
 
             "When I execute the baufile for a JSON listing"
-                .f(() => output = baufile.Run("-J"));
+                .f(() => output = baufile.Run(CliOption));
 
             "Then the output should be an empty task array"
                 .f(() => output.Should().Contain(
@@ -35,14 +37,14 @@ namespace Bau.Test.Acceptance
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given bau is required with no tasks"
+            "Given bau is required with one simple task"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task"")
 .Run();"));
 
             "When I execute the baufile for a JSON listing"
-                .f(() => output = baufile.Run("-J"));
+                .f(() => output = baufile.Run(CliOption));
 
             "Then the output should contain information for that task"
                 .f(() => output.Should().Contain(
@@ -63,7 +65,7 @@ namespace Bau.Test.Acceptance
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given bau is required with no tasks"
+            "Given bau is required with two described tasks having a relationship"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
 @"Require<Bau>()
 .Task(""some-task2"")
@@ -74,9 +76,9 @@ namespace Bau.Test.Acceptance
 .Run();"));
 
             "When I execute the baufile for a JSON listing"
-                .f(() => output = baufile.Run("-J"));
+                .f(() => output = baufile.Run(CliOption));
 
-            "Then the output should have the two tasks described correctly"
+            "Then the output should have the two tasks described correctly showing a dependency"
                 .f(() => output.Should().Contain(
 @"{
     ""tasks"": [

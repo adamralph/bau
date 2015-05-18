@@ -9,6 +9,7 @@ namespace BauCore.Test.Unit
     using System.Linq;
     using FluentAssertions;
     using Xunit;
+    using Xunit.Extensions;
 
     public class TaskListWriterFacts
     {
@@ -93,12 +94,15 @@ namespace BauCore.Test.Unit
 
         public class General : TaskListWriterFacts
         {
-            [Fact]
-            public void NoTasksProduceNoResults()
+            [Theory]
+            [InlineData(TaskListingKind.TextAll)]
+            [InlineData(TaskListingKind.TextDescribed)]
+            [InlineData(TaskListingKind.TextPrereq)]
+            public void NoTasksProduceNoPlainTextResults(TaskListingKind taskListingKind)
             {
                 // arrange
                 var tasks = new IBauTask[0];
-                var sut = new TaskListWriter();
+                var sut = new TaskListWriter(taskListingKind);
 
                 // act
                 var actual = sut.CreateTaskListingLines(tasks);
@@ -115,7 +119,20 @@ namespace BauCore.Test.Unit
             {
                 // arrange
                 var tasks = CreateSampleTasks();
-                var expectedNames = tasks.Select(t => t.Name).OrderBy(n => n);
+                var maxTaskNameLength = tasks.Where(t => t.Description != null).Max(t => t.Name.Length);
+
+                var expectedNames = tasks.Select(t =>
+                {
+                    if (t.Description != null)
+                    {
+                        return t.Name.PadRight(maxTaskNameLength) + " # " + t.Description;
+                    }
+                    else
+                    {
+                        return t.Name;
+                    }
+                }).OrderBy(n => n);
+
                 var sut = this.CreateAllTaskListWriter();
 
                 // act
@@ -158,9 +175,47 @@ namespace BauCore.Test.Unit
                     });
             }
 
+            [Fact]
+            public void DescriptionIndentationAppliesToDescribedTasksOnly()
+            {
+                // arrange
+                var tasks = new[]
+                {
+                    new BauTask
+                    {
+                        Name = "a-task",
+                        Description = "A description."
+                    },
+                    new BauTask
+                    {
+                        Name = "Rechtsschutzversicherungsgesellschaften"
+                    },
+                    new BauTask
+                    {
+                        Name = "zzzzzzzzzz",
+                        Description = "Another description."
+                    },
+                };
+
+                var sut = this.CreateAllTaskListWriter();
+
+                // act
+                var actual = sut.CreateTaskListingLines(tasks);
+
+                // assert
+                actual.Should().NotBeNullOrEmpty();
+                actual.Select(line => line.ToString()).Should()
+                    .Equal(new[]
+                    {
+                        "a-task     # A description.",
+                        "Rechtsschutzversicherungsgesellschaften",
+                        "zzzzzzzzzz # Another description."
+                    });
+            }
+
             private TaskListWriter CreateAllTaskListWriter()
             {
-                return new TaskListWriter(); // all defaults should be false
+                return new TaskListWriter(TaskListingKind.TextAll);
             }
         }
 
@@ -192,11 +247,7 @@ namespace BauCore.Test.Unit
 
             private TaskListWriter CreateDescribedTaskListWriter()
             {
-                return new TaskListWriter
-                {
-                    RequireDescription = true,
-                    ShowDescription = true
-                };
+                return new TaskListWriter(TaskListingKind.TextDescribed);
             }
         }
 
@@ -207,20 +258,23 @@ namespace BauCore.Test.Unit
             {
                 // arrange
                 var tasks = CreateSampleTasks();
+                var maxTaskNameLength = tasks.Where(t => t.Description != null).Max(t => t.Name.Length);
+
                 var expectedLines = tasks
                     .OrderBy(t => t.Name)
                     .SelectMany(t =>
                         new[]
                         {
-                            t.Name
+                            t.Description == null ? t.Name : (t.Name.PadRight(maxTaskNameLength) + " # " + t.Description)
                         }
                         .Concat(t.Dependencies
-                            .Select(d => "    " + d)));
+                            .Select(d => "    " + d)))
+                    .ToArray();
 
                 var sut = this.CreatePrereqTaskListWriter();
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListingLines(tasks).ToArray();
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -240,7 +294,8 @@ namespace BauCore.Test.Unit
                         Dependencies =
                         {
                             "some-other-task"
-                        }
+                        },
+                        Description = "Some description."
                     },
                     new BauTask
                     {
@@ -258,17 +313,14 @@ namespace BauCore.Test.Unit
                 actual.Select(line => line.ToString()).Should().Equal(new[]
                 {
                     "some-other-task",
-                    "some-task",
+                    "some-task # Some description.",
                     "    some-other-task"
                 });
             }
 
             private TaskListWriter CreatePrereqTaskListWriter()
             {
-                return new TaskListWriter
-                {
-                    ShowPrerequisites = true
-                };
+                return new TaskListWriter(TaskListingKind.TextPrereq);
             }
         }
 
@@ -427,12 +479,7 @@ namespace BauCore.Test.Unit
 
             private TaskListWriter CreateJsonTaskListWriter()
             {
-                return new TaskListWriter
-                {
-                    FormatAsJson = true,
-                    ShowDescription = true,
-                    ShowPrerequisites = true
-                };
+                return new TaskListWriter(TaskListingKind.Json);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListWriter.Should().BeNull();
+            arguments.TaskListingKind.Should().Be(TaskListingKind.None);
         }
 
         [Fact]
@@ -33,11 +33,7 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListWriter.Should().NotBeNull();
-            arguments.TaskListWriter.FormatAsJson.Should().BeFalse();
-            arguments.TaskListWriter.RequireDescription.Should().BeFalse();
-            arguments.TaskListWriter.ShowDescription.Should().BeFalse();
-            arguments.TaskListWriter.ShowPrerequisites.Should().BeFalse();
+            arguments.TaskListingKind.Should().Be(TaskListingKind.TextAll);
         }
 
         [Fact]
@@ -50,11 +46,7 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListWriter.Should().NotBeNull();
-            arguments.TaskListWriter.FormatAsJson.Should().BeFalse();
-            arguments.TaskListWriter.RequireDescription.Should().BeTrue();
-            arguments.TaskListWriter.ShowDescription.Should().BeTrue();
-            arguments.TaskListWriter.ShowPrerequisites.Should().BeFalse();
+            arguments.TaskListingKind.Should().Be(TaskListingKind.TextDescribed);
         }
 
         [Fact]
@@ -67,11 +59,7 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListWriter.Should().NotBeNull();
-            arguments.TaskListWriter.FormatAsJson.Should().BeFalse();
-            arguments.TaskListWriter.RequireDescription.Should().BeFalse();
-            arguments.TaskListWriter.ShowDescription.Should().BeFalse();
-            arguments.TaskListWriter.ShowPrerequisites.Should().BeTrue();
+            arguments.TaskListingKind.Should().Be(TaskListingKind.TextPrereq);
         }
 
         [Fact]
@@ -84,11 +72,7 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListWriter.Should().NotBeNull();
-            arguments.TaskListWriter.FormatAsJson.Should().BeTrue();
-            arguments.TaskListWriter.RequireDescription.Should().BeFalse();
-            arguments.TaskListWriter.ShowDescription.Should().BeTrue();
-            arguments.TaskListWriter.ShowPrerequisites.Should().BeTrue();
+            arguments.TaskListingKind.Should().Be(TaskListingKind.Json);
         }
     }
 }
