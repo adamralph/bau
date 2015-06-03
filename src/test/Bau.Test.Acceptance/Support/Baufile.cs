@@ -2,6 +2,9 @@
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
+using System.ComponentModel;
+using System.Globalization;
+
 namespace Bau.Test.Acceptance.Support
 {
     using System;
@@ -111,7 +114,23 @@ namespace Bau.Test.Acceptance.Support
                 process.StartInfo = info;
                 process.OutputDataReceived += (sender, e) => output.AppendLine(e.Data);
                 process.ErrorDataReceived += (sender, e) => output.AppendLine(e.Data);
-                process.Start();
+                try
+                {
+                    process.Start();
+                }
+                catch (Win32Exception ex)
+                {
+                    if (ex.NativeErrorCode == 2)
+                    {
+                        var message =
+                            string.Format(CultureInfo.InvariantCulture, "Could not find file '{0}'.", info.FileName);
+
+                        throw new FileNotFoundException(message, info.FileName, ex);
+                    }
+
+                    throw;
+                }
+
                 process.BeginOutputReadLine();
                 process.WaitForExit();
 
