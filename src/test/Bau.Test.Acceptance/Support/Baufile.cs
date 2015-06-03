@@ -99,7 +99,7 @@ namespace Bau.Test.Acceptance.Support
 
             var info = new ProcessStartInfo
             {
-                FileName = Environment.GetEnvironmentVariable("SCRIPTCS_PATH") ?? "scriptcs",
+                FileName = Environment.GetEnvironmentVariable("SCRIPTCS_PATH") ?? "scriptcs.exe",
                 Arguments = string.Join(" ", args),
                 WorkingDirectory = directory,
                 UseShellExecute = false,
