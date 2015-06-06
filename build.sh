@@ -3,4 +3,4 @@ set -e
 set -o pipefail
 set -x
 
-scriptcs ./mono.csx -- $@
+scriptcs ./baufile.csx -- $@
