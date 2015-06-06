@@ -8,7 +8,7 @@ install:
   - mono ./scriptcs_packages/NuGet.CommandLine.2.8.3/tools/NuGet.exe restore src/Bau.sln
 
 script:
-  - mono ./scriptcs/tools/scriptcs.exe ./baufile.csx
+  - mono ./scriptcs/tools/scriptcs.exe ./baufile.csx -- -loglevel debug
 
 notifications:
   email:
