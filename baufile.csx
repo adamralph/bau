@@ -1,3 +1,5 @@
+var isMono = Type.GetType("Mono.Runtime") != null;
+
 // parameters
 var ci = Environment.GetEnvironmentVariable("CI");
 var versionSuffix = Environment.GetEnvironmentVariable("VERSION_SUFFIX");
@@ -21,13 +23,29 @@ var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", "src/Bau.Xunit/Bau.X
 var bau = Require<Bau>();
 
 bau
-.Task("default").DependsOn(string.IsNullOrWhiteSpace(ci) ? new[] { "unit", "component", "pack" } : new[] { "unit", "component", "accept", "pack" })
+.Task("default").DependsOn("unit", "component");
 
-.Task("all").DependsOn("unit", "component", "accept", "pack")
+if(!isMono) {
+    if(!string.IsNullOrWhiteSpace(ci)) {
+        bau.DependsOn("accept");
+    }
+    bau.DependsOn("pack");
+}
 
-.Task("logs").Do(() => CreateDirectory(logs))
+bau.Task("all").DependsOn("unit", "component");
+if(!isMono) {
+    bau.DependsOn("accept");
+    bau.DependsOn("pack");
+}
 
-.MSBuild("clean").DependsOn("logs").Do(msb =>
+bau.Task("logs").Do(() => CreateDirectory(logs));
+
+if(isMono) {
+    bau.Exec("clean").DependsOn("logs").Do(exec => exec
+        .Run("xbuild")
+        .With(solution, "/target:Clean", "/property:Configuration=Release", "/verbosity:normal", "/nologo"));
+} else {
+    bau.MSBuild("clean").DependsOn("logs").Do(msb =>
     {
         msb.MSBuildVersion = "net45";
         msb.Solution = solution;
@@ -48,14 +66,29 @@ bau
                     LogFile = logs + "/clean.log",
                 }
             });
-    })
+    });
+}
 
-.Task("clobber").DependsOn("clean").Do(() => DeleteDirectory(output))
+bau.Task("clobber").DependsOn("clean").Do(() => DeleteDirectory(output));
 
-.Exec("restore").Do(exec => exec
-    .Run(nugetCommand).With("restore", solution))
+if(isMono) {
+    bau.Exec("restore").Do(exec =>
+        exec.Run("mono")
+            .With(new [] { nugetCommand, "restore", solution })
+    );
+} else {
+    bau.Exec("restore").Do(exec =>
+        exec.Run(nugetCommand)
+            .With(new [] { "restore", solution })
+    );
+}
 
-.MSBuild("build").DependsOn("clean", "restore", "logs").Do(msb =>
+if(isMono) {
+    bau.Exec("build").Do(exec => exec
+        .Run("xbuild")
+        .With(solution, "/target:Build", "/property:Configuration=Release", "/verbosity:normal", "/nologo"));
+} else {
+    bau.MSBuild("build").Do(msb =>
     {
         msb.MSBuildVersion = "net45";
         msb.Solution = solution;
@@ -76,8 +109,11 @@ bau
                     LogFile = logs + "/build.log",
                 }
             });
-    })
+    });
+}
+bau.DependsOn("clean", "restore", "logs");
 
+bau
 .Task("tests").Do(() => CreateDirectory(tests))
 
 .Xunit("unit").DependsOn("build", "tests").Do(xunit => xunit
