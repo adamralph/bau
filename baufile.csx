@@ -22,29 +22,32 @@ var packs = new[] { "src/Bau/Bau", "src/Bau.Exec/Bau.Exec", "src/Bau.Xunit/Bau.X
 // solution agnostic tasks
 var bau = Require<Bau>();
 
-bau
-.Task("default").DependsOn("unit", "component");
-
-if(!isMono) {
-    if(!string.IsNullOrWhiteSpace(ci)) {
-        bau.DependsOn("accept");
+bau.Task("default").DependsOn("unit", "component");
+if (!isMono)
+{
+    bau.Task("default").DependsOn("pack");
+    if (!string.IsNullOrWhiteSpace(ci))
+    {
+        bau.Task("default").DependsOn("accept");
     }
-    bau.DependsOn("pack");
 }
 
 bau.Task("all").DependsOn("unit", "component");
-if(!isMono) {
-    bau.DependsOn("accept");
-    bau.DependsOn("pack");
+if (!isMono)
+{
+    bau.Task("all").DependsOn("accept", "pack");
 }
 
 bau.Task("logs").Do(() => CreateDirectory(logs));
 
-if(isMono) {
+if (isMono)
+{
     bau.Exec("clean").DependsOn("logs").Do(exec => exec
         .Run("xbuild")
         .With(solution, "/target:Clean", "/property:Configuration=Release", "/verbosity:normal", "/nologo"));
-} else {
+}
+else
+{
     bau.MSBuild("clean").DependsOn("logs").Do(msb =>
     {
         msb.MSBuildVersion = "net45";
@@ -71,23 +74,27 @@ if(isMono) {
 
 bau.Task("clobber").DependsOn("clean").Do(() => DeleteDirectory(output));
 
-if(isMono) {
-    bau.Exec("restore").Do(exec =>
-        exec.Run("mono")
-            .With(new [] { nugetCommand, "restore", solution })
-    );
-} else {
-    bau.Exec("restore").Do(exec =>
-        exec.Run(nugetCommand)
-            .With(new [] { "restore", solution })
-    );
+if (isMono)
+{
+    bau.Exec("restore").Do(exec => exec
+        .Run("mono")
+        .With(new [] { nugetCommand, "restore", solution }));
+}
+else
+{
+    bau.Exec("restore").Do(exec => exec
+        .Run(nugetCommand)
+        .With(new [] { "restore", solution }));
 }
 
-if(isMono) {
+if (isMono)
+{
     bau.Exec("build").Do(exec => exec
         .Run("xbuild")
         .With(solution, "/target:Build", "/property:Configuration=Release", "/verbosity:normal", "/nologo"));
-} else {
+}
+else
+{
     bau.MSBuild("build").Do(msb =>
     {
         msb.MSBuildVersion = "net45";
@@ -111,9 +118,9 @@ if(isMono) {
             });
     });
 }
-bau.DependsOn("clean", "restore", "logs");
 
-bau
+bau.Task("build").DependsOn("clean", "restore", "logs")
+
 .Task("tests").Do(() => CreateDirectory(tests))
 
 .Xunit("unit").DependsOn("build", "tests").Do(xunit => xunit
