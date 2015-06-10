@@ -42,6 +42,18 @@ namespace BauCore
             return this;
         }
 
+        public ITaskBuilder<TTask> InputFile(string inputFileName)
+        {
+            this.builder.InputFile(inputFileName);
+            return this;
+        }
+
+        public ITaskBuilder<TTask> OutputFile(string outputFileName)
+        {
+            this.builder.OutputFile(outputFileName);
+            return this;
+        }
+
         public void Run()
         {
             this.builder.Run();
@@ -71,6 +83,16 @@ namespace BauCore
         public ITaskBuilder Do(Action action)
         {
             return this.builder.Do(action);
+        }
+
+        ITaskBuilder ITaskBuilder.InputFile(string inputFileName)
+        {
+            return this.builder.InputFile(inputFileName);
+        }
+
+        ITaskBuilder ITaskBuilder.OutputFile(string outputFileName)
+        {
+            return this.builder.InputFile(outputFileName);
         }
 
         public void Invoke(string task)

@@ -21,6 +21,10 @@ namespace BauCore
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Do", Justification = "By design.")]
         ITaskBuilder Do(Action action);
 
+        ITaskBuilder InputFile(string inputFileName);
+
+        ITaskBuilder OutputFile(string outputFileName);
+
         void Run();
 
         [Obsolete("Use Run() instead.")]

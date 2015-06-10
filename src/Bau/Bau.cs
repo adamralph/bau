@@ -7,6 +7,7 @@ namespace BauCore
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using ScriptCs.Contracts;
@@ -76,6 +77,20 @@ namespace BauCore
                 this.currentTask.Actions.Add(action);
             }
 
+            return this;
+        }
+
+        public ITaskBuilder InputFile(string inputFileName)
+        {
+            this.EnsureCurrentTask();
+            this.currentTask.InputFile = new FileInfo(inputFileName);
+            return this;
+        }
+
+        public ITaskBuilder OutputFile(string inputFileName)
+        {
+            this.EnsureCurrentTask();
+            this.currentTask.OutputFile = new FileInfo(inputFileName);
             return this;
         }
 
@@ -212,6 +227,12 @@ namespace BauCore
 
         private static void Execute(string task, IBauTask taskRef)
         {
+            if (taskRef.IsUpToDate)
+            {
+                Log.Info(new ColorText("Skipping '", new ColorToken(task, Log.TaskColor), "'"));
+                return;
+            }
+            
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             Log.Info(new ColorText("Starting '", new ColorToken(task, Log.TaskColor), "'..."));

@@ -6,6 +6,7 @@ namespace BauCore
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using ScriptCs.Contracts;
 
     public class BauTask : ScriptPack<BauTask>, IScriptPackContext, IBauTask
@@ -25,6 +26,26 @@ namespace BauCore
         public IList<Action> Actions
         {
             get { return this.actions; }
+        }
+
+        public FileInfo InputFile
+        {
+            get;
+            set;
+        }
+
+        public FileInfo OutputFile
+        {
+            get;
+            set;
+        }
+
+        public bool IsUpToDate
+        {
+            get
+            {
+                return null != this.InputFile && null != this.OutputFile && (!this.InputFile.Exists || this.InputFile.LastWriteTimeUtc < this.OutputFile.LastWriteTimeUtc);
+            }
         }
 
         public bool Invoked { get; set; }
