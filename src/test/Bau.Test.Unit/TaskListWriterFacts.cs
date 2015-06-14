@@ -95,24 +95,24 @@ namespace BauCore.Test.Unit
         public class General : TaskListWriterFacts
         {
             [Theory]
-            [InlineData(TaskListingKind.TextAll)]
-            [InlineData(TaskListingKind.TextDescribed)]
-            [InlineData(TaskListingKind.TextPrereq)]
-            public void NoTasksProduceNoPlainTextResults(TaskListingKind taskListingKind)
+            [InlineData(TaskListType.All)]
+            [InlineData(TaskListType.Descriptive)]
+            [InlineData(TaskListType.Prerequisites)]
+            public void NoTasksProduceNoPlainTextResults(TaskListType taskListType)
             {
                 // arrange
                 var tasks = new IBauTask[0];
-                var sut = new TaskListWriter(taskListingKind);
+                var sut = new TaskListWriter(taskListType);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().BeEmpty();
             }
         }
         
-        public class ListAllTasks : TaskListWriterFacts
+        public class ListTasksAll : TaskListWriterFacts
         {
             [Fact]
             public void VariousTasksWhereAllAreListedByName()
@@ -133,10 +133,10 @@ namespace BauCore.Test.Unit
                     }
                 }).OrderBy(n => n);
 
-                var sut = this.CreateAllTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.All);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -160,10 +160,10 @@ namespace BauCore.Test.Unit
                     }
                 };
 
-                var sut = this.CreateAllTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.All);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -197,10 +197,10 @@ namespace BauCore.Test.Unit
                     },
                 };
 
-                var sut = this.CreateAllTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.All);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -212,14 +212,9 @@ namespace BauCore.Test.Unit
                         "zzzzzzzzzz # Another description."
                     });
             }
-
-            private TaskListWriter CreateAllTaskListWriter()
-            {
-                return new TaskListWriter(TaskListingKind.TextAll);
-            }
         }
 
-        public class ListDescribedTasks : TaskListWriterFacts
+        public class ListTasksDefault : TaskListWriterFacts
         {
             [Fact]
             public void VariousTasksWithDescriptionsAreListed()
@@ -234,24 +229,19 @@ namespace BauCore.Test.Unit
                     + 1;
                 var expectedLines = candidateTasks
                     .Select(t => t.Name.PadRight(padAmmount) + "# " + t.Description);
-                var sut = this.CreateDescribedTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.Descriptive);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
                 actual.Select(line => line.ToString())
                     .Should().Equal(expectedLines);
             }
-
-            private TaskListWriter CreateDescribedTaskListWriter()
-            {
-                return new TaskListWriter(TaskListingKind.TextDescribed);
-            }
         }
 
-        public class ListTasksAndPrereqs : TaskListWriterFacts
+        public class ListTasksPrerequisites : TaskListWriterFacts
         {
             [Fact]
             public void VariousTasksWithPrereqsAreListed()
@@ -271,10 +261,10 @@ namespace BauCore.Test.Unit
                             .Select(d => "    " + d)))
                     .ToArray();
 
-                var sut = this.CreatePrereqTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.Prerequisites);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks).ToArray();
+                var actual = sut.CreateTaskListLines(tasks).ToArray();
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -303,10 +293,10 @@ namespace BauCore.Test.Unit
                     }
                 };
 
-                var sut = this.CreatePrereqTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.Prerequisites);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -316,11 +306,6 @@ namespace BauCore.Test.Unit
                     "some-task # Some description.",
                     "    some-other-task"
                 });
-            }
-
-            private TaskListWriter CreatePrereqTaskListWriter()
-            {
-                return new TaskListWriter(TaskListingKind.TextPrereq);
             }
         }
 
@@ -339,10 +324,10 @@ namespace BauCore.Test.Unit
                     "}"
                 };
 
-                var sut = this.CreateJsonTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.Json);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -413,10 +398,10 @@ namespace BauCore.Test.Unit
 
                 expectedLines[expectedLines.Length - 3] = indent2 + "}";
 
-                var sut = this.CreateJsonTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.Json);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
@@ -466,20 +451,15 @@ namespace BauCore.Test.Unit
                     "}"
                 };
 
-                var sut = this.CreateJsonTaskListWriter();
+                var sut = new TaskListWriter(TaskListType.Json);
 
                 // act
-                var actual = sut.CreateTaskListingLines(tasks);
+                var actual = sut.CreateTaskListLines(tasks);
 
                 // assert
                 actual.Should().NotBeNullOrEmpty();
                 actual.Select(line => line.ToString())
                     .Should().Equal(expectedLines);
-            }
-
-            private TaskListWriter CreateJsonTaskListWriter()
-            {
-                return new TaskListWriter(TaskListingKind.Json);
             }
         }
     }

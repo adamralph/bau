@@ -14,20 +14,20 @@ namespace BauCore
     {
         private readonly ReadOnlyCollection<string> tasks;
         private readonly LogLevel logLevel;
-        private readonly TaskListingKind taskListingKind;
+        private readonly TaskListType? taskListType;
         private readonly bool help;
 
         public Arguments(
             IEnumerable<string> tasks,
             LogLevel logLevel,
-            TaskListingKind taskListingKind,
+            TaskListType? taskListType,
             bool help)
         {
             Guard.AgainstNullArgument("tasks", tasks);
 
             this.tasks = new ReadOnlyCollection<string>(tasks.ToList());
             this.logLevel = logLevel;
-            this.taskListingKind = taskListingKind;
+            this.taskListType = taskListType;
             this.help = help;
         }
 
@@ -41,9 +41,9 @@ namespace BauCore
             get { return this.logLevel; }
         }
 
-        public TaskListingKind TaskListingKind
+        public TaskListType? TaskListType
         {
-            get { return this.taskListingKind; }
+            get { return this.taskListType; }
         }
 
         public bool Help
@@ -222,7 +222,7 @@ namespace BauCore
             var tasks = new List<string>();
             var logLevel = LogLevel.Info;
             var help = false;
-            var taskListingKind = TaskListingKind.None;
+            var taskListType = default(TaskListType?);
             foreach (var option in Parse(args, tasks))
             {
                 switch (option.Key.ToUpperInvariant())
@@ -237,10 +237,10 @@ namespace BauCore
                         break;
 
                     case "TASKLIST":
-                        var taskListingKinds = option.Value;
-                        if (taskListingKinds.Any())
+                        var taskListTypes = option.Value;
+                        if (taskListTypes.Any())
                         {
-                            taskListingKind = MapTaskListintKind(taskListingKinds.First());
+                            taskListType = MapTaskListType(taskListTypes.First());
                         }
 
                         break;
@@ -257,7 +257,7 @@ namespace BauCore
                 }
             }
 
-            return new Arguments(tasks, logLevel, taskListingKind, help);
+            return new Arguments(tasks, logLevel, taskListType, help);
         }
 
         private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, ICollection<string> tasks)
@@ -375,23 +375,23 @@ namespace BauCore
             }
         }
 
-        private static TaskListingKind MapTaskListintKind(string writerType)
+        private static TaskListType MapTaskListType(string taskListTypeString)
         {
-            switch (writerType.ToUpperInvariant())
+            switch (taskListTypeString.ToUpperInvariant())
             {
                 case "T":
-                    return TaskListingKind.TextDescribed;
+                    return BauCore.TaskListType.Descriptive;
                 case "A":
-                    return TaskListingKind.TextAll;
+                    return BauCore.TaskListType.All;
                 case "P":
-                    return TaskListingKind.TextPrereq;
+                    return BauCore.TaskListType.Prerequisites;
                 case "J":
-                    return TaskListingKind.Json;
+                    return BauCore.TaskListType.Json;
                 default:
                     var message = string.Format(
-                        CultureInfo.InvariantCulture, "The task writer type '{0}' is not recognised.", writerType);
+                        CultureInfo.InvariantCulture, "The task list type '{0}' is not recognised.", taskListTypeString);
 
-                    throw new ArgumentException(message, writerType);
+                    throw new ArgumentException(message, taskListTypeString);
             }
         }
     }

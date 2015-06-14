@@ -6,6 +6,7 @@ namespace BauCore
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -19,27 +20,31 @@ namespace BauCore
         private static readonly ConsoleColor JsonSyntaxColor = ConsoleColor.Gray;
         private static readonly Regex NameEscapeRequiredRegex = new Regex(@"[\s#]");
 
-        public TaskListWriter(TaskListingKind listingKind)
+        public TaskListWriter(TaskListType taskListType)
         {
             this.ShowDescription = true;
 
-            switch (listingKind)
+            switch (taskListType)
             {
-                case TaskListingKind.TextDescribed:
+                case TaskListType.Descriptive:
                     this.RequireDescription = true;
                     break;
-                case TaskListingKind.TextPrereq:
+                case TaskListType.Prerequisites:
                     this.ShowPrerequisites = true;
                     break;
-                case TaskListingKind.Json:
+                case TaskListType.Json:
                     this.FormatAsJson = true;
                     this.ShowPrerequisites = true;
                     break;
-                case TaskListingKind.TextAll:
+                case TaskListType.All:
                     break;
-                case TaskListingKind.None:
                 default:
-                    throw new NotSupportedException(string.Format("Task listing is not supported: {0}", listingKind));
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Task list type '{0}' is not supported.",
+                        taskListType.ToString());
+
+                    throw new NotSupportedException(message);
             }
         }
 
@@ -51,11 +56,11 @@ namespace BauCore
 
         public bool FormatAsJson { get; set; }
 
-        public IEnumerable<ColorText> CreateTaskListingLines(IEnumerable<IBauTask> tasks)
+        public IEnumerable<ColorText> CreateTaskListLines(IEnumerable<IBauTask> tasks)
         {
             return this.FormatAsJson
-                ? this.CreateJsonTaskListingLines(tasks)
-                : this.CreatePlainTextTaskListingLines(tasks);
+                ? this.CreateJsonTaskListLines(tasks)
+                : this.CreatePlainTextTaskListLines(tasks);
         }
 
         private static string EscapeTaskName(string name)
@@ -73,7 +78,7 @@ namespace BauCore
             return name;
         }
 
-        private IEnumerable<ColorText> CreatePlainTextTaskListingLines(IEnumerable<IBauTask> allTasks)
+        private IEnumerable<ColorText> CreatePlainTextTaskListLines(IEnumerable<IBauTask> allTasks)
         {
             var printableTasks = allTasks;
 
@@ -135,7 +140,7 @@ namespace BauCore
             }
         }
 
-        private IEnumerable<ColorText> CreateJsonTaskListingLines(IEnumerable<IBauTask> allTasks)
+        private IEnumerable<ColorText> CreateJsonTaskListLines(IEnumerable<IBauTask> allTasks)
         {
             // TODO: replace with a JSON serialization library when an appropriate dependency is taken
             yield return new ColorText(new ColorToken("{", JsonSyntaxColor));
@@ -189,7 +194,7 @@ namespace BauCore
                     yield return new ColorText(
                         new ColorToken(indent3 + "]", JsonSyntaxColor));
                 }
-                
+
                 yield return new ColorText(new ColorToken(
                     indent2 + (taskIndex == lastTaskIndex ? "}" : "},"),
                     JsonSyntaxColor));
@@ -198,7 +203,7 @@ namespace BauCore
             yield return new ColorText(new ColorToken(IndentationPrefix + "]", JsonSyntaxColor));
             yield return new ColorText(new ColorToken("}", JsonSyntaxColor));
         }
-        
+
         private string CreateJsonString(string value)
         {
             // TODO: remove this method when Bau takes a dependency on a JSON library

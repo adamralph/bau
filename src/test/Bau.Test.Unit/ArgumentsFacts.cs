@@ -11,7 +11,7 @@ namespace BauCore.Test.Unit
     public static class ArgumentsFacts
     {
         [Fact]
-        public static void TaskWriterIsNullWhenNoArguments()
+        public static void TaskListTypeIsNullWhenNoArguments()
         {
             // arrange
             var rawArgs = new string[0];
@@ -20,11 +20,11 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListingKind.Should().Be(TaskListingKind.None);
+            arguments.TaskListType.Should().BeNull();
         }
 
         [Fact]
-        public static void CanParseTaskWriterForAll()
+        public static void CanParseTaskListTypeAll()
         {
             // arrange
             var rawArgs = new[] { "-A" };
@@ -33,11 +33,11 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListingKind.Should().Be(TaskListingKind.TextAll);
+            arguments.TaskListType.Should().Be(TaskListType.All);
         }
 
         [Fact]
-        public static void CanParseTaskWriterForDescribedTasks()
+        public static void CanParseTaskListTypeDefault()
         {
             // arrange
             var rawArgs = new[] { "-T" };
@@ -46,11 +46,11 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListingKind.Should().Be(TaskListingKind.TextDescribed);
+            arguments.TaskListType.Should().Be(TaskListType.Descriptive);
         }
 
         [Fact]
-        public static void CanParseTaskWriterForPrerequisites()
+        public static void CanParseTaskListTypePrerequisites()
         {
             // arrange
             var rawArgs = new[] { "-P" };
@@ -59,11 +59,11 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListingKind.Should().Be(TaskListingKind.TextPrereq);
+            arguments.TaskListType.Should().Be(TaskListType.Prerequisites);
         }
 
         [Fact]
-        public static void CanParseTaskWriterForJson()
+        public static void CanParseTaskListTypeJson()
         {
             // arrange
             var rawArgs = new[] { "-J" };
@@ -72,7 +72,7 @@ namespace BauCore.Test.Unit
             var arguments = Arguments.Parse(rawArgs);
 
             // assert
-            arguments.TaskListingKind.Should().Be(TaskListingKind.Json);
+            arguments.TaskListType.Should().Be(TaskListType.Json);
         }
     }
 }
