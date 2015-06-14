@@ -16,7 +16,7 @@ namespace Bau.Test.Acceptance
         [Example("-h")]
         [Example("-help")]
         [Example("-Help")]
-        public static void HelpAndUsageDump(string arg, Baufile baufile, string output)
+        public static void GettingHelp(string arg, Baufile baufile, string output)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
