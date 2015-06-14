@@ -1,4 +1,4 @@
-﻿// <copyright file="TaskListingFull.cs" company="Bau contributors">
+﻿// <copyright file="TaskListAll.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -10,10 +10,8 @@ namespace Bau.Test.Acceptance
     using Support;
     using Xbehave;
 
-    public static class TaskListingFull
+    public static class TaskListAll
     {
-        private static readonly string CliOption = "-A";
-
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
         {
@@ -22,8 +20,8 @@ namespace Bau.Test.Acceptance
             "Given bau is required with no tasks"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"Require<Bau>().Run();"));
 
-            "When I execute the baufile for a listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list all tasks"
+                .f(() => output = baufile.Run("-A"));
 
             "Then the output should end normally"
                 .f(() => output.TrimEnd().Should().EndWith("Terminating packs"));
@@ -40,8 +38,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task"")
 .Run();"));
 
-            "When I execute the baufile for a listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list all tasks"
+                .f(() => output = baufile.Run("-A"));
 
             "Then the output should show a task name"
                 .f(() => output.Should().Contain("some-task"));
@@ -59,8 +57,8 @@ namespace Bau.Test.Acceptance
 .Desc(""Some long description."")
 .Run();"));
 
-            "When I execute the baufile for a listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list all tasks"
+                .f(() => output = baufile.Run("-A"));
 
             "Then the output should show the task and description"
                 .f(() => output.Should().Contain("some-task # Some long description."));
@@ -78,8 +76,8 @@ namespace Bau.Test.Acceptance
 .Task(""task2"")
 .Run();"));
 
-            "When I execute the baufile for a listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list all tasks"
+                .f(() => output = baufile.Run("-A"));
 
             "Then the output should contain both tasks"
                 .f(() => output.Should()
@@ -98,8 +96,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task2"")
 .Run();"));
 
-            "When I execute the baufile for a listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list all tasks"
+                .f(() => output = baufile.Run("-A"));
 
             "Then the output should end both tasks"
                 .f(() => output.Should()
@@ -117,8 +115,8 @@ namespace Bau.Test.Acceptance
 .Task(""some task"")
 .Run();"));
 
-            "When I execute the baufile for a listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list all tasks"
+                .f(() => output = baufile.Run("-A"));
 
             "Then the output should contain the quoted task name"
                 .f(() => output.Should().Contain(@"""some task"""));

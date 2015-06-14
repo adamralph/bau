@@ -1,4 +1,4 @@
-﻿// <copyright file="TaskListingPrerequisites.cs" company="Bau contributors">
+﻿// <copyright file="TaskListPrerequisites.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -9,10 +9,8 @@ namespace Bau.Test.Acceptance
     using Support;
     using Xbehave;
 
-    public static class TaskListingPrerequisites
+    public static class TaskListPrerequisites
     {
-        private static readonly string CliOption = "-P";
-
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
         {
@@ -21,8 +19,8 @@ namespace Bau.Test.Acceptance
             "Given bau is required with no tasks"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>(); bau.Run();"));
 
-            "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks including prerequisites"
+                .f(() => output = baufile.Run("-P"));
 
             "Then the output should end normally"
                 .f(() => output.TrimEnd().Should().EndWith("Terminating packs"));
@@ -39,8 +37,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task"")
 .Run();"));
 
-            "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks including prerequisites"
+                .f(() => output = baufile.Run("-P"));
 
             "Then the output should end with a task name"
                 .f(() => output.Should().Contain("some-task"));
@@ -59,8 +57,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-other-task"")
 .Run();"));
 
-            "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks including prerequisites"
+                .f(() => output = baufile.Run("-P"));
 
             "Then the output should contain the two tasks where one has a dep"
                 .f(() => output.Should().Contain(
@@ -81,8 +79,8 @@ some-task
 .Task(""some-task2"")
 .Run();"));
 
-            "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks including prerequisites"
+                .f(() => output = baufile.Run("-P"));
 
             "Then the output should show the two tasks"
                 .f(() => output.Should().Contain(
@@ -105,8 +103,8 @@ some-task2"));
 .Desc(""Some other description."")
 .Run();"));
 
-            "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks including prerequisites"
+                .f(() => output = baufile.Run("-P"));
 
             "Then the output should contain the two described tasks where one has a dep"
                 .f(() => output.Should().Contain(
@@ -146,8 +144,8 @@ some-task       # Some description.
 .Task(""restore"")
 .Run();"));
 
-            "When I execute the baufile for a prereq listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks including prerequisites"
+                .f(() => output = baufile.Run("-P"));
 
             "Then the output should look like the sample Adam gave"
                 .f(() => output.Should().Contain(

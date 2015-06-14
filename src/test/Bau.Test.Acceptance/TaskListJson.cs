@@ -1,4 +1,4 @@
-﻿// <copyright file="TaskListingJson.cs" company="Bau contributors">
+﻿// <copyright file="TaskListJson.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -9,10 +9,8 @@ namespace Bau.Test.Acceptance
     using Support;
     using Xbehave;
 
-    public static class TaskListingJson
+    public static class TaskListJson
     {
-        private static readonly string CliOption = "-J";
-
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
         {
@@ -21,8 +19,8 @@ namespace Bau.Test.Acceptance
             "Given bau is required with no tasks"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"var bau = Require<Bau>(); bau.Run();"));
 
-            "When I execute the baufile for a JSON listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks as JSON"
+                .f(() => output = baufile.Run("-J"));
 
             "Then the output should be an empty task array"
                 .f(() => output.Should().Contain(
@@ -43,8 +41,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task"")
 .Run();"));
 
-            "When I execute the baufile for a JSON listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks as JSON"
+                .f(() => output = baufile.Run("-J"));
 
             "Then the output should contain information for that task"
                 .f(() => output.Should().Contain(
@@ -75,8 +73,8 @@ namespace Bau.Test.Acceptance
 .Desc(""First task"")
 .Run();"));
 
-            "When I execute the baufile for a JSON listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks as JSON"
+                .f(() => output = baufile.Run("-J"));
 
             "Then the output should have the two tasks described correctly showing a dependency"
                 .f(() => output.Should().Contain(

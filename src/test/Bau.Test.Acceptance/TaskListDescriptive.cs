@@ -1,4 +1,4 @@
-﻿// <copyright file="TaskListingDescriptive.cs" company="Bau contributors">
+﻿// <copyright file="TaskListDescriptive.cs" company="Bau contributors">
 //  Copyright (c) Bau contributors. (baubuildch@gmail.com)
 // </copyright>
 
@@ -10,10 +10,8 @@ namespace Bau.Test.Acceptance
     using Support;
     using Xbehave;
 
-    public static class TaskListingDescriptive
+    public static class TaskListDescriptive
     {
-        private static readonly string CliOption = "-T";
-
         [Scenario]
         public static void NoTasks(Baufile baufile, string output)
         {
@@ -22,8 +20,8 @@ namespace Bau.Test.Acceptance
             "Given bau is required with no tasks"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(@"Require<Bau>().Run();"));
 
-            "When I execute the baufile for a descriptive listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks"
+                .f(() => output = baufile.Run("-T"));
 
             "Then the output should end normally"
                 .f(() => output.TrimEnd().Should()
@@ -41,8 +39,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task"")
 .Run();"));
 
-            "When I execute the baufile for a descriptive listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks"
+                .f(() => output = baufile.Run("-T"));
 
             "Then the output should not list the task"
                 .f(() => output.TrimEnd().Should()
@@ -61,8 +59,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task2"")
 .Run();"));
 
-            "When I execute the baufile for a descriptive listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks"
+                .f(() => output = baufile.Run("-T"));
 
             "Then the output should show the described task with description"
                 .f(() => output.Should()
@@ -85,8 +83,8 @@ namespace Bau.Test.Acceptance
 .Task(""some-task2"").Desc(""Another description."")
 .Run();"));
 
-            "When I execute the baufile for a descriptive listing"
-                .f(() => output = baufile.Run(CliOption));
+            "When I list the tasks"
+                .f(() => output = baufile.Run("-T"));
 
             "Then the output should show show both tasks with descriptions"
                 .f(() => output.Should().Contain(
