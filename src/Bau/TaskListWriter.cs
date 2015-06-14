@@ -13,12 +13,12 @@ namespace BauCore
 
     internal class TaskListWriter
     {
-        private const string IndentationPrefix = "    ";
-        private static readonly ConsoleColor DefaultColor = ConsoleColor.White;
-        private static readonly ConsoleColor DependenciesColor = ConsoleColor.Gray;
-        private static readonly ConsoleColor JsonDataColor = ConsoleColor.White;
-        private static readonly ConsoleColor JsonSyntaxColor = ConsoleColor.Gray;
-        private static readonly Regex NameEscapeRequiredRegex = new Regex(@"[\s#]");
+        private static readonly string indentationPrefix = "    ";
+        private static readonly ConsoleColor defaultColor = ConsoleColor.White;
+        private static readonly ConsoleColor dependenciesColor = ConsoleColor.Gray;
+        private static readonly ConsoleColor jsonDataColor = ConsoleColor.White;
+        private static readonly ConsoleColor jsonSyntaxColor = ConsoleColor.Gray;
+        private static readonly Regex nameEscapeRequiredRegex = new Regex(@"[\s#]");
 
         public TaskListWriter(TaskListType taskListType)
         {
@@ -70,7 +70,7 @@ namespace BauCore
                 return "\"\"";
             }
 
-            if (NameEscapeRequiredRegex.IsMatch(name))
+            if (nameEscapeRequiredRegex.IsMatch(name))
             {
                 return "\"" + name + "\"";
             }
@@ -126,15 +126,15 @@ namespace BauCore
                     fullLine = t.EscapedName;
                 }
 
-                yield return new ColorText(new ColorToken(fullLine, DefaultColor));
+                yield return new ColorText(new ColorToken(fullLine, defaultColor));
 
                 if (this.ShowPrerequisites)
                 {
                     foreach (var dependency in t.Dependencies)
                     {
                         yield return new ColorText(new ColorToken(
-                            IndentationPrefix + dependency,
-                            DependenciesColor));
+                            indentationPrefix + dependency,
+                            dependenciesColor));
                     }
                 }
             }
@@ -143,12 +143,12 @@ namespace BauCore
         private IEnumerable<ColorText> CreateJsonTaskListLines(IEnumerable<IBauTask> allTasks)
         {
             // TODO: replace with a JSON serialization library when an appropriate dependency is taken
-            yield return new ColorText(new ColorToken("{", JsonSyntaxColor));
-            yield return new ColorText(new ColorToken(IndentationPrefix + "\"tasks\": [", JsonSyntaxColor));
+            yield return new ColorText(new ColorToken("{", jsonSyntaxColor));
+            yield return new ColorText(new ColorToken(indentationPrefix + "\"tasks\": [", jsonSyntaxColor));
 
-            var indent2 = IndentationPrefix + IndentationPrefix;
-            var indent3 = indent2 + IndentationPrefix;
-            var indent4 = indent3 + IndentationPrefix;
+            var indent2 = indentationPrefix + indentationPrefix;
+            var indent3 = indent2 + indentationPrefix;
+            var indent4 = indent3 + indentationPrefix;
 
             var printableTasks = allTasks.OrderBy(t => t.Name).ToList();
             var lastTaskIndex = printableTasks.Count - 1;
@@ -156,24 +156,24 @@ namespace BauCore
             {
                 var task = printableTasks[taskIndex];
 
-                yield return new ColorText(new ColorToken(indent2 + "{", JsonSyntaxColor));
+                yield return new ColorText(new ColorToken(indent2 + "{", jsonSyntaxColor));
 
                 yield return new ColorText(new ColorToken(
                     indent3 + "\"name\": " + this.CreateJsonString(task.Name) + (this.ShowDescription || this.ShowPrerequisites ? "," : string.Empty),
-                    JsonDataColor));
+                    jsonDataColor));
 
                 if (this.ShowDescription)
                 {
                     yield return new ColorText(new ColorToken(
                         indent3 + "\"description\": " + this.CreateJsonString(task.Description) + (this.ShowPrerequisites ? "," : string.Empty),
-                        JsonDataColor));
+                        jsonDataColor));
                 }
 
                 if (this.ShowPrerequisites)
                 {
                     yield return new ColorText(
-                        new ColorToken(indent3 + "\"dependencies\":", JsonDataColor),
-                        new ColorToken(" [", JsonSyntaxColor));
+                        new ColorToken(indent3 + "\"dependencies\":", jsonDataColor),
+                        new ColorToken(" [", jsonSyntaxColor));
 
                     if (task.Dependencies != null)
                     {
@@ -187,21 +187,21 @@ namespace BauCore
                             }
 
                             yield return new ColorText(
-                                new ColorToken(indent4 + jsonStringValue, JsonDataColor));
+                                new ColorToken(indent4 + jsonStringValue, jsonDataColor));
                         }
                     }
 
                     yield return new ColorText(
-                        new ColorToken(indent3 + "]", JsonSyntaxColor));
+                        new ColorToken(indent3 + "]", jsonSyntaxColor));
                 }
 
                 yield return new ColorText(new ColorToken(
                     indent2 + (taskIndex == lastTaskIndex ? "}" : "},"),
-                    JsonSyntaxColor));
+                    jsonSyntaxColor));
             }
 
-            yield return new ColorText(new ColorToken(IndentationPrefix + "]", JsonSyntaxColor));
-            yield return new ColorText(new ColorToken("}", JsonSyntaxColor));
+            yield return new ColorText(new ColorToken(indentationPrefix + "]", jsonSyntaxColor));
+            yield return new ColorText(new ColorToken("}", jsonSyntaxColor));
         }
 
         private string CreateJsonString(string value)
