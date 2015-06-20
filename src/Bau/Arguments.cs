@@ -80,20 +80,48 @@ namespace BauCore
             ColorConsole.WriteLine(new ColorToken("Options:", ConsoleColor.White));
 
             ColorConsole.WriteLine(new ColorText(
-                new ColorToken("  -T                    ", ConsoleColor.DarkGreen),
-                new ColorToken("Display all tasks which have a description.", ConsoleColor.Gray)));
+                new ColorToken("  -T", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.DarkGray),
+                new ColorToken("-tasklist", ConsoleColor.DarkGreen),
+                new ColorToken("          Display the list of tasks", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("                        (", ConsoleColor.Gray),
+                new ColorToken("d", ConsoleColor.DarkGreen),
+                new ColorToken("*", ConsoleColor.Gray),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("descriptive", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("a", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("all", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("p", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("prerequisites", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("j", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("json", ConsoleColor.DarkGreen),
+                new ColorToken(").", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  -A                    ", ConsoleColor.DarkGreen),
-                new ColorToken("Display all tasks.", ConsoleColor.Gray)));
+                new ColorToken("Alias for ", ConsoleColor.Gray),
+                new ColorToken("-tasklist all", ConsoleColor.DarkGreen),
+                new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  -P                    ", ConsoleColor.DarkGreen),
-                new ColorToken("Display all tasks and their prerequisites.", ConsoleColor.Gray)));
+                new ColorToken("Alias for ", ConsoleColor.Gray),
+                new ColorToken("-tasklist prerequisites", ConsoleColor.DarkGreen),
+                new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  -J                    ", ConsoleColor.DarkGreen),
-                new ColorToken("List tasks in a JSON format.", ConsoleColor.Gray)));
+                new ColorToken("Alias for ", ConsoleColor.Gray),
+                new ColorToken("-tasklist json", ConsoleColor.DarkGreen),
+                new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  -l", ConsoleColor.DarkGreen),
@@ -208,6 +236,14 @@ namespace BauCore
                 new ColorToken("default", ConsoleColor.DarkCyan),
                 new ColorToken("' task and log at debug level.", ConsoleColor.Gray)));
 
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  scriptcs baufile.csx -- -T          ", ConsoleColor.DarkGreen),
+                new ColorToken("Display the list of tasks with descriptions.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  scriptcs baufile.csx -- -T p        ", ConsoleColor.DarkGreen),
+                new ColorToken("Display the list of tasks and prerequisites.", ConsoleColor.Gray)));
+
             ColorConsole.WriteLine(null);
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("* Default value.", ConsoleColor.Gray)));
@@ -238,10 +274,9 @@ namespace BauCore
 
                     case "TASKLIST":
                         var taskListTypes = option.Value;
-                        if (taskListTypes.Any())
-                        {
-                            taskListType = MapTaskListType(taskListTypes.First());
-                        }
+                        taskListType = taskListTypes.Any()
+                            ? MapTaskListType(taskListTypes.First())
+                            : BauCore.TaskListType.Descriptive;
 
                         break;
 
@@ -307,6 +342,18 @@ namespace BauCore
             impliedValue = null;
             switch (optionName)
             {
+                case "TASKLIST":
+                case "T":
+                    return "TASKLIST";
+                case "A":
+                    impliedValue = "ALL";
+                    return "TASKLIST";
+                case "P":
+                    impliedValue = "PREREQUISITES";
+                    return "TASKLIST";
+                case "J":
+                    impliedValue = "JSON";
+                    return "TASKLIST";
                 case "l":
                     return "LOGLEVEL";
                 case "t":
@@ -326,14 +373,7 @@ namespace BauCore
                     return "LOGLEVEL";
                 case "h":
                 case "?":
-                    impliedValue = "OFF";
                     return "HELP";
-                case "T":
-                case "A":
-                case "P":
-                case "J":
-                    impliedValue = optionName;
-                    return "TASKLIST";
                 default:
                     return optionName;
             }
@@ -379,12 +419,16 @@ namespace BauCore
         {
             switch (taskListTypeString.ToUpperInvariant())
             {
-                case "T":
+                case "DESCRIPTIVE":
+                case "D":
                     return BauCore.TaskListType.Descriptive;
+                case "ALL":
                 case "A":
                     return BauCore.TaskListType.All;
+                case "PREREQUISITES":
                 case "P":
                     return BauCore.TaskListType.Prerequisites;
+                case "JSON":
                 case "J":
                     return BauCore.TaskListType.Json;
                 default:
