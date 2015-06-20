@@ -35,10 +35,11 @@ namespace Bau.Test.Acceptance
 Usage: scriptcs <filename> -- [tasks|default*] [options]
 
 Options:
-  -T                    Display all tasks which have a description.
-  -A                    Display all tasks.
-  -P                    Display all tasks and their prerequisites.
-  -J                    List tasks in a JSON format.
+  -T|-tasklist          Display the list of tasks
+                        (d*|descriptive|a|all|p|prerequisites|j|json).
+  -A                    Alias for -tasklist all.
+  -P                    Alias for -tasklist prerequisites.
+  -J                    Alias for -tasklist json.
   -l|-loglevel <level>  Log at the specified level
                         (a|all|t|trace|d|debug|i*|info|w|warn|e|error|f|fatal|o|off).
   -t                    Alias for -loglevel trace.
@@ -54,6 +55,8 @@ Examples:
   scriptcs baufile.csx                Run the 'default' task.
   scriptcs baufile.csx -- build test  Run the 'build' and 'test' tasks.
   scriptcs baufile.csx -- -l d        Run the 'default' task and log at debug level.
+  scriptcs baufile.csx -- -T          Display the list of tasks with descriptions.
+  scriptcs baufile.csx -- -T p        Display the list of tasks and prerequisites.
 
 * Default value.
 

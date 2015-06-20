@@ -7,6 +7,7 @@ namespace BauCore.Test.Unit
     using BauCore;
     using FluentAssertions;
     using Xunit;
+    using Xunit.Extensions;
 
     public static class ArgumentsFacts
     {
@@ -23,11 +24,14 @@ namespace BauCore.Test.Unit
             arguments.TaskListType.Should().BeNull();
         }
 
-        [Fact]
-        public static void CanParseTaskListTypeAll()
+        [Theory]
+        [InlineData("-A", null)]
+        [InlineData("-T", "a")]
+        [InlineData("-T", "all")]
+        public static void CanParseTaskListTypeAll(string arg1, string arg2)
         {
             // arrange
-            var rawArgs = new[] { "-A" };
+            var rawArgs = new[] { arg1, arg2 };
 
             // act
             var arguments = Arguments.Parse(rawArgs);
@@ -36,11 +40,14 @@ namespace BauCore.Test.Unit
             arguments.TaskListType.Should().Be(TaskListType.All);
         }
 
-        [Fact]
-        public static void CanParseTaskListTypeDefault()
+        [Theory]
+        [InlineData("-T", null)]
+        [InlineData("-T", "d")]
+        [InlineData("-T", "descriptive")]
+        public static void CanParseTaskListTypeDefault(string arg1, string arg2)
         {
             // arrange
-            var rawArgs = new[] { "-T" };
+            var rawArgs = new[] { arg1, arg2 };
 
             // act
             var arguments = Arguments.Parse(rawArgs);
@@ -49,11 +56,14 @@ namespace BauCore.Test.Unit
             arguments.TaskListType.Should().Be(TaskListType.Descriptive);
         }
 
-        [Fact]
-        public static void CanParseTaskListTypePrerequisites()
+        [Theory]
+        [InlineData("-P", null)]
+        [InlineData("-T", "p")]
+        [InlineData("-T", "prerequisites")]
+        public static void CanParseTaskListTypePrerequisites(string arg1, string arg2)
         {
             // arrange
-            var rawArgs = new[] { "-P" };
+            var rawArgs = new[] { arg1, arg2 };
 
             // act
             var arguments = Arguments.Parse(rawArgs);
@@ -62,11 +72,14 @@ namespace BauCore.Test.Unit
             arguments.TaskListType.Should().Be(TaskListType.Prerequisites);
         }
 
-        [Fact]
-        public static void CanParseTaskListTypeJson()
+        [Theory]
+        [InlineData("-J", null)]
+        [InlineData("-T", "j")]
+        [InlineData("-T", "json")]
+        public static void CanParseTaskListTypeJson(string arg1, string arg2)
         {
             // arrange
-            var rawArgs = new[] { "-J" };
+            var rawArgs = new[] { arg1, arg2 };
 
             // act
             var arguments = Arguments.Parse(rawArgs);
