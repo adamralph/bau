@@ -4,12 +4,9 @@
 
 namespace BauCore.Test.Component
 {
-    using System;
-    using System.Collections.Generic;
     using BauCore.Test.Component.Support;
     using FluentAssertions;
     using Xbehave;
-    using Xunit;
 
     public static class TaskDescriptions
     {
