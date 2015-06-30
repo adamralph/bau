@@ -14,17 +14,20 @@ namespace BauCore
     {
         private readonly ReadOnlyCollection<string> tasks;
         private readonly LogLevel logLevel;
+        private readonly TaskListType? taskListType;
         private readonly bool help;
 
         public Arguments(
             IEnumerable<string> tasks,
             LogLevel logLevel,
+            TaskListType? taskListType,
             bool help)
         {
             Guard.AgainstNullArgument("tasks", tasks);
 
             this.tasks = new ReadOnlyCollection<string>(tasks.ToList());
             this.logLevel = logLevel;
+            this.taskListType = taskListType;
             this.help = help;
         }
 
@@ -36,6 +39,11 @@ namespace BauCore
         public LogLevel LogLevel
         {
             get { return this.logLevel; }
+        }
+
+        public TaskListType? TaskListType
+        {
+            get { return this.taskListType; }
         }
 
         public bool Help
@@ -70,6 +78,50 @@ namespace BauCore
 
             ColorConsole.WriteLine(null);
             ColorConsole.WriteLine(new ColorToken("Options:", ConsoleColor.White));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -T", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.DarkGray),
+                new ColorToken("-tasklist", ConsoleColor.DarkGreen),
+                new ColorToken("          Display the list of tasks", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("                        (", ConsoleColor.Gray),
+                new ColorToken("d", ConsoleColor.DarkGreen),
+                new ColorToken("*", ConsoleColor.Gray),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("descriptive", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("a", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("all", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("p", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("prerequisites", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("j", ConsoleColor.DarkGreen),
+                new ColorToken("|", ConsoleColor.Gray),
+                new ColorToken("json", ConsoleColor.DarkGreen),
+                new ColorToken(").", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -A                    ", ConsoleColor.DarkGreen),
+                new ColorToken("Alias for ", ConsoleColor.Gray),
+                new ColorToken("-tasklist all", ConsoleColor.DarkGreen),
+                new ColorToken(".", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -P                    ", ConsoleColor.DarkGreen),
+                new ColorToken("Alias for ", ConsoleColor.Gray),
+                new ColorToken("-tasklist prerequisites", ConsoleColor.DarkGreen),
+                new ColorToken(".", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  -J                    ", ConsoleColor.DarkGreen),
+                new ColorToken("Alias for ", ConsoleColor.Gray),
+                new ColorToken("-tasklist json", ConsoleColor.DarkGreen),
+                new ColorToken(".", ConsoleColor.Gray)));
 
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("  -l", ConsoleColor.DarkGreen),
@@ -184,6 +236,14 @@ namespace BauCore
                 new ColorToken("default", ConsoleColor.DarkCyan),
                 new ColorToken("' task and log at debug level.", ConsoleColor.Gray)));
 
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  scriptcs baufile.csx -- -T          ", ConsoleColor.DarkGreen),
+                new ColorToken("Display the list of tasks with descriptions.", ConsoleColor.Gray)));
+
+            ColorConsole.WriteLine(new ColorText(
+                new ColorToken("  scriptcs baufile.csx -- -T p        ", ConsoleColor.DarkGreen),
+                new ColorToken("Display the list of tasks and prerequisites.", ConsoleColor.Gray)));
+
             ColorConsole.WriteLine(null);
             ColorConsole.WriteLine(new ColorText(
                 new ColorToken("* Default value.", ConsoleColor.Gray)));
@@ -198,6 +258,7 @@ namespace BauCore
             var tasks = new List<string>();
             var logLevel = LogLevel.Info;
             var help = false;
+            var taskListType = default(TaskListType?);
             foreach (var option in Parse(args, tasks))
             {
                 switch (option.Key.ToUpperInvariant())
@@ -208,6 +269,14 @@ namespace BauCore
                         {
                             logLevel = MapLogLevel(logLevels.First());
                         }
+
+                        break;
+
+                    case "TASKLIST":
+                        var taskListTypes = option.Value;
+                        taskListType = taskListTypes.Any()
+                            ? MapTaskListType(taskListTypes.First())
+                            : BauCore.TaskListType.Descriptive;
 
                         break;
 
@@ -223,7 +292,7 @@ namespace BauCore
                 }
             }
 
-            return new Arguments(tasks, logLevel, help);
+            return new Arguments(tasks, logLevel, taskListType, help);
         }
 
         private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, ICollection<string> tasks)
@@ -273,6 +342,18 @@ namespace BauCore
             impliedValue = null;
             switch (optionName)
             {
+                case "TASKLIST":
+                case "T":
+                    return "TASKLIST";
+                case "A":
+                    impliedValue = "ALL";
+                    return "TASKLIST";
+                case "P":
+                    impliedValue = "PREREQUISITES";
+                    return "TASKLIST";
+                case "J":
+                    impliedValue = "JSON";
+                    return "TASKLIST";
                 case "l":
                     return "LOGLEVEL";
                 case "t":
@@ -292,7 +373,6 @@ namespace BauCore
                     return "LOGLEVEL";
                 case "h":
                 case "?":
-                    impliedValue = "OFF";
                     return "HELP";
                 default:
                     return optionName;
@@ -332,6 +412,30 @@ namespace BauCore
                         CultureInfo.InvariantCulture, "The log level '{0}' is not recognised.", logLevelString);
 
                     throw new ArgumentException(message, "logLevelString");
+            }
+        }
+
+        private static TaskListType MapTaskListType(string taskListTypeString)
+        {
+            switch (taskListTypeString.ToUpperInvariant())
+            {
+                case "DESCRIPTIVE":
+                case "D":
+                    return BauCore.TaskListType.Descriptive;
+                case "ALL":
+                case "A":
+                    return BauCore.TaskListType.All;
+                case "PREREQUISITES":
+                case "P":
+                    return BauCore.TaskListType.Prerequisites;
+                case "JSON":
+                case "J":
+                    return BauCore.TaskListType.Json;
+                default:
+                    var message = string.Format(
+                        CultureInfo.InvariantCulture, "The task list type '{0}' is not recognised.", taskListTypeString);
+
+                    throw new ArgumentException(message, taskListTypeString);
             }
         }
     }

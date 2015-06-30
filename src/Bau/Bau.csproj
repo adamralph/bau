@@ -58,6 +58,8 @@
     <Compile Include="BauTask.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskListType.cs" />
+    <Compile Include="TaskListWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Bau.nuspec" />

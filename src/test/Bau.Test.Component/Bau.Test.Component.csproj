@@ -50,6 +50,7 @@
     <Compile Include="ReenablingTasks.cs" />
     <Compile Include="TaskDependencies.cs" />
     <Compile Include="DefaultTask.cs" />
+    <Compile Include="TaskDescriptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FakeItEasy">

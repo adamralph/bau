@@ -3,6 +3,10 @@
 // </copyright>
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("Bau")]
 [assembly: AssemblyDescription("Write your build scripts in C#.")]
+
+// hooray! \o/ friends!
+[assembly: InternalsVisibleTo("Bau.Test.Unit")]

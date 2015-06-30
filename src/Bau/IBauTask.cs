@@ -13,6 +13,8 @@ namespace BauCore
 
         IList<string> Dependencies { get; }
 
+        string Description { get; set; }
+
         IList<Action> Actions { get; }
 
         bool Invoked { get; set; }

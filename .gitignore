@@ -14,3 +14,7 @@ scriptcs_packages
 
 /scriptcs
 /*.nupkg
+
+*.ncrunch*
+*.crunchsolution*
+/**/_NCrunch_*/
