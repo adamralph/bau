@@ -4,7 +4,6 @@
 
 namespace Bau.Test.Acceptance
 {
-    using System;
     using System.Reflection;
     using System.Text;
     using Bau.Test.Acceptance.Support;

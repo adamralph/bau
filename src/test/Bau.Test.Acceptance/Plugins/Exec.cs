@@ -16,7 +16,9 @@ namespace Bau.Test.Acceptance.Plugins
     public static class Exec
     {
         private static readonly bool isMono = Type.GetType("Mono.Runtime") != null;
-        private static readonly string createCommand = @"@""" + Path.Combine(Directory.GetCurrentDirectory(), "Bau.Test.Acceptance.CreateFile.exe") + @"""";
+        private static readonly string createCommand =
+            @"@""" + Path.Combine(Directory.GetCurrentDirectory(), "Bau.Test.Acceptance.CreateFile.exe") + @"""";
+        
         private static readonly string command = isMono ? @"""mono""" : createCommand;
         private static readonly string fooArgs = MakeArgs(@"""foo.txt""");
         private static readonly string emptyArgs = MakeArgs();
@@ -46,7 +48,7 @@ namespace Bau.Test.Acceptance.Plugins
 
             "And I the command details are logged at debug level"
                 .f(() => output.Should().MatchEquivalentOf(
-                    @"*[default] *DEBUG: *'*Bau.Test.Acceptance.CreateFile.exe foo.txt' * 'Bau.Test.Acceptance.Plugins.Exec.ExecutingACommand'*"));
+@"*[default] *DEBUG: *'*Bau.Test.Acceptance.CreateFile.exe foo.txt' * 'Bau.Test.Acceptance.Plugins.Exec.ExecutingACommand'*"));
         }
 
         [Scenario]
@@ -121,7 +123,7 @@ namespace Bau.Test.Acceptance.Plugins
         private static string MakeWith(string args)
         {
             var withArgs = MakeArgs(args);
-            return withArgs.Length != 0 ? @".With(" + MakeArgs() + @")" : string.Empty;
+            return withArgs.Length != 0 ? ".With(" + MakeArgs() + ")" : string.Empty;
         }
 
         private static string MakeArgs(params string[] args)
