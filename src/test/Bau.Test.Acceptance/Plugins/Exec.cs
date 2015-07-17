@@ -25,9 +25,9 @@ namespace Bau.Test.Acceptance.Plugins
 .Task<Exec>(""default"")
 .Do(exec =>
 {
-    exec.WorkingDirectory = @""" + scenario + @""";
     exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
     exec.Args = new[] { ""foo.txt"" };
+    exec.WorkingDirectory = @""" + scenario + @""";
 })
 .Run();"));
 
@@ -53,9 +53,9 @@ namespace Bau.Test.Acceptance.Plugins
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.WorkingDirectory = @""" + scenario + @""";
     exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
     exec.Args = new[] { ""foo.txt"" };
+    exec.WorkingDirectory = @""" + scenario + @""";
 })
 .Run();"));
 
@@ -75,7 +75,10 @@ namespace Bau.Test.Acceptance.Plugins
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
 @"Require<Bau>()
 .Exec(""default"")
-.Do(exec => exec.Run(@""..\Bau.Test.Acceptance.CreateFile.exe"").With(""foo.txt"").In(@""" + scenario + @"""))
+.Do(exec => exec
+    .Run(@""..\Bau.Test.Acceptance.CreateFile.exe"")
+    .With(""foo.txt"")
+    .In(@""" + scenario + @"""))
 .Run();"));
 
             "When I execute the baufile"
@@ -92,7 +95,10 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which fails"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"Require<Bau>().Task<Exec>().Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"").Run();"));
+@"Require<Bau>()
+.Exec(""default"")
+.Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"")
+.Run();"));
 
             "When I execute the baufile"
                 .f(() => ex = Record.Exception(() => baufile.Run()));
