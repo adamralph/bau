@@ -21,12 +21,14 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which succeeds"
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
-@"Require<Bau>()
+@"var isMono = Type.GetType(""Mono.Runtime"") != null;
+
+Require<Bau>()
 .Task<Exec>(""default"")
 .Do(exec =>
 {
-    exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
-    exec.Args = new[] { ""foo.txt"" };
+    exec.Command = isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"";
+    exec.Args = isMono ? new[] { @""..\Bau.Test.Acceptance.CreateFile.exe"", ""foo.txt"" } : new[] { ""foo.txt"" };
     exec.WorkingDirectory = @""" + scenario + @""";
 })
 .Run();"));
@@ -49,12 +51,14 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which uses the Exec extension method"
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
-@"Require<Bau>()
+@"var isMono = Type.GetType(""Mono.Runtime"") != null;
+
+Require<Bau>()
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"";
-    exec.Args = new[] { ""foo.txt"" };
+    exec.Command = isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"";
+    exec.Args = isMono ? new[] { @""..\Bau.Test.Acceptance.CreateFile.exe"", ""foo.txt"" } : new[] { ""foo.txt"" };
     exec.WorkingDirectory = @""" + scenario + @""";
 })
 .Run();"));
@@ -73,11 +77,13 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which uses the Exec extension method"
                 .f(() => baufile = Baufile.Create(scenario, true).WriteLine(
-@"Require<Bau>()
+@"var isMono = Type.GetType(""Mono.Runtime"") != null;
+
+Require<Bau>()
 .Exec(""default"")
 .Do(exec => exec
-    .Run(@""..\Bau.Test.Acceptance.CreateFile.exe"")
-    .With(""foo.txt"")
+    .Run(isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"")
+    .With(isMono ? @""..\Bau.Test.Acceptance.CreateFile.exe"" : """", ""foo.txt"")
     .In(@""" + scenario + @"""))
 .Run();"));
 
@@ -95,9 +101,15 @@ namespace Bau.Test.Acceptance.Plugins
 
             "Given a baufile with an exec task which fails"
                 .f(() => baufile = Baufile.Create(scenario).WriteLine(
-@"Require<Bau>()
+@"var isMono = Type.GetType(""Mono.Runtime"") != null;
+
+Require<Bau>()
 .Exec(""default"")
-.Do(exec => exec.Command = @""..\Bau.Test.Acceptance.CreateFile.exe"")
+.Do(exec =>
+{
+    exec.Command = isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"";
+    exec.Args = isMono ? new[] { @""..\Bau.Test.Acceptance.CreateFile.exe"" } : new[] { """" };
+})
 .Run();"));
 
             "When I execute the baufile"
