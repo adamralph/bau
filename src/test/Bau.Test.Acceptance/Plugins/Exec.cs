@@ -27,8 +27,8 @@ Require<Bau>()
 .Task<Exec>(""default"")
 .Do(exec =>
 {
-    exec.Command = isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"";
-    exec.Args = isMono ? new[] { @""..\Bau.Test.Acceptance.CreateFile.exe"", ""foo.txt"" } : new[] { ""foo.txt"" };
+    exec.Command = ""cmd"";
+    exec.Args = isMono ? new[] { ""foo.txt"" } : new[] { ""/C"", @""..\..\create-file.cmd"", ""foo.txt"" };
     exec.WorkingDirectory = @""" + scenario + @""";
 })
 .Run();"));
@@ -41,7 +41,7 @@ Require<Bau>()
 
             "And I the command details are logged at debug level"
                 .f(() => output.Should().MatchEquivalentOf(
-                    @"*[default] *DEBUG: *'..\Bau.Test.Acceptance.CreateFile.exe foo.txt' * 'Bau.Test.Acceptance.Plugins.Exec.ExecutingACommand'*"));
+                    @"*[default] *DEBUG: *'cmd /C ..\..\create-file.cmd foo.txt' * 'Bau.Test.Acceptance.Plugins.Exec.ExecutingACommand'*"));
         }
 
         [Scenario]
@@ -57,8 +57,8 @@ Require<Bau>()
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.Command = isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"";
-    exec.Args = isMono ? new[] { @""..\Bau.Test.Acceptance.CreateFile.exe"", ""foo.txt"" } : new[] { ""foo.txt"" };
+    exec.Command = isMono ? """" : ""cmd"";
+    exec.Args = isMono ? new[] { ""foo.txt"" } : new[] { ""/C"", @""..\..\create-file.cmd"", ""foo.txt"" };
     exec.WorkingDirectory = @""" + scenario + @""";
 })
 .Run();"));
@@ -82,8 +82,8 @@ Require<Bau>()
 Require<Bau>()
 .Exec(""default"")
 .Do(exec => exec
-    .Run(isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"")
-    .With(isMono ? @""..\Bau.Test.Acceptance.CreateFile.exe"" : """", ""foo.txt"")
+    .Run(isMono ? """" : ""cmd"")
+    .With(isMono ? new[] { ""foo.txt"" } : new[] { ""/C"", @""..\..\create-file.cmd"", ""foo.txt"" })
     .In(@""" + scenario + @"""))
 .Run();"));
 
@@ -107,8 +107,8 @@ Require<Bau>()
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.Command = isMono ? ""mono"" : @""..\Bau.Test.Acceptance.CreateFile.exe"";
-    exec.Args = isMono ? new[] { @""..\Bau.Test.Acceptance.CreateFile.exe"" } : new[] { """" };
+    exec.Command = isMono ? """" : ""cmd"";
+    exec.Args = isMono ? new[] { """" } : new[] { ""/C"", @""..\..\create-file.cmd"" };
 })
 .Run();"));
 

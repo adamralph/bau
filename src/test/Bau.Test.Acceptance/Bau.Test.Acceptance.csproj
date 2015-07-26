@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="create-file.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\..\Bau.Dictionary.xml">
@@ -82,12 +85,6 @@
     <Compile Include="Support\Baufile.cs" />
     <Compile Include="Support\MethodBaseExtensions.cs" />
     <Compile Include="DisplayingTasks.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Bau.Test.Acceptance.CreateFile\Bau.Test.Acceptance.CreateFile.csproj">
-      <Project>{82DB9E13-3BCD-408E-B8A0-EB4D92E2AE63}</Project>
-      <Name>Bau.Test.Acceptance.CreateFile</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
