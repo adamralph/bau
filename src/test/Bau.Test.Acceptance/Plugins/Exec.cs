@@ -27,7 +27,7 @@ Require<Bau>()
 .Task<Exec>(""default"")
 .Do(exec =>
 {
-    exec.Command = ""cmd"";
+    exec.Command = isMono ? ""..\..\create-file.sh"" : ""cmd"";
     exec.Args = isMono ? new[] { ""foo.txt"" } : new[] { ""/C"", @""..\..\create-file.cmd"", ""foo.txt"" };
     exec.WorkingDirectory = @""" + scenario + @""";
 })
@@ -57,7 +57,7 @@ Require<Bau>()
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.Command = isMono ? """" : ""cmd"";
+    exec.Command = isMono ? ""..\..\create-file.sh"" : ""cmd"";
     exec.Args = isMono ? new[] { ""foo.txt"" } : new[] { ""/C"", @""..\..\create-file.cmd"", ""foo.txt"" };
     exec.WorkingDirectory = @""" + scenario + @""";
 })
@@ -82,7 +82,7 @@ Require<Bau>()
 Require<Bau>()
 .Exec(""default"")
 .Do(exec => exec
-    .Run(isMono ? """" : ""cmd"")
+    .Run(isMono ? ""..\..\create-file.sh"" : ""cmd"")
     .With(isMono ? new[] { ""foo.txt"" } : new[] { ""/C"", @""..\..\create-file.cmd"", ""foo.txt"" })
     .In(@""" + scenario + @"""))
 .Run();"));
@@ -107,7 +107,7 @@ Require<Bau>()
 .Exec(""default"")
 .Do(exec =>
 {
-    exec.Command = isMono ? """" : ""cmd"";
+    exec.Command = isMono ? ""..\..\create-file.sh"" : ""cmd"";
     exec.Args = isMono ? new[] { """" } : new[] { ""/C"", @""..\..\create-file.cmd"" };
 })
 .Run();"));

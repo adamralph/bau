@@ -40,6 +40,7 @@
     <None Include="create-file.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="create-file.sh" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\..\Bau.Dictionary.xml">
