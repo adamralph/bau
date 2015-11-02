@@ -16,7 +16,7 @@ You can also build with Visual Studio 2012 or later but you'll have to run the t
 
 Using a command prompt, navigate to your clone root folder and execute:
 
-`build.cmd` (Windows)
+`build.bat` (Windows)
 
 `build.sh` (Mac/Linux) 
 
@@ -24,8 +24,8 @@ This executes the default build tasks. After the build has completed, the build 
 
 To run the acceptance test task (and all dependencies), execute:
 
-`build.cmd accept` (Windows only)
+`build.bat accept` (Windows only)
 
 To run *all* tasks, execute:
 
-`build.cmd all` (Windows only)
+`build.bat all` (Windows only)
