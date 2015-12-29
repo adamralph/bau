@@ -3,4 +3,4 @@ set -e
 set -o pipefail
 set -x
 
-scriptcs ./baufile.csx -- "$@"
+exec scriptcs ./baufile.csx -- "$@"
