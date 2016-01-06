@@ -82,6 +82,7 @@
     <Compile Include="Support\Baufile.cs" />
     <Compile Include="Support\MethodBaseExtensions.cs" />
     <Compile Include="DisplayingTasks.cs" />
+    <Compile Include="InputsOutputs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bau.Test.Acceptance.CreateFile\Bau.Test.Acceptance.CreateFile.csproj">

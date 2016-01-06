@@ -6,6 +6,7 @@ namespace BauCore
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     public interface IBauTask
     {
@@ -16,6 +17,23 @@ namespace BauCore
         string Description { get; set; }
 
         IList<Action> Actions { get; }
+
+        FileInfo InputFile
+        {
+            get;
+            set;
+        }
+
+        FileInfo OutputFile
+        {
+            get;
+            set;
+        }
+
+        bool IsUpToDate
+        {
+            get;
+        }
 
         bool Invoked { get; set; }
 
