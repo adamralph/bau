@@ -61,6 +61,26 @@ namespace BauCore
             return this;
         }
 
+        public ITaskBuilder WithAliases(params string[] aliases)
+        {
+            this.EnsureCurrentTask();
+            foreach (var alias in aliases.Where(a => !this.currentTask.Aliases.Contains(a)))
+            {
+                if (string.IsNullOrWhiteSpace(alias))
+                {
+                    var message = new ColorText(
+                        "Invalid aliase name '", new ColorToken(alias, Log.TaskColor), "'.");
+
+                    Log.Error(message);
+                    throw new ArgumentException(message.ToString(), "aliases");
+                }
+
+                this.currentTask.Aliases.Add(alias);
+            }
+
+            return this;
+        }
+
         public ITaskBuilder Desc(string description)
         {
             this.EnsureCurrentTask();
@@ -252,6 +272,11 @@ namespace BauCore
         {
             try
             {
+                var taskWithAlias = this.tasks.Values.SingleOrDefault(v => v.Aliases.Contains(task));
+                if (taskWithAlias != null)
+                {
+                    task = taskWithAlias.Name;
+                }
                 return this.tasks[task];
             }
             catch (KeyNotFoundException ex)

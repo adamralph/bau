@@ -128,5 +128,38 @@ bau.Run();"));
             "And I am informed that the non-existent task was not found"
                 .f(() => ex.Message.Should().ContainEquivalentOf("'non-existent' task not found"));
         }
+
+        [Scenario]
+        public static void AliasedTask(Baufile baufile, string tempFile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given a baufile with a non-default task with an alias set as nd"
+                .f(() =>
+                {
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
+                    @"Require<Bau>().Task(""non-default"").WithAliases(""nd"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Run();");
+                })
+                .Teardown(() => File.Delete(tempFile));
+
+            "When I execute the non-default task using an alias"
+                .f(() => output = baufile.Run("nd"));
+
+            "Then the task is executed"
+                .f(() => File.Exists(tempFile).Should().BeTrue());
+
+            "And I am informed that the task and dependencies are being run"
+                .f(() => output.Should().ContainEquivalentOf("Running 'nd' and dependencies"));
+
+            "And I am informed that the task was started"
+                .f(() => output.Should().ContainEquivalentOf("starting 'nd'"));
+
+            "And I am informed that the task was finished after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("finished 'nd' after "));
+
+            "And I am informed that the task and dependencies were completed after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("Completed 'nd' and dependencies in "));
+        }
     }
 }
