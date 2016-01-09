@@ -152,6 +152,9 @@ bau.Run();"));
             "And I am informed that the task and dependencies are being run"
                 .f(() => output.Should().ContainEquivalentOf("Running 'nd' and dependencies"));
 
+            "And I am informed that I ran the task using an alias"
+                .f(() => output.Should().ContainEquivalentOf("Actual task name 'non-default'"));
+
             "And I am informed that the task was started"
                 .f(() => output.Should().ContainEquivalentOf("starting 'nd'"));
 

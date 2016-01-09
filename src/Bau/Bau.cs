@@ -276,6 +276,11 @@ namespace BauCore
                 if (taskWithAlias != null)
                 {
                     task = taskWithAlias.Name;
+                    
+                    Log.Info(new ColorText(
+                            "Actual task name '",
+                            new ColorToken(task, Log.TaskColor),
+                            "'"));
                 }
                 return this.tasks[task];
             }
