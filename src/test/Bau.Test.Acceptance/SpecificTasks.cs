@@ -164,5 +164,28 @@ bau.Run();"));
             "And I am informed that the task and dependencies were completed after a period of time"
                 .f(() => output.Should().ContainEquivalentOf("Completed 'nd' and dependencies in "));
         }
+
+        [Scenario]
+        [Example("MultipleTasksWithSameAlias", @"Require<Bau>().Task(""foo"")
+                                                  .WithAliases(""nd"").Do(() => { })
+                                                  .Task(""bar"")
+                                                  .WithAliases(""nd"").Do(() => { })
+                                                  .Run();")]
+        public static void MultipleMatchingTasksWithanAlias(string tag, string code, Baufile baufile, Exception ex)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given a baufile containing {0}"
+                .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
+
+            "When I execute a task with an alias and is duplicated"
+                .f(() => ex = Record.Exception(() => baufile.Run("nd")));
+
+            "Then execution should fail"
+                .f(() => ex.Should().NotBeNull());
+
+            "And I am informed that the non-existent task was not found"
+                .f(() => ex.Message.Should().ContainEquivalentOf("'nd' alias was assigned for multiple tasks"));
+        }
     }
 }

@@ -276,11 +276,11 @@ namespace BauCore
                 if (taskWithAlias != null)
                 {
                     task = taskWithAlias.Name;
-                    
+
                     Log.Info(new ColorText(
-                            "Actual task name '",
-                            new ColorToken(task, Log.TaskColor),
-                            "'"));
+                                 "Actual task name '",
+                                 new ColorToken(task, Log.TaskColor),
+                                 "'"));
                 }
                 return this.tasks[task];
             }
@@ -290,6 +290,16 @@ namespace BauCore
                     "'",
                     new ColorToken(task, Log.TaskColor),
                     "' task not found.");
+
+                Log.Error(message);
+                throw new InvalidOperationException(message.ToString(), ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                var message = new ColorText(
+                    "'",
+                    new ColorToken(task, Log.TaskColor),
+                    "' alias was assigned for multiple tasks.");
 
                 Log.Error(message);
                 throw new InvalidOperationException(message.ToString(), ex);
