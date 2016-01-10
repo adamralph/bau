@@ -178,7 +178,7 @@ bau.Run();"));
             "Given a baufile containing {0}"
                 .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
 
-            "When I execute a task with an alias and is duplicated"
+            "When I execute a task with an alias which is also used for another task"
                 .f(() => ex = Record.Exception(() => baufile.Run("nd")));
 
             "Then execution should fail"
