@@ -69,7 +69,7 @@ namespace BauCore
                 if (string.IsNullOrWhiteSpace(alias))
                 {
                     var message = new ColorText(
-                        "Invalid aliase name '", new ColorToken(alias, Log.TaskColor), "'.");
+                        "Invalid alias name '", new ColorToken(alias, Log.TaskColor), "'.");
 
                     Log.Error(message);
                     throw new ArgumentException(message.ToString(), "aliases");

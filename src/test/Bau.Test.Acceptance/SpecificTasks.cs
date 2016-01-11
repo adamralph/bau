@@ -184,7 +184,7 @@ bau.Run();"));
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
 
-            "And I am informed that the non-existent task was not found"
+            "And I am informed that the alias was used for multiple tasks"
                 .f(() => ex.Message.Should().ContainEquivalentOf("'nd' alias was assigned for multiple tasks"));
         }
     }
