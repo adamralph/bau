@@ -29,7 +29,7 @@ namespace BauCore
             return this;
         }
 
-        public ITaskBuilder WithAliases(params string[] aliases)
+        public ITaskBuilder<TTask> WithAliases(params string[] aliases)
         {
             this.builder.WithAliases(aliases);
             return this;
@@ -67,6 +67,11 @@ namespace BauCore
         ITaskBuilder ITaskBuilder.DependsOn(params string[] otherTasks)
         {
             return this.builder.DependsOn(otherTasks);
+        }
+
+        ITaskBuilder ITaskBuilder.WithAliases(params string[] aliases)
+        {
+            return this.builder.WithAliases(aliases);
         }
 
         ITaskBuilder ITaskBuilder.Desc(string description)
