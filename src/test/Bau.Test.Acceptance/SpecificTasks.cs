@@ -134,16 +134,16 @@ bau.Run();"));
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given a baufile with a non-default task with an alias set as nd"
+            "Given a baufile with a non-default task with an alias"
                 .f(() =>
                 {
                     tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
                     baufile = Baufile.Create(scenario).WriteLine(
-                    @"Require<Bau>().Task(""non-default"").WithAliases(""nd"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Run();");
+@"Require<Bau>().Task(""non-default"").WithAliases(""nd"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Run();");
                 })
                 .Teardown(() => File.Delete(tempFile));
 
-            "When I execute the non-default task using an alias"
+            "When I execute the non-default task using the alias"
                 .f(() => output = baufile.Run("nd"));
 
             "Then the task is executed"
@@ -166,25 +166,21 @@ bau.Run();"));
         }
 
         [Scenario]
-        [Example("MultipleTasksWithSameAlias", @"Require<Bau>().Task(""foo"")
-                                                  .WithAliases(""nd"").Do(() => { })
-                                                  .Task(""bar"")
-                                                  .WithAliases(""nd"").Do(() => { })
-                                                  .Run();")]
-        public static void MultipleMatchingTasksWithanAlias(string tag, string code, Baufile baufile, Exception ex)
+        public static void DuplicateTaskAliases(string tag, string code, Baufile baufile, Exception ex)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();
 
-            "Given a baufile containing {0}"
-                .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
+            "Given a baufile with two tasks with the same alias"
+                .f(() => baufile = Baufile.Create(scenario).WriteLine(
+@"Require<Bau>().Task(""foo"").WithAliases(""nd"").Do(() => { }).Task(""bar"").WithAliases(""nd"").Do(() => { }).Run();"));
 
-            "When I execute a task with an alias which is also used for another task"
+            "When I try and execute a task using that alias"
                 .f(() => ex = Record.Exception(() => baufile.Run("nd")));
 
             "Then execution should fail"
                 .f(() => ex.Should().NotBeNull());
 
-            "And I am informed that the alias was used for multiple tasks"
+            "And I am informed that the alias was used more than once"
                 .f(() => ex.Message.Should().ContainEquivalentOf("'nd' alias was assigned for multiple tasks"));
         }
     }
