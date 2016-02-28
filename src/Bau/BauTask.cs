@@ -12,6 +12,7 @@ namespace BauCore
     {
         private readonly List<string> dependencies = new List<string>();
         private readonly List<Action> actions = new List<Action>();
+        private readonly List<string> aliases = new List<string>(); 
 
         public string Name { get; set; }
 
@@ -25,6 +26,11 @@ namespace BauCore
         public IList<Action> Actions
         {
             get { return this.actions; }
+        }
+
+        public IList<string> Aliases
+        {
+            get { return this.aliases; }
         }
 
         public bool Invoked { get; set; }

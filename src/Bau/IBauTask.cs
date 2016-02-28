@@ -17,6 +17,8 @@ namespace BauCore
 
         IList<Action> Actions { get; }
 
+        IList<string> Aliases { get; } 
+
         bool Invoked { get; set; }
 
         void Execute();

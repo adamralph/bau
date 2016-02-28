@@ -128,5 +128,64 @@ bau.Run();"));
             "And I am informed that the non-existent task was not found"
                 .f(() => ex.Message.Should().ContainEquivalentOf("'non-existent' task not found"));
         }
+
+        [Scenario]
+        public static void AliasedTask(Baufile baufile, string tempFile, string output)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given a baufile with a non-default task with an alias set as nd"
+                .f(() =>
+                {
+                    tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+                    baufile = Baufile.Create(scenario).WriteLine(
+                    @"Require<Bau>().Task(""non-default"").WithAliases(""nd"").Do(() => File.Create(@""" + tempFile + @""").Dispose()).Run();");
+                })
+                .Teardown(() => File.Delete(tempFile));
+
+            "When I execute the non-default task using an alias"
+                .f(() => output = baufile.Run("nd"));
+
+            "Then the task is executed"
+                .f(() => File.Exists(tempFile).Should().BeTrue());
+
+            "And I am informed that the task and dependencies are being run"
+                .f(() => output.Should().ContainEquivalentOf("Running 'nd' and dependencies"));
+
+            "And I am informed that I ran the task using an alias"
+                .f(() => output.Should().ContainEquivalentOf("Actual task name 'non-default'"));
+
+            "And I am informed that the task was started"
+                .f(() => output.Should().ContainEquivalentOf("starting 'nd'"));
+
+            "And I am informed that the task was finished after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("finished 'nd' after "));
+
+            "And I am informed that the task and dependencies were completed after a period of time"
+                .f(() => output.Should().ContainEquivalentOf("Completed 'nd' and dependencies in "));
+        }
+
+        [Scenario]
+        [Example("MultipleTasksWithSameAlias", @"Require<Bau>().Task(""foo"")
+                                                  .WithAliases(""nd"").Do(() => { })
+                                                  .Task(""bar"")
+                                                  .WithAliases(""nd"").Do(() => { })
+                                                  .Run();")]
+        public static void MultipleMatchingTasksWithanAlias(string tag, string code, Baufile baufile, Exception ex)
+        {
+            var scenario = MethodBase.GetCurrentMethod().GetFullName();
+
+            "Given a baufile containing {0}"
+                .f(() => baufile = Baufile.Create(string.Concat(scenario, ".", tag)).WriteLine(code));
+
+            "When I execute a task with an alias which is also used for another task"
+                .f(() => ex = Record.Exception(() => baufile.Run("nd")));
+
+            "Then execution should fail"
+                .f(() => ex.Should().NotBeNull());
+
+            "And I am informed that the alias was used for multiple tasks"
+                .f(() => ex.Message.Should().ContainEquivalentOf("'nd' alias was assigned for multiple tasks"));
+        }
     }
 }

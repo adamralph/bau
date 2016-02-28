@@ -29,6 +29,12 @@ namespace BauCore
             return this;
         }
 
+        public ITaskBuilder WithAliases(params string[] aliases)
+        {
+            this.builder.WithAliases(aliases);
+            return this;
+        }
+
         public ITaskBuilder<TTask> Desc(string description)
         {
             this.builder.Desc(description);
