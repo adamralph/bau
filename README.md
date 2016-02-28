@@ -13,8 +13,6 @@ Extensions are provided by [plugins](https://github.com/bau-build/bau/wiki/Plugi
 - [Quickstart](https://github.com/bau-build/bau/wiki/Quickstart)
 - [Wiki](https://github.com/bau-build/bau/wiki)
 - [Samples](https://github.com/bau-build/bau/tree/dev/src/samples)
-- [NuGet package](https://nuget.org/packages/Bau/ "Bau on Nuget")
-- [JabbR chat room](http://jabbr.net/#/rooms/bau)
 
 ##### Task definition
 ```C#
