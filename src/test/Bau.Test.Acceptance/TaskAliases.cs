@@ -38,14 +38,11 @@ namespace Bau.Test.Acceptance
             "And I am informed that the task and dependencies are being run"
                 .f(() => output.Should().ContainEquivalentOf("Running 'nd' and dependencies"));
 
-            "And I am informed that I ran the task using an alias"
-                .f(() => output.Should().ContainEquivalentOf("Actual task name 'non-default'"));
-
             "And I am informed that the task was started"
-                .f(() => output.Should().ContainEquivalentOf("starting 'nd'"));
+                .f(() => output.Should().ContainEquivalentOf("starting 'nd' ('non-default')"));
 
             "And I am informed that the task was finished after a period of time"
-                .f(() => output.Should().ContainEquivalentOf("finished 'nd' after "));
+                .f(() => output.Should().ContainEquivalentOf("finished 'nd' ('non-default') after "));
 
             "And I am informed that the task and dependencies were completed after a period of time"
                 .f(() => output.Should().ContainEquivalentOf("Completed 'nd' and dependencies in "));
@@ -67,7 +64,8 @@ namespace Bau.Test.Acceptance
                 .f(() => ex.Should().NotBeNull());
 
             "And I am informed that the alias was used more than once"
-                .f(() => ex.Message.Should().ContainEquivalentOf("'nd' alias was assigned for multiple tasks"));
+                .f(() => ex.Message.Should().ContainEquivalentOf(
+                    "The 'nd' task alias cannot be used for 'bar' because it has already been used for 'foo'"));
         }
     }
 }
