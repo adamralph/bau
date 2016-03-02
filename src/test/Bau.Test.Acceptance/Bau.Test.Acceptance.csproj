@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Help.cs" />
     <Compile Include="LogLevels.cs" />
+    <Compile Include="TaskAliases.cs" />
     <Compile Include="SpecificTasks.cs" />
     <Compile Include="Plugins\Exec.cs" />
     <Compile Include="ScriptExecution.cs" />
