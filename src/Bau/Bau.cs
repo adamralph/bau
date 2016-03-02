@@ -75,6 +75,17 @@ namespace BauCore
                     throw new ArgumentException(message.ToString(), "aliases");
                 }
 
+                var existingTaskWithAlias = this.tasks.Values.FirstOrDefault(task => task.Aliases.Contains(alias));
+                if (existingTaskWithAlias != null)
+                {
+                    var message = string.Format(
+                        "The 'nd' task alias cannot be used for '{0}' because it has already been used for '{1}'.",
+                        this.currentTask.Name,
+                        existingTaskWithAlias.Name);
+
+                    throw new ArgumentException(message, "aliases");
+                }
+
                 this.currentTask.Aliases.Add(alias);
             }
 
@@ -103,12 +114,18 @@ namespace BauCore
         {
             var taskRef = this.GetTask(task);
 
+            var taskTokens = GetTaskTokens(task, taskRef);
             var suffix = taskRef.Invoked ? null : " (first time)";
-            Log.Trace(new ColorText("Invoking '", new ColorToken(task, Log.TaskColor), "'", suffix, "."));
+            Log.Trace(new ColorText(
+                new ColorToken[] { "Invoking " }.Concat(taskTokens).Concat(new ColorToken[] { suffix, "." }).ToArray()));
+
             if (taskRef.Invoked)
             {
                 Log.Trace(new ColorText(
-                    "Already invoked '", new ColorToken(task, Log.TaskColor), "'. Ignoring invocation."));
+                    new ColorToken[] { "Already invoked " }
+                        .Concat(taskTokens)
+                        .Concat(new ColorToken[] { ". Ignoring invocation." })
+                        .ToArray()));
 
                 return;
             }
@@ -234,7 +251,9 @@ namespace BauCore
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Log.Info(new ColorText("Starting '", new ColorToken(task, Log.TaskColor), "'..."));
+            var taskTokens = GetTaskTokens(task, taskRef);
+            Log.Info(new ColorText(
+                new ColorToken[] { "Starting " }.Concat(taskTokens).Concat(new ColorToken[] { "..." }).ToArray()));
 
             try
             {
@@ -243,21 +262,44 @@ namespace BauCore
             catch (Exception ex)
             {
                 var message = new ColorText(
-                    "'",
-                    new ColorToken(task, Log.TaskColor),
-                    "' task failed. ",
-                    new ColorToken(ex.Message, ConsoleColor.DarkRed));
+                    taskTokens
+                        .Concat(new ColorToken[] { " task failed. ", new ColorToken(ex.Message, ConsoleColor.DarkRed) })
+                        .ToArray());
 
                 Log.Error(message);
                 throw new InvalidOperationException(message.ToString());
             }
 
             Log.Info(new ColorText(
-                "Finished '",
-                new ColorToken(task, Log.TaskColor),
-                "' after ",
-                new ColorToken(stopwatch.Elapsed.TotalMilliseconds.ToStringFromMilliseconds(), ConsoleColor.DarkYellow),
-                "."));
+                new ColorToken[] { "Finished " }
+                    .Concat(taskTokens)
+                    .Concat(new ColorToken[]
+                        {
+                            " after ",
+                            new ColorToken(stopwatch.Elapsed.TotalMilliseconds.ToStringFromMilliseconds(), ConsoleColor.DarkYellow),
+                            "."
+                        })
+                    .ToArray()));
+        }
+
+        private static ColorToken[] GetTaskTokens(string task, IBauTask taskRef)
+        {
+            return task == taskRef.Name
+                ? new ColorToken[]
+                    {
+                        "'",
+                        new ColorToken(task, Log.TaskColor),
+                        "'",
+                    }
+                : new ColorToken[]
+                    {
+                        "'",
+                        new ColorToken(task, Log.TaskColor),
+                        "'",
+                        " ('",
+                        new ColorToken(taskRef.Name, Log.TaskColor),
+                        "')",
+                    };
         }
 
         private void EnsureCurrentTask()
@@ -272,17 +314,7 @@ namespace BauCore
         {
             try
             {
-                var taskWithAlias = this.tasks.Values.SingleOrDefault(v => v.Aliases.Contains(task));
-                if (taskWithAlias != null)
-                {
-                    task = taskWithAlias.Name;
-
-                    Log.Info(new ColorText(
-                                 "Actual task name '",
-                                 new ColorToken(task, Log.TaskColor),
-                                 "'"));
-                }
-                return this.tasks[task];
+                return this.tasks.Values.FirstOrDefault(v => v.Aliases.Contains(task)) ?? this.tasks[task];
             }
             catch (KeyNotFoundException ex)
             {
@@ -290,16 +322,6 @@ namespace BauCore
                     "'",
                     new ColorToken(task, Log.TaskColor),
                     "' task not found.");
-
-                Log.Error(message);
-                throw new InvalidOperationException(message.ToString(), ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                var message = new ColorText(
-                    "'",
-                    new ColorToken(task, Log.TaskColor),
-                    "' alias was assigned for multiple tasks.");
 
                 Log.Error(message);
                 throw new InvalidOperationException(message.ToString(), ex);
