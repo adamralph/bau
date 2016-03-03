@@ -4,14 +4,14 @@
 
 # Next, to build with Rake:
 # 1. install ruby:      http://chocolatey.org/packages/ruby
-# 2. install gems:      gem install albacore
-# 3. execute rakefile:  rake
-
+# 2. install bundler:   gem install bundler
+# 3. install gems:      bundle install
+# 4. execute rakefile:  bundle exec rake
 
 require 'albacore'
 
-xunit_command = "packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe"
-nuget_command = "packages/NuGet.CommandLine.2.8.3/tools/NuGet.exe";
+nuget_command = "scriptcs_packages/NuGet.CommandLine.3.3.0/tools/NuGet.exe";
+xunit_command = "scriptcs_packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe"
 solution = "../src/Bau.sln"
 test = "../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll";
 
