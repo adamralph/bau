@@ -13,8 +13,8 @@ module.exports = function(grunt) {
 
   var path = require('path');
 
-  var nugetCommand = 'packages/NuGet.CommandLine.2.8.3/tools/NuGet.exe';
-  var xunitCommand = 'packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
+  var nugetCommand = 'scriptcs_packages/NuGet.CommandLine.3.3.0/tools/NuGet.exe';
+  var xunitCommand = 'scriptcs_packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe';
   var solution = '../src/Bau.sln';
   var test = '../src/test/Bau.Test.Component/bin/Release/Bau.Test.Component.dll';
 
