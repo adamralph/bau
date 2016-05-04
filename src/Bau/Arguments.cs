@@ -281,7 +281,7 @@ namespace BauCore
 
                         break;
                     case "CONFIG":
-                        namedParameters = option.Value?? new List<string>();
+                        namedParameters = option.Value ?? new List<string>();
                         break;
                     case "TASKLIST":
                         var taskListTypes = option.Value;
