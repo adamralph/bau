@@ -45,6 +45,11 @@ namespace BauCore
         {
             get { return this.taskListType; }
         }
+        
+        public List<string> NamedParameters
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public bool Help
         {

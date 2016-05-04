@@ -87,5 +87,80 @@ namespace BauCore.Test.Unit
             // assert
             arguments.TaskListType.Should().Be(TaskListType.Json);
         }
+
+        [Theory]
+        [InlineData("-p", "FirstName=John")]
+        public static void CanParseParameter(string arg1, string arg2)
+        {
+            // arrange
+            var rawArgs = new[] { arg1, arg2 };
+
+            // act
+            var arguments = Arguments.Parse(rawArgs);
+
+            // assert
+            arguments.NamedParameters.Should().NotBeNull();            
+        }
+
+        [Theory]
+        [InlineData("-p", "FirstName=John")]
+        public static void CanParseSingleParameter(string arg1, string arg2)
+        {
+            // arrange
+            var rawArgs = new[] { arg1, arg2 };
+
+            // act
+            var arguments = Arguments.Parse(rawArgs);
+
+            // assert
+            arguments.NamedParameters.Count.Should().Be(1);    
+        }
+
+        [Theory]
+        [InlineData("-p", "FirstName=John", "-p", "LastName=Doe")]
+        public static void CanParseTwoParameters(string arg1, string arg2, string arg3, string arg4)
+        {
+            // arrange
+            var rawArgs = new[] { arg1, arg2, arg3, arg4 };
+
+            // act
+            var arguments = Arguments.Parse(rawArgs);
+
+            // assert
+            arguments.NamedParameters.Count.Should().Be(2);
+        }
+
+        [Theory]
+        [InlineData("-p", "FirstName=John", "-p", "LastName=Doe")]
+        public static void CanCreateParameterContextCount(string arg1, string arg2, string arg3, string arg4)
+        {
+            // arrange
+            var rawArgs = new[] { arg1, arg2, arg3, arg4 };
+
+            // act
+            var arguments = Arguments.Parse(rawArgs);
+
+            // assert
+            var parameterContext = new BauScriptParameterContext(arguments.NamedParameters);
+            parameterContext.Count.Should().Be(2);
+        }
+
+        [Theory]
+        [InlineData("-p", "FirstName=John", "-p", "LastName=Doe")]
+        public static void CanCreateParameterContext(string arg1, string arg2, string arg3, string arg4)
+        {
+            // arrange
+            var rawArgs = new[] { arg1, arg2, arg3, arg4 };
+
+            // act
+            var arguments = Arguments.Parse(rawArgs);
+
+            // assert
+            var parameterContext = new BauScriptParameterContext(arguments.NamedParameters);
+            var firstName = (string) parameterContext["FirstName"];
+            firstName.Should().Be("John");
+            var lastName = (string) parameterContext["LastName"];
+            lastName.Should().Be("Doe");
+        }
     }
 }

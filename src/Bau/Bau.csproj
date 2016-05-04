@@ -39,6 +39,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BauScriptParameterContext.cs" />
     <Compile Include="ColorText.cs" />
     <Compile Include="ColorToken.cs" />
     <Compile Include="Log.cs" />

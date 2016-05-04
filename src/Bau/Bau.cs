@@ -20,6 +20,7 @@ namespace BauCore
         private readonly bool help;
         private readonly Dictionary<string, IBauTask> tasks = new Dictionary<string, IBauTask>();
         private IBauTask currentTask;
+        private readonly BauScriptParameterContext parameterContext;
 
         public Bau(Arguments arguments)
         {
@@ -39,6 +40,11 @@ namespace BauCore
         public IBauTask CurrentTask
         {
             get { return this.currentTask; }
+        }
+
+        public BauScriptParameterContext GetParameterContext()
+        {
+            return parameterContext;
         }
 
         public ITaskBuilder DependsOn(params string[] otherTasks)
