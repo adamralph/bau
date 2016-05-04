@@ -35,6 +35,7 @@ namespace BauCore
             Log.LogLevel = arguments.LogLevel;
             this.taskListType = arguments.TaskListType;
             this.help = arguments.Help;
+            this.parameterContext = new BauScriptParameterContext(arguments.NamedParameters);
         }
 
         public IBauTask CurrentTask
