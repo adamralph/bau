@@ -1,3 +1,5 @@
+**This project is no longer maintained. If you would like to take it over, please raise an issue or contact the owners of the NuGet package via the NuGet gallery.**
+
 ![Bau](https://raw.githubusercontent.com/bau-build/bau/dev/assets/bau.128.png)
 
 The C# task runner.
