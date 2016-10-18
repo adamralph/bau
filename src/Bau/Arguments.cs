@@ -16,12 +16,14 @@ namespace BauCore
         private readonly LogLevel logLevel;
         private readonly TaskListType? taskListType;
         private readonly bool help;
+        private readonly List<string> namedParameters; 
 
         public Arguments(
             IEnumerable<string> tasks,
             LogLevel logLevel,
             TaskListType? taskListType,
-            bool help)
+            bool help,
+            List<string> namedParameters)
         {
             Guard.AgainstNullArgument("tasks", tasks);
 
@@ -29,6 +31,7 @@ namespace BauCore
             this.logLevel = logLevel;
             this.taskListType = taskListType;
             this.help = help;
+            this.namedParameters = namedParameters;
         }
 
         public IEnumerable<string> Tasks
@@ -44,6 +47,11 @@ namespace BauCore
         public TaskListType? TaskListType
         {
             get { return this.taskListType; }
+        }
+        
+        public List<string> NamedParameters
+        {
+            get { return namedParameters; }
         }
 
         public bool Help
@@ -259,6 +267,7 @@ namespace BauCore
             var logLevel = LogLevel.Info;
             var help = false;
             var taskListType = default(TaskListType?);
+            var namedParameters = new List<string>();
             foreach (var option in Parse(args, tasks))
             {
                 switch (option.Key.ToUpperInvariant())
@@ -271,7 +280,9 @@ namespace BauCore
                         }
 
                         break;
-
+                    case "CONFIG":
+                        namedParameters = option.Value ?? new List<string>();
+                        break;
                     case "TASKLIST":
                         var taskListTypes = option.Value;
                         taskListType = taskListTypes.Any()
@@ -292,7 +303,7 @@ namespace BauCore
                 }
             }
 
-            return new Arguments(tasks, logLevel, taskListType, help);
+            return new Arguments(tasks, logLevel, taskListType, help, namedParameters);
         }
 
         private static Dictionary<string, List<string>> Parse(IEnumerable<string> args, ICollection<string> tasks)
@@ -371,6 +382,9 @@ namespace BauCore
                 case "s":
                     impliedValue = "OFF";
                     return "LOGLEVEL";
+                case "p":
+                    impliedValue = "";
+                    return "CONFIG";
                 case "h":
                 case "?":
                     return "HELP";
