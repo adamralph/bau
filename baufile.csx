@@ -26,16 +26,17 @@ bau.Task("default").DependsOn("unit", "component");
 if (!isMono)
 {
     bau.Task("default").DependsOn("pack");
-    if (!string.IsNullOrWhiteSpace(ci))
-    {
-        bau.Task("default").DependsOn("accept");
-    }
 }
 
-bau.Task("all").DependsOn("unit", "component");
+if (!string.IsNullOrWhiteSpace(ci))
+{
+    bau.Task("default").DependsOn("accept");
+}
+
+bau.Task("all").DependsOn("unit", "component", "accept");
 if (!isMono)
 {
-    bau.Task("all").DependsOn("accept", "pack");
+    bau.Task("all").DependsOn("pack");
 }
 
 bau.Task("logs").Do(() => CreateDirectory(logs));

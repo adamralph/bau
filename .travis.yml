@@ -1,6 +1,9 @@
 sudo: false
 language: csharp
 
+env:
+  - SCRIPTCS_PATH="$TRAVIS_BUILD_DIR/scriptcs/tools/scriptcs.exe"
+
 install:
   - wget "http://chocolatey.org/api/v2/package/ScriptCs/0.15.0" -O ScriptCs.0.15.0.nupkg
   - unzip ./ScriptCs.0.15.0.nupkg -d scriptcs

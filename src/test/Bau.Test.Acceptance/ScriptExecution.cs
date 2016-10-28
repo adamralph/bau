@@ -13,7 +13,7 @@ namespace Bau.Test.Acceptance
 
     public static class ScriptExecution
     {
-        [Scenario]
+        [Scenario(Skip = "Doesn't work when using the Mono engine due to https://github.com/scriptcs/scriptcs/issues/1054.")]
         public static void CompilationFails(Baufile baufile, Exception ex)
         {
             var scenario = MethodBase.GetCurrentMethod().GetFullName();

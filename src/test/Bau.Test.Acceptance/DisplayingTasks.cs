@@ -6,6 +6,7 @@ namespace Bau.Test.Acceptance
 {
     using System;
     using System.Reflection;
+    using System.Text;
     using FluentAssertions;
     using Support;
     using Xbehave;
@@ -60,7 +61,7 @@ namespace Bau.Test.Acceptance
                 .f(() => output.Should()
                     .NotContain("some-task3"));
         }
-        
+
         [Scenario]
         public static void DisplayingNoTasksAsJson(Baufile baufile, string output)
         {
@@ -73,11 +74,17 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-J"));
 
             "Then the output should contain an empty task array"
-                .f(() => output.Should().Contain(
-@"{
-    ""tasks"": [
-    ]
-}"));
+                .f(() =>
+                {
+                    var expectedOutput = new StringBuilder()
+                        .AppendLine("{")
+                        .AppendLine("    \"tasks\": [")
+                        .AppendLine("    ]")
+                        .AppendLine("}")
+                        .ToString();
+
+                    output.Should().Contain(expectedOutput);
+                });
         }
 
         [Scenario]
@@ -99,24 +106,30 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-J"));
 
             "Then the output should contain the two tasks as JSON"
-                .f(() => output.Should().Contain(
-@"{
-    ""tasks"": [
-        {
-            ""name"": ""some task1"",
-            ""description"": ""First task"",
-            ""dependencies"": [
-            ]
-        },
-        {
-            ""name"": ""some-task2"",
-            ""description"": ""Second task"",
-            ""dependencies"": [
-                ""some task1""
-            ]
-        }
-    ]
-}"));
+                .f(() =>
+                {
+                    var expectedOutput = new StringBuilder()
+                        .AppendLine("{")
+                        .AppendLine("    \"tasks\": [")
+                        .AppendLine("        {")
+                        .AppendLine("            \"name\": \"some task1\",")
+                        .AppendLine("            \"description\": \"First task\",")
+                        .AppendLine("            \"dependencies\": [")
+                        .AppendLine("            ]")
+                        .AppendLine("        },")
+                        .AppendLine("        {")
+                        .AppendLine("            \"name\": \"some-task2\",")
+                        .AppendLine("            \"description\": \"Second task\",")
+                        .AppendLine("            \"dependencies\": [")
+                        .AppendLine("                \"some task1\"")
+                        .AppendLine("            ]")
+                        .AppendLine("        }")
+                        .AppendLine("    ]")
+                        .AppendLine("}")
+                        .ToString();
+
+                    output.Should().Contain(expectedOutput);
+                });
         }
 
         [Scenario]
@@ -154,28 +167,34 @@ namespace Bau.Test.Acceptance
                 .f(() => output = baufile.Run("-P"));
 
             "Then the tasks should be listed with prerequisites"
-                .f(() => output.Should().Contain(
-@"accept
-    build
-artifacts
-artifacts/logs
-artifacts/output
-build
-    clean
-    restore packages
-    artifacts/logs
-clean
-    artifacts/logs
-component
-    build
-default
-    component
-    accept
-    pack
-pack
-    build
-    artifacts/output
-""restore packages"""));
+                .f(() =>
+                {
+                    var expectedOutput = new StringBuilder()
+                        .AppendLine("accept")
+                        .AppendLine("    build")
+                        .AppendLine("artifacts")
+                        .AppendLine("artifacts/logs")
+                        .AppendLine("artifacts/output")
+                        .AppendLine("build")
+                        .AppendLine("    clean")
+                        .AppendLine("    restore packages")
+                        .AppendLine("    artifacts/logs")
+                        .AppendLine("clean")
+                        .AppendLine("    artifacts/logs")
+                        .AppendLine("component")
+                        .AppendLine("    build")
+                        .AppendLine("default")
+                        .AppendLine("    component")
+                        .AppendLine("    accept")
+                        .AppendLine("    pack")
+                        .AppendLine("pack")
+                        .AppendLine("    build")
+                        .AppendLine("    artifacts/output")
+                        .AppendLine("\"restore packages\"")
+                        .ToString();
+
+                    output.Should().Contain(expectedOutput);
+                });
         }
     }
 }
