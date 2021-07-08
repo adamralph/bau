@@ -31,11 +31,11 @@ namespace Bau.Test.Acceptance.Support
             var assemblyDirectories = new[]
             {
 #if DEBUG
-                @"..\..\..\..\Bau\bin\Debug",
-                @"..\..\..\..\Bau.Exec\bin\Debug",
+                @"../../../../Bau/bin/Debug",
+                @"../../../../Bau.Exec/bin/Debug",
 #else
-                @"..\..\..\..\Bau\bin\Release",
-                @"..\..\..\..\Bau.Exec\bin\Release",
+                @"../../../../Bau/bin/Release",
+                @"../../../../Bau.Exec/bin/Release",
 #endif
             };
 
